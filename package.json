@@ -1,0 +1,58 @@
+{
+  "name": "dcek-landing",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite serve --force --host=127.0.0.1",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "pixi.js": "^8.5.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.13",
+    "@fullhuman/postcss-purgecss": "^6.0.0",
+    "@rollup/plugin-typescript": "^12.1.1",
+    "@stadtlandnetz/rollup-plugin-postprocess": "^1.1.0",
+    "@stylistic/eslint-plugin-js": "^2.10.1",
+    "@tailwindcss/forms": "^0.5.3",
+    "@types/eslint-config-prettier": "^6.11.3",
+    "@typescript-eslint/utils": "^8.13.0",
+    "@vitest/browser": "^2.1.4",
+    "@vitest/eslint-plugin": "^1.1.7",
+    "eslint": "^9.14.0",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.12.0",
+    "jsdom": "^25.0.1",
+    "playwright": "^1.48.2",
+    "postcss": "^8.4.20",
+    "postcss-loader": "^7.0.2",
+    "postcss-nesting": "^13.0.1",
+    "postcss-preset-env": "^7.8.3",
+    "rollup-plugin-hypothetical": "^2.1.1",
+    "style-loader": "^3.3.1",
+    "tailwindcss": "^3.4.14",
+    "ts-loader": "^9.5.1",
+    "typescript-eslint": "^8.13.0",
+    "vite-plugin-html": "^3.2.2",
+    "vite-plugin-node-polyfills": "^0.22.0",
+    "vite-plugin-static-copy": "^2.0.0",
+    "vitest": "^2.1.4",
+
+    "@eslint/js": "^9.13.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "@stylistic/eslint-plugin-ts": "^2.10.1",
+    "typescript": "~5.6.2",
+    "vite": "^5.4.10"
+  }
+}
