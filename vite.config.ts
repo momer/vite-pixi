@@ -29,9 +29,8 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
             },
         },
         plugins: [
-            react(),
             createHtmlPlugin({
-                entry: 'src/ts/main.ts',
+                entry: 'src/main.tsx',
                 template: 'index.html',
                 inject: {
                     data: {
@@ -89,7 +88,7 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
                     }
                 ]
             }));
-
+        baseConfig.plugins.push(react())
     }
 
     if (configEnv.command !== 'build') {
