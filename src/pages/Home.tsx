@@ -15,9 +15,10 @@ import logoPhobiaDark from '@/images/clients/phobia/logo-dark.svg';
 import logoPhobiaLight from '@/images/clients/phobia/logo-light.svg';
 import logoUnseal from '@/images/clients/unseal/logo-light.svg';
 import imageLaptop from '@/images/laptop.jpg';
-import { type CaseStudy, type MDXEntry, loadCaseStudies } from '@/lib/mdx';
 import { Helmet } from 'react-helmet';
 import { useEffect, useState } from 'react';
+import { StringMap } from '@/lib/stringMap';
+import { CaseStudy, loadCaseStudies, MDXEntry } from '@/lib/mdx';
 
 const clients = [
     ['Phobia', logoPhobiaLight],
@@ -169,6 +170,11 @@ function Services() {
         </>
     );
 }
+
+export const metadata: StringMap = {
+    title: 'Contact Us',
+    description: 'Let’s work together. We can’t wait to hear from you.',
+};
 
 export function Home() {
     const [caseStudies, setCaseStudies] = useState<MDXEntry<CaseStudy>[]>([]);
