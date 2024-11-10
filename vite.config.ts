@@ -31,7 +31,7 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
         },
         plugins: [
             createHtmlPlugin({
-                entry: 'src/main.tsx',
+                entry: 'src/app/main.tsx',
                 template: 'index.html',
                 inject: {
                     data: {
