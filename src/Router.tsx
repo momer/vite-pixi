@@ -20,11 +20,11 @@ export const createRouter = () => {
                 path='/'
                 element={
                     <RootLayout>
-                        <Home />
+                        <Home/>
                     </RootLayout>
                 }
             />
-            <Route path="/*" element={<p>Page not found</p>} />
+            <Route path="/*" element={ <p>Page not found</p> }/>
         </Route>
     );
 

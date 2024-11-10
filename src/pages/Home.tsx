@@ -92,6 +92,7 @@ function CaseStudies({
                                         />
                                     </a>
                                 </h3>
+
                                 <p className="mt-6 flex gap-x-2 text-sm text-neutral-950">
                                     <time
                                         dateTime={ caseStudy.date.split('-')[0] }
