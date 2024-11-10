@@ -3,7 +3,6 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 import typography from '@tailwindcss/typography';
 import forms from '@tailwindcss/forms';
 import aspectRatio from '@tailwindcss/aspect-ratio';
-import lineClamp from '@tailwindcss/line-clamp';
 
 /** @type {import('tailwindcss').Config} */
 
@@ -138,7 +137,6 @@ module.exports = {
         typography,
         forms,
         aspectRatio,
-        lineClamp,
         // https://github.com/tailwindlabs/tailwindcss/discussions/3378
         plugin(({matchUtilities, theme}) => {
             matchUtilities(

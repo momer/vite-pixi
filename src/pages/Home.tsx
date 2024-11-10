@@ -5,20 +5,20 @@ import { List, ListItem } from '@/components/List';
 import { SectionIntro } from '@/components/SectionIntro';
 import { StylizedImage } from '@/components/StylizedImage';
 import { Testimonial } from '@/components/Testimonial';
-import logoBrightPath from '/images/clients/bright-path/logo-light.svg';
-import logoFamilyFund from '/images/clients/family-fund/logo-light.svg';
-import logoGreenLife from '/images/clients/green-life/logo-light.svg';
-import logoHomeWork from '/images/clients/home-work/logo-light.svg';
-import logoMailSmirk from '/images/clients/mail-smirk/logo-light.svg';
-import logoNorthAdventures from '/images/clients/north-adventures/logo-light.svg';
-import logoPhobiaDark from '/images/clients/phobia/logo-dark.svg';
-import logoPhobiaLight from '/images/clients/phobia/logo-light.svg';
-import logoUnseal from '/images/clients/unseal/logo-light.svg';
-import imageLaptop from '/images/laptop.jpg';
+import logoBrightPath from '/static/images/clients/bright-path/logo-light.svg';
+import logoFamilyFund from '/static/images/clients/family-fund/logo-light.svg';
+import logoGreenLife from '/static/images/clients/green-life/logo-light.svg';
+import logoHomeWork from '/static/images/clients/home-work/logo-light.svg';
+import logoMailSmirk from '/static/images/clients/mail-smirk/logo-light.svg';
+import logoNorthAdventures from '/static/images/clients/north-adventures/logo-light.svg';
+import logoPhobiaDark from '/static/images/clients/phobia/logo-dark.svg';
+import logoPhobiaLight from '/static/images/clients/phobia/logo-light.svg';
+import logoUnseal from '/static/images/clients/unseal/logo-light.svg';
+import imageLaptop from '/static/images/laptop.jpg';
 import { Helmet } from 'react-helmet';
 import { useEffect, useState } from 'react';
 import { StringMap } from '@/lib/stringMap';
-import { CaseStudy, loadCaseStudies, MDXEntry } from '@/lib/mdx';
+import { CaseStudy, MDXEntry } from '@/lib/mdx';
 
 const clients = [
     ['Phobia', logoPhobiaLight],
@@ -180,8 +180,8 @@ export function Home() {
     const [caseStudies, setCaseStudies] = useState<MDXEntry<CaseStudy>[]>([]);
     useEffect(() => {
         async function getCaseStudies() {
-            const value = await loadCaseStudies();
-            setCaseStudies(value.slice(0, 3));
+            // this isn't available, todo: think about what I want
+            setCaseStudies([]);
         }
 
         getCaseStudies();
