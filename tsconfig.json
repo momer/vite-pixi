@@ -8,6 +8,9 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "outDir": "./dist/",
+    "paths": {
+        "@/*": ["./src/*"]
+    },
     "sourceMap": true,
     "strict": true,
     "target": "es6",

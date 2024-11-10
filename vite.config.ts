@@ -18,6 +18,7 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
     const baseConfig: UserConfig = {
         resolve: {
             alias: {
+                '@': '/src',
                 'tailwind.config.cjs': path.resolve(
                     __dirname,
                     '../hoppscotch-common/tailwind.config.cjs'
@@ -88,7 +89,7 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
                     }
                 ]
             }));
-        baseConfig.plugins.push(react())
+        baseConfig.plugins.push(react());
     }
 
     if (configEnv.command !== 'build') {

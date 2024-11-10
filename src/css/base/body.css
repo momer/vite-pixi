@@ -1,0 +1,9 @@
+body {
+  @apply antialiased;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  background-color: #8a97a5;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+}

@@ -21,7 +21,7 @@ export default tseslint.config(
             ...tseslint.configs.stylisticTypeChecked,
         ],
 
-        files: ['**/*.ts', '**/*.mts'],
+        files: ['**/*.ts?(x)', '**/*.mts?(x)'],
 
         plugins: {
             '@typescript-eslint': tseslint.plugin,
