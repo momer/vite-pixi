@@ -1,7 +1,7 @@
-import clsx from 'clsx'
+import clsx from 'clsx';
 
-import { Container } from '@/components/Container'
-import { FadeIn } from '@/components/FadeIn'
+import { Container } from '@/components/Container';
+import { FadeIn } from '@/components/FadeIn';
 
 export function SectionIntro({
   title,
@@ -21,23 +21,23 @@ export function SectionIntro({
   invert?: boolean
 }) {
   return (
-    <Container {...props}>
-      <FadeIn className="max-w-2xl">
-        <h2>
-          {eyebrow && (
-            <>
-              <span
+      <Container {...props}>
+          <FadeIn className="max-w-2xl">
+              <h2>
+                  {eyebrow && (
+                  <>
+                      <span
                 className={clsx(
                   'mb-6 block font-display text-base font-semibold',
                   invert ? 'text-white' : 'text-neutral-950',
                 )}
               >
-                {eyebrow}
-              </span>
-              <span className="sr-only"> - </span>
-            </>
+                          {eyebrow}
+                      </span>
+                      <span className="sr-only"> - </span>
+                  </>
           )}
-          <span
+                  <span
             className={clsx(
               'block font-display tracking-tight [text-wrap:balance]',
               smaller
@@ -46,20 +46,20 @@ export function SectionIntro({
               invert ? 'text-white' : 'text-neutral-950',
             )}
           >
-            {title}
-          </span>
-        </h2>
-        {children && (
-          <div
+                      {title}
+                  </span>
+              </h2>
+              {children && (
+              <div
             className={clsx(
               'mt-6 text-xl',
               invert ? 'text-neutral-300' : 'text-neutral-600',
             )}
           >
-            {children}
-          </div>
+                  {children}
+              </div>
         )}
-      </FadeIn>
-    </Container>
-  )
+          </FadeIn>
+      </Container>
+  );
 }

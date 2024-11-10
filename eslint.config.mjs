@@ -11,6 +11,17 @@ export default [
     ...tseslint.configs.recommended,
     eslintConfigPrettier,
     {
+        languageOptions: {
+            globals: {
+                ...globals.browser,
+                ...globals.node,
+            },
+            ecmaVersion: 'latest',
+            sourceType: 'module',
+            parserOptions: {
+                project: true
+            }
+        },
         files: ['**/*.ts?(x)', '**/*.mts?(x)'],
         plugins: {
             react: react,
@@ -30,7 +41,10 @@ export default [
     },
     {
         languageOptions: {
-            globals: {...globals.browser},
+            globals: {
+                ...globals.browser,
+                ...globals.node,
+            },
             ecmaVersion: 'latest',
             sourceType: 'module',
             parserOptions: {
