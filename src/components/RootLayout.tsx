@@ -80,7 +80,7 @@ function Header({
                     />
                 </a>
                 <div className="flex items-center gap-x-8">
-                    <Button href="/contact" invert={ invert }>
+                    <Button variant='link' to="/contact" invert={ invert }>
                         Contact us
                     </Button>
                     <button

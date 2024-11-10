@@ -8,12 +8,11 @@ type ButtonProps = {
             (
             {
                 variant: 'link';
-                href: string;
             } & React.ComponentPropsWithoutRef<typeof Link>
         ) | (
             {
                 variant: 'button';
-                href?: undefined;
+                to?: undefined;
             } & React.ComponentPropsWithoutRef<'button'>
         )
     )
@@ -43,7 +42,7 @@ export function Button({
         );
     } else {
         return (
-            <Link className={ className } to={ props.href }>
+            <Link className={ className } to={ props.to }>
                 { inner }
             </Link>
         );
