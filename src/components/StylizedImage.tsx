@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { ImgHTMLAttributes, useId } from 'react';
 import clsx from 'clsx';
 
 const shapes = [
@@ -19,12 +19,12 @@ const shapes = [
     },
 ];
 
-type ImagePropsWithOptionalAltNoStyle = Omit<HTMLImageElement, 'alt'|'style'> & { alt?: string }
+type ImagePropsWithOptionalAlt = Omit<ImgHTMLAttributes<HTMLImageElement>, 'alt'> & { alt?: string }
 
 export function StylizedImage({
                                   shape = 0,
                                   className,
-                              }: ImagePropsWithOptionalAltNoStyle & { shape?: 0 | 1 | 2 }) {
+                              }: ImagePropsWithOptionalAlt & { shape?: 0 | 1 | 2 }) {
     const id = useId();
     const { width, height, path } = shapes[shape];
 
