@@ -130,7 +130,7 @@ module.exports = {
         },
         fontFamily: {
             sans: ['Inconsolata, sans-serif'],
-            headings: ['"League Gothic"', 'sans-serif'],
+            headings: ['neue-haas-unica', 'sans-serif'],
             body: ['"Source Sans Pro"', 'sans-serif'],
         },
     },

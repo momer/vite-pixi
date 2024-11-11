@@ -20,6 +20,7 @@ import { StringMap } from '@/lib/stringMap';
 import { CaseStudy, MDXEntry } from '@/lib/mdx';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 
 
 const clients = [
@@ -196,19 +197,36 @@ export function Home() {
                     <title>DCEK: Systems Thinking in Bloom</title>
                     <meta name="description"
                           content="We're an engineering and systems design agency, bringing technology products to our clients customers."/>
+                    <link rel="stylesheet" href="https://use.typekit.net/wiw0xgp.css"/>
                 </Helmet>
-                <div className={ clsx('mx-auto max-w-screen-3xl px-6 ml-12 lg:px-8 lg:ml-16 mt-24 sm:mt-32 md:mt-[40rem]') }>
+                <div
+                    className={ clsx('mx-auto max-w-screen-3xl px-6 ml-12 lg:px-8 lg:ml-16 mt-24 sm:mt-32 md:mt-[40rem]') }>
                     <div className="mx-auto max-w-2xl lg:max-w-none">
-                        <FadeIn className="max-w-4xl">
-                            <h1 className="font-display text-5xl font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
-                                Systems thinking in bloom.
-                            </h1>
-                            <p className="mt-6 text-xl text-neutral-600">
-                                We are a development studio working at the intersection of design
-                                and technology. It’s a really busy intersection though — a lot of
-                                our staff have been involved in hit and runs.
-                            </p>
-                        </FadeIn>
+                        <div className="max-w-4xl">
+                            <FadeIn className="max-w-4xl"
+                                    viewport={ { once: true, margin: '0px 0px 0px' } }
+                                    transition={ {
+                                        duration: 1,
+                                        delay: 0.5,
+                                        delayChildren: 0.5,
+                                        staggerChildren: 0.5
+                                    } }>
+                                <h1 className="font-display text-5xl font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
+                                    Systems thinking in bloom.
+                                </h1>
+                            </FadeIn>
+                            <motion.p className="mt-6 text-xl text-neutral-600"
+                                      variants={{
+                                          hidden: { opacity: 0, },
+                                          visible: { opacity: 1, y: 0 },
+                                      }}
+                                      transition={ { duration: 1, delay: 2 } }
+                                      initial="hidden"
+                                      whileInView="visible"
+                            >
+                                We connect ideas, strategy, and technology: helping challenges blossom into solutions.
+                            </motion.p>
+                        </div>
                     </div>
                 </div>
 
