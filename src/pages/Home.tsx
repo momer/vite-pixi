@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import { StringMap } from '@/lib/stringMap';
 import { CaseStudy, MDXEntry } from '@/lib/mdx';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
+import clsx from 'clsx';
 
 
 const clients = [
@@ -34,7 +35,7 @@ const clients = [
 
 function Clients() {
     return (
-        <div className="mt-24 rounded-4xl bg-neutral-950 py-20 sm:mt-32 sm:py-32 lg:mt-56">
+        <div className="mt-24 rounded-4xl bg-neutral-950 py-20 sm:mt-32 sm:py-32 lg:mt-10">
             <Container>
                 <FadeIn className="flex items-center gap-x-8">
                     <h2 className="text-center font-display text-sm font-semibold tracking-wider text-white sm:text-left">
@@ -192,31 +193,33 @@ export function Home() {
         <>
             <HelmetProvider>
                 <Helmet>
-                    <title>DCEK -&gt;&lt;- Systems Thinking in Bloom</title>
+                    <title>DCEK: Systems Thinking in Bloom</title>
                     <meta name="description"
-                      content="We're an engineering and systems design agency, bringing technology products to our clients customers."/>
+                          content="We're an engineering and systems design agency, bringing technology products to our clients customers."/>
                 </Helmet>
-                <Container className="mt-24 sm:mt-32 md:mt-56">
-                    <FadeIn className="max-w-3xl">
-                        <h1 className="font-display text-5xl font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
-                            Award-winning development studio based in Denmark.
-                        </h1>
-                        <p className="mt-6 text-xl text-neutral-600">
-                            We are a development studio working at the intersection of design
-                            and technology. It’s a really busy intersection though — a lot of
-                            our staff have been involved in hit and runs.
-                        </p>
-                    </FadeIn>
-                </Container>
+                <div className={ clsx('mx-auto max-w-screen-3xl px-6 ml-12 lg:px-8 lg:ml-16 mt-24 sm:mt-32 md:mt-[40rem]') }>
+                    <div className="mx-auto max-w-2xl lg:max-w-none">
+                        <FadeIn className="max-w-4xl">
+                            <h1 className="font-display text-5xl font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
+                                Systems thinking in bloom.
+                            </h1>
+                            <p className="mt-6 text-xl text-neutral-600">
+                                We are a development studio working at the intersection of design
+                                and technology. It’s a really busy intersection though — a lot of
+                                our staff have been involved in hit and runs.
+                            </p>
+                        </FadeIn>
+                    </div>
+                </div>
 
                 <Clients/>
 
                 <CaseStudies caseStudies={ caseStudies }/>
 
                 <Testimonial
-                className="mt-24 sm:mt-32 lg:mt-40"
-                client={ { name: 'Phobia', logo: logoPhobiaDark } }
-            >
+                    className="mt-24 sm:mt-32 lg:mt-40"
+                    client={ { name: 'Phobia', logo: logoPhobiaDark } }
+                >
                     The team at Studio went above and beyond with our onboarding, even
                     finding a way to access the user’s microphone without triggering one of
                     those annoying permission dialogs.

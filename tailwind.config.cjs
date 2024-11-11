@@ -16,6 +16,7 @@ module.exports = {
         screens: {
             'xs': '475px',
             ...defaultTheme.screens,
+            '3xl': '1792px',
         },
         extend: {
             boxShadow: {
