@@ -1,6 +1,6 @@
 import { Application, extend, useApplication, useAssets } from '@pixi/react';
 import { Container, Graphics, Sprite } from 'pixi.js';
-import { forwardRef, useCallback, useEffect, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
@@ -13,6 +13,7 @@ extend({
 
 // Following from https://pixijs.com/8.x/examples/graphics/svg-load
 export const TreeContainer = () => {
+    const [treeTrunkPivot, setTreeTrunkPivot] = useState({ x: 0, y: 0});
     const { app }: ApplicationState = useApplication();
     const {
         assets: [
@@ -20,7 +21,6 @@ export const TreeContainer = () => {
         ],
         isSuccess,
     } = useAssets([
-        trunkSvgUrl,
         {
             alias: 'treeTrunk',
             src: trunkSvgUrl,
@@ -28,29 +28,25 @@ export const TreeContainer = () => {
         }
     ]);
 
-    const drawCallback = useCallback((graphics: Graphics) => {
-        if (graphics && app?.renderer && app?.ticker && app?.screen) {
-            const bounds = graphics.getLocalBounds();
-            graphics.pivot.set(
-                (bounds.x + bounds.width) / 2,
-                (bounds.y + bounds.height) / 2
-            );
-
-            app.ticker.add(() => {
-                graphics.rotation += 0.01;
-                graphics.scale.set(2 + Math.sin(graphics.rotation));
+    useEffect(() => {
+        if (isSuccess && treeTrunk && app?.renderer && app?.ticker && app?.screen) {
+            const bounds = treeTrunk.bounds;
+            setTreeTrunkPivot({
+                x: (bounds.x + bounds.width) / 2,
+                y: (bounds.y + bounds.height) / 2,
             });
+            treeTrunk.position.set(app.screen.width / 2, app.screen.height / 2);
         }
-    }, [app]);
+    }, [treeTrunk, app]);
 
     return (
         <container sortableChildren={ true }>
-            { isSuccess && app?.renderer && app?.screen && (
+            { isSuccess && treeTrunk && app?.renderer && app?.screen && (
                 <graphics
                     context={ treeTrunk }
+                    pivot={treeTrunkPivot}
                     x={ app.screen.width / 2 }
                     y={ app.screen.height / 2 }
-                    draw={ drawCallback }
                 />
             ) }
         </container>
