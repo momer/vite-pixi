@@ -204,12 +204,12 @@ export function Home() {
                 </Helmet>
 
                 <div
-                    className={ clsx('h-[calc(100vh-8rem)]') }
+                    className={ clsx('flex h-[calc(100vh-10rem)]') }
                     ref={ myRef }
                 >
 
                     <div
-                        className={ clsx('mx-auto max-w-screen-3xl px-6 ml-12 lg:px-8 lg:ml-16 mt-24 sm:mt-32 md:mt-[40rem]') }
+                        className={ clsx('mx-auto max-w-screen-3xl px-6 ml-12 lg:px-8 lg:ml-16 mt-24 sm:mt-32 md:mt-[36rem]') }
                     >
                         <div className="mx-auto max-w-2xl lg:max-w-none">
                             <div className="max-w-4xl">

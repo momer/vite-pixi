@@ -1,6 +1,6 @@
 import { Application, extend, useApplication, useAssets } from '@pixi/react';
 import { Container, Graphics, Sprite } from 'pixi.js';
-import { forwardRef, useCallback, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useRef } from 'react';
 
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
@@ -11,50 +11,52 @@ extend({
     Sprite,
 });
 
-export const SakuraContainer = () => {
+// Following from https://pixijs.com/8.x/examples/graphics/svg-load
+export const TreeContainer = () => {
     const { app }: ApplicationState = useApplication();
-
-    const drawCallback = useCallback((graphics: Graphics) => {
-        if (app?.renderer && app?.screen) {
-            graphics.clear();
-            graphics.setFillStyle({ color: 'red' });
-            graphics.rect(app.screen.width / 2, app.screen.height / 2, 100, 100);
-            graphics.fill();
-        }
-    }, []);
-
-
     const {
         assets: [
-            sakuraTrunk,
+            treeTrunk,
         ],
         isSuccess,
     } = useAssets([
         trunkSvgUrl,
         {
-            alias: 'sakuraTrunk',
+            alias: 'treeTrunk',
             src: trunkSvgUrl,
+            data: { parseAsGraphicsContext: true }
         }
     ]);
 
+    const drawCallback = useCallback((graphics: Graphics) => {
+        if (graphics && app?.renderer && app?.ticker && app?.screen) {
+            const bounds = graphics.getLocalBounds();
+            graphics.pivot.set(
+                (bounds.x + bounds.width) / 2,
+                (bounds.y + bounds.height) / 2
+            );
+
+            app.ticker.add(() => {
+                graphics.rotation += 0.01;
+                graphics.scale.set(2 + Math.sin(graphics.rotation));
+            });
+        }
+    }, [app]);
+
     return (
         <container sortableChildren={ true }>
-
-            <graphics draw={ drawCallback }/>
-
-            {/*<graphics draw={ drawCallback }/>*/ }
             { isSuccess && app?.renderer && app?.screen && (
-                <sprite
-                    texture={ sakuraTrunk }
-                    anchor={ { x: 0.5, y: 0.5 } }
+                <graphics
+                    context={ treeTrunk }
                     x={ app.screen.width / 2 }
                     y={ app.screen.height / 2 }
-                    zIndex={ 500 }
+                    draw={ drawCallback }
                 />
             ) }
         </container>
     );
 };
+TreeContainer.displayName = 'HomeDemo';
 
 export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
     return (
@@ -65,7 +67,7 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
             background={ 'white' }
             backgroundAlpha={ 0 }
         >
-            <SakuraContainer/>
+            <TreeContainer/>
         </Application>
     );
 });
