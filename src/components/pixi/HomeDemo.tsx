@@ -1,4 +1,4 @@
-import { Application, extend, useApplication, useAssets } from '@pixi/react';
+import { Application, extend, useApplication, useAssets, useTick } from '@pixi/react';
 import { Container, Graphics, Sprite } from 'pixi.js';
 import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 
@@ -13,7 +13,8 @@ extend({
 
 // Following from https://pixijs.com/8.x/examples/graphics/svg-load
 export const TreeContainer = () => {
-    const [treeTrunkPivot, setTreeTrunkPivot] = useState({ x: 0, y: 0});
+    const [treeTrunkPivot, setTreeTrunkPivot] = useState({ x: 0, y: 0 });
+    const [treeTrunkScale, setTreeTrunkScale] = useState<number>(1);
     const { app }: ApplicationState = useApplication();
     const {
         assets: [
@@ -28,6 +29,17 @@ export const TreeContainer = () => {
         }
     ]);
 
+    const ref = useRef<Graphics>(null);
+
+    useTick(() => {
+        if (treeTrunk && isSuccess && ref && ref.current && ref.current?.constructor && ref.current.constructor.name === 'Graphics') {
+            // ref.current.rotation += 0.01;
+            setTreeTrunkScale(0.75);
+            console.log(`Current scale: ${ treeTrunkScale } | Current rotation: ${ ref.current.rotation }`);
+            // console.log(`Ref type: ${typeof ref.current} ref: ${ref.current.constructor.name}`);
+        }
+    });
+
     useEffect(() => {
         if (isSuccess && treeTrunk && app?.renderer && app?.ticker && app?.screen) {
             const bounds = treeTrunk.bounds;
@@ -35,18 +47,26 @@ export const TreeContainer = () => {
                 x: (bounds.x + bounds.width) / 2,
                 y: (bounds.y + bounds.height) / 2,
             });
-            treeTrunk.position.set(app.screen.width / 2, app.screen.height / 2);
+
         }
     }, [treeTrunk, app]);
+
+    useEffect(() => {
+        if (ref && ref.current) {
+            // ref.current.position = { x: 0, y: 0 };
+        }
+    }, [ref]);
 
     return (
         <container sortableChildren={ true }>
             { isSuccess && treeTrunk && app?.renderer && app?.screen && (
                 <graphics
+                    ref={ ref }
                     context={ treeTrunk }
-                    pivot={treeTrunkPivot}
-                    x={ app.screen.width / 2 }
-                    y={ app.screen.height / 2 }
+                    pivot={ treeTrunkPivot }
+                    scale={ treeTrunkScale }
+                    x={ app.screen.width - ((9 * treeTrunk.bounds.width) / 10) + 40 }
+                    y={ app.screen.height - ((8 * treeTrunk.bounds.height) / 10) }
                 />
             ) }
         </container>
