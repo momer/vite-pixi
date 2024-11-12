@@ -3,21 +3,26 @@ import { Container, Graphics, Sprite } from 'pixi.js';
 import { forwardRef, useCallback, useRef } from 'react';
 
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
+import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
 
 extend({
     Container,
     Graphics,
     Sprite,
-    useAssets
 });
 
 export const SakuraContainer = () => {
+    const { app }: ApplicationState = useApplication();
+
     const drawCallback = useCallback((graphics: Graphics) => {
-        graphics.clear();
-        graphics.setFillStyle({ color: 'red' });
-        graphics.rect(0, 0, 100, 100);
-        graphics.fill();
+        if (app?.renderer && app?.screen) {
+            graphics.clear();
+            graphics.setFillStyle({ color: 'red' });
+            graphics.rect(app.screen.width / 2, app.screen.height / 2, 100, 100);
+            graphics.fill();
+        }
     }, []);
+
 
     const {
         assets: [
@@ -33,11 +38,19 @@ export const SakuraContainer = () => {
     ]);
 
     return (
-        <container x={ 100 } y={ 100 }>
-            {  }
+        <container sortableChildren={ true }>
+
+            <graphics draw={ drawCallback }/>
+
             {/*<graphics draw={ drawCallback }/>*/ }
-            { isSuccess && (
-                <sprite texture={ sakuraTrunk }/>
+            { isSuccess && app?.renderer && app?.screen && (
+                <sprite
+                    texture={ sakuraTrunk }
+                    anchor={ { x: 0.5, y: 0.5 } }
+                    x={ app.screen.width / 2 }
+                    y={ app.screen.height / 2 }
+                    zIndex={ 500 }
+                />
             ) }
         </container>
     );
@@ -49,8 +62,8 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
             autoStart
             sharedTicker
             resizeTo={ ref }
-            background={'white'}
-            backgroundAlpha={0}
+            background={ 'white' }
+            backgroundAlpha={ 0 }
         >
             <SakuraContainer/>
         </Application>
