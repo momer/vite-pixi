@@ -15,12 +15,13 @@ import logoPhobiaDark from '/static/images/clients/phobia/logo-dark.svg';
 import logoPhobiaLight from '/static/images/clients/phobia/logo-light.svg';
 import logoUnseal from '/static/images/clients/unseal/logo-light.svg';
 import imageLaptop from '/static/images/laptop.jpg';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StringMap } from '@/lib/stringMap';
 import { CaseStudy, MDXEntry } from '@/lib/mdx';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
+import { HomeDemo } from '@/components/pixi/HomeDemo';
 
 
 const clients = [
@@ -181,6 +182,8 @@ export const metadata: StringMap = {
 
 export function Home() {
     const [caseStudies, setCaseStudies] = useState<MDXEntry<CaseStudy>[]>([]);
+    const myRef = useRef<HTMLDivElement | null>(null);
+
     useEffect(() => {
         async function getCaseStudies() {
             // this isn't available, todo: think about what I want
@@ -199,38 +202,49 @@ export function Home() {
                           content="We're an engineering and systems design agency, bringing technology products to our clients customers."/>
                     <link rel="stylesheet" href="https://use.typekit.net/wiw0xgp.css"/>
                 </Helmet>
+
                 <div
-                    className={ clsx('mx-auto max-w-screen-3xl px-6 ml-12 lg:px-8 lg:ml-16 mt-24 sm:mt-32 md:mt-[40rem]') }>
-                    <div className="mx-auto max-w-2xl lg:max-w-none">
-                        <div className="max-w-4xl">
-                            <FadeIn className="max-w-4xl"
-                                    viewport={ { once: true, margin: '0px 0px 0px' } }
-                                    transition={ {
-                                        duration: 1,
-                                        delay: 0.5,
-                                        delayChildren: 0.5,
-                                        staggerChildren: 0.5
-                                    } }>
-                                <h1 className="font-display text-5xl font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
-                                    Systems thinking in bloom.
-                                </h1>
-                            </FadeIn>
-                            <motion.p className="mt-6 text-xl text-neutral-600"
-                                      variants={ {
-                                          hidden: { opacity: 0, },
-                                          visible: { opacity: 1, y: 0 },
-                                      } }
-                                      transition={ { duration: 1, delay: 2 } }
-                                      initial="hidden"
-                                      whileInView="visible"
-                            >
-                                We connect ideas, strategy, and technology: helping challenges blossom into solutions.
-                            </motion.p>
+                    className={ clsx('h-[calc(100vh-8rem)]') }
+                    ref={ myRef }
+                >
+
+                    <div
+                        className={ clsx('mx-auto max-w-screen-3xl px-6 ml-12 lg:px-8 lg:ml-16 mt-24 sm:mt-32 md:mt-[40rem]') }
+                    >
+                        <div className="mx-auto max-w-2xl lg:max-w-none">
+                            <div className="max-w-4xl">
+                                <FadeIn className="max-w-4xl"
+                                        viewport={ { once: true, margin: '0px 0px 0px' } }
+                                        transition={ {
+                                            duration: 1,
+                                            delay: 0.5,
+                                            delayChildren: 0.5,
+                                            staggerChildren: 0.5
+                                        } }>
+                                    <h1 className="font-display text-5xl font-medium tracking-tight text-white [text-wrap:balance] sm:text-7xl">
+                                        Systems thinking in bloom.
+                                    </h1>
+                                </FadeIn>
+                                <motion.p className="mt-6 text-xl text-neutral-500"
+                                          variants={ {
+                                              hidden: { opacity: 0, },
+                                              visible: { opacity: 1, y: 0 },
+                                          } }
+                                          transition={ { duration: 1, delay: 2 } }
+                                          initial="hidden"
+                                          whileInView="visible"
+                                >
+                                    We connect ideas, strategy, and technology; helping challenges blossom into
+                                    solutions.
+                                </motion.p>
+                            </div>
+                        </div>
+
+                        <div id="pixi-app" className={ clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none') }>
+                            <HomeDemo ref={ myRef }/>
                         </div>
                     </div>
                 </div>
-
-                <div id="pixi-app"></div>
 
                 <Clients/>
 
@@ -248,6 +262,7 @@ export function Home() {
                 <Services/>
 
                 <ContactSection/>
+
             </HelmetProvider>
         </>
     );
