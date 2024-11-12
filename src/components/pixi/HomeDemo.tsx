@@ -1,10 +1,14 @@
-import { Application, extend, useApplication } from '@pixi/react';
-import { Container, Graphics } from 'pixi.js';
+import { Application, extend, useApplication, useAssets } from '@pixi/react';
+import { Container, Graphics, Sprite } from 'pixi.js';
 import { forwardRef, useCallback, useRef } from 'react';
+
+import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 
 extend({
     Container,
-    Graphics
+    Graphics,
+    Sprite,
+    useAssets
 });
 
 export const SakuraContainer = () => {
@@ -15,10 +19,26 @@ export const SakuraContainer = () => {
         graphics.fill();
     }, []);
 
+    const {
+        assets: [
+            sakuraTrunk,
+        ],
+        isSuccess,
+    } = useAssets([
+        trunkSvgUrl,
+        {
+            alias: 'sakuraTrunk',
+            src: trunkSvgUrl,
+        }
+    ]);
+
     return (
         <container x={ 100 } y={ 100 }>
-            {/* eslint-disable-next-line react/no-unknown-property */ }
-            <graphics draw={ drawCallback }/>
+            {  }
+            {/*<graphics draw={ drawCallback }/>*/ }
+            { isSuccess && (
+                <sprite texture={ sakuraTrunk }/>
+            ) }
         </container>
     );
 };
@@ -29,6 +49,8 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
             autoStart
             sharedTicker
             resizeTo={ ref }
+            background={'white'}
+            backgroundAlpha={0}
         >
             <SakuraContainer/>
         </Application>

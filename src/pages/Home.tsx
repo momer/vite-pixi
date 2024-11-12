@@ -221,7 +221,7 @@ export function Home() {
                                             delayChildren: 0.5,
                                             staggerChildren: 0.5
                                         } }>
-                                    <h1 className="font-display text-5xl font-medium tracking-tight text-white [text-wrap:balance] sm:text-7xl">
+                                    <h1 className="font-display text-5xl font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
                                         Systems thinking in bloom.
                                     </h1>
                                 </FadeIn>
@@ -230,7 +230,7 @@ export function Home() {
                                               hidden: { opacity: 0, },
                                               visible: { opacity: 1, y: 0 },
                                           } }
-                                          transition={ { duration: 1, delay: 2 } }
+                                          transition={ { duration: 1, delay: 1.5 } }
                                           initial="hidden"
                                           whileInView="visible"
                                 >
