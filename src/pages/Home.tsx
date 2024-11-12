@@ -216,10 +216,10 @@ export function Home() {
                                 </h1>
                             </FadeIn>
                             <motion.p className="mt-6 text-xl text-neutral-600"
-                                      variants={{
+                                      variants={ {
                                           hidden: { opacity: 0, },
                                           visible: { opacity: 1, y: 0 },
-                                      }}
+                                      } }
                                       transition={ { duration: 1, delay: 2 } }
                                       initial="hidden"
                                       whileInView="visible"
@@ -229,6 +229,8 @@ export function Home() {
                         </div>
                     </div>
                 </div>
+
+                <div id="pixi-app"></div>
 
                 <Clients/>
 
