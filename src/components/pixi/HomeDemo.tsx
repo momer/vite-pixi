@@ -1,8 +1,9 @@
 import { Application, extend, useApplication, useAssets, useTick } from '@pixi/react';
 import { Container, Graphics, Sprite } from 'pixi.js';
-import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
+import { forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
+import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
 import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
 
 extend({
@@ -16,6 +17,7 @@ export const TreeContainer = () => {
     const [treeTrunkPivot, setTreeTrunkPivot] = useState({ x: 0, y: 0 });
     const [treeTrunkScale, setTreeTrunkScale] = useState<number>(1);
     const { app }: ApplicationState = useApplication();
+    const treeRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const {
         assets: [
             treeTrunk,
@@ -29,15 +31,9 @@ export const TreeContainer = () => {
         }
     ]);
 
-    const ref = useRef<Graphics>(null);
 
     useTick(() => {
-        if (treeTrunk && isSuccess && ref && ref.current && ref.current?.constructor && ref.current.constructor.name === 'Graphics') {
-            // ref.current.rotation += 0.01;
-            setTreeTrunkScale(0.75);
-            console.log(`Current scale: ${ treeTrunkScale } | Current rotation: ${ ref.current.rotation }`);
-            // console.log(`Ref type: ${typeof ref.current} ref: ${ref.current.constructor.name}`);
-        }
+
     });
 
     useEffect(() => {
@@ -51,22 +47,29 @@ export const TreeContainer = () => {
         }
     }, [treeTrunk, app]);
 
-    useEffect(() => {
-        if (ref && ref.current) {
-            // ref.current.position = { x: 0, y: 0 };
+    const handleTreeGraphics = useCallback((tree: Graphics) => {
+        if (tree) {
+            tree.position = {
+                x: 0,
+                y: app.screen.height / 2 - (tree.getBounds().height / 2)
+            };
+            setTreeTrunkScale(0.65);
+            console.log(`tree position: ${tree.position}`);
+            // set the ref for other components
+            treeRef.current = tree;
         }
-    }, [ref]);
+    }, []);
 
     return (
         <container sortableChildren={ true }>
             { isSuccess && treeTrunk && app?.renderer && app?.screen && (
                 <graphics
-                    ref={ ref }
+                    ref={ handleTreeGraphics }
                     context={ treeTrunk }
                     pivot={ treeTrunkPivot }
                     scale={ treeTrunkScale }
-                    x={ app.screen.width - ((9 * treeTrunk.bounds.width) / 10) + 40 }
-                    y={ app.screen.height - ((8 * treeTrunk.bounds.height) / 10) }
+                    x={ app.screen.width / 2 }
+                    y={ app.screen.height / 2}
                 />
             ) }
         </container>
