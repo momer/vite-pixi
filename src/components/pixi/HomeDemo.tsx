@@ -1,5 +1,5 @@
 import { Application, extend, useApplication, useAssets, useTick } from '@pixi/react';
-import { Container, Graphics, Sprite } from 'pixi.js';
+import { Bounds, Container, Graphics, Sprite } from 'pixi.js';
 import { forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
@@ -18,6 +18,7 @@ export const TreeContainer = () => {
     const [treeTrunkScale, setTreeTrunkScale] = useState<number>(1);
     const { app }: ApplicationState = useApplication();
     const treeRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
+    const treeBounds: MutableRefObject<Bounds | null> = useRef(null);
     const {
         assets: [
             treeTrunk,
@@ -30,11 +31,6 @@ export const TreeContainer = () => {
             data: { parseAsGraphicsContext: true }
         }
     ]);
-
-
-    useTick(() => {
-
-    });
 
     useEffect(() => {
         if (isSuccess && treeTrunk && app?.renderer && app?.ticker && app?.screen) {
@@ -49,12 +45,12 @@ export const TreeContainer = () => {
 
     const handleTreeGraphics = useCallback((tree: Graphics) => {
         if (tree) {
-            tree.position = {
-                x: app.screen.width / 2 + (tree.getBounds().width / 6) ,
-                y: app.screen.height / 2 - ((2 * tree.getBounds().height) / 5)
+            treeBounds.current = tree.getBounds();
+                tree.position = {
+                x: app.screen.width / 2 + (treeBounds.current.width / 6) ,
+                y: app.screen.height / 2 - ((2 * treeBounds.current.height) / 5)
             };
             setTreeTrunkScale(0.65);
-            console.log(`tree position: ${tree.position}`);
             // set the ref for other components
             treeRef.current = tree;
         }
