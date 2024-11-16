@@ -45,6 +45,11 @@ export const TreeContainer = () => {
 
     const handleTreeGraphics = useCallback((tree: Graphics) => {
         if (tree) {
+            // https://www.pixiplayground.com/#/edit/RMMgRsw1qqxpfUbS6-BEw
+            //
+            //     console.log(graphics.getLocalBounds().containsPoint(new PIXI.Point(110, 110)));
+            //     const transformedPoint = graphics.toLocal(new PIXI.Point(110, 110));
+            //     console.log(graphics.containsPoint(transformedPoint));
             treeBounds.current = tree.getBounds();
                 tree.position = {
                 x: app.screen.width / 2 + (treeBounds.current.width / 6) ,
