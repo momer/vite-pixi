@@ -50,8 +50,8 @@ export const TreeContainer = () => {
     const handleTreeGraphics = useCallback((tree: Graphics) => {
         if (tree) {
             tree.position = {
-                x: 0,
-                y: app.screen.height / 2 - (tree.getBounds().height / 2)
+                x: app.screen.width / 2 + (tree.getBounds().width / 6) ,
+                y: app.screen.height / 2 - ((2 * tree.getBounds().height) / 5)
             };
             setTreeTrunkScale(0.65);
             console.log(`tree position: ${tree.position}`);
