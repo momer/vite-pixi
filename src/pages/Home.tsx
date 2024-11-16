@@ -15,7 +15,7 @@ import logoPhobiaDark from '/static/images/clients/phobia/logo-dark.svg';
 import logoPhobiaLight from '/static/images/clients/phobia/logo-light.svg';
 import logoUnseal from '/static/images/clients/unseal/logo-light.svg';
 import imageLaptop from '/static/images/laptop.jpg';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { StringMap } from '@/lib/stringMap';
 import { CaseStudy, MDXEntry } from '@/lib/mdx';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
@@ -183,6 +183,17 @@ export const metadata: StringMap = {
 export function Home() {
     const [caseStudies, setCaseStudies] = useState<MDXEntry<CaseStudy>[]>([]);
     const myRef = useRef<HTMLDivElement | null>(null);
+    const myRefCallback = useCallback((element: HTMLDivElement) => {
+        console.log('returning from callback');
+        const observer = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const { width, height } = entry.contentRect;
+                console.log('Div resized:', width, height);
+            }
+        });
+        observer.observe(element, {});
+        return element;
+    }, []);
 
     useEffect(() => {
         async function getCaseStudies() {
@@ -205,7 +216,7 @@ export function Home() {
 
                 <div
                     className={ clsx('flex h-[calc(100vh-10rem)]') }
-                    ref={ myRef }
+                    ref={ myRefCallback }
                 >
 
                     <div
@@ -241,7 +252,7 @@ export function Home() {
                         </div>
 
                         <div id="pixi-app" className={ clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none') }>
-                            <HomeDemo ref={ myRef }/>
+                            <HomeDemo ref={ myRefCallback }/>
                         </div>
                     </div>
                 </div>

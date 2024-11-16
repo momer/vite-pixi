@@ -1,6 +1,7 @@
 import { Application, extend, useApplication, useAssets, useTick } from '@pixi/react';
 import { Bounds, Container, Graphics, Sprite } from 'pixi.js';
 import { forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import useMeasure from 'react-use-measure';
 
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
@@ -40,6 +41,9 @@ export const LeafCollection = ({ tree }: LeafCollectionProps) => {
 
 // Following from https://pixijs.com/8.x/examples/graphics/svg-load
 export const TreeContainer = () => {
+    const [ref, bounds] = useMeasure();
+    const { app }: ApplicationState = useApplication();
+
     // Both should be the same for trunk and canopy
     const [treePivot, setTreePivot] = useState({ x: 0, y: 0 });
     const [treeScale, setTreeScale] = useState<number>(1);
@@ -47,8 +51,6 @@ export const TreeContainer = () => {
     const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(true);
     const [isCanopyGraphicsLoaded, setIsCanopyGraphicsLoaded] = useState(false);
     const [isTrunkGraphicsLoaded, setIsTrunkGraphicsLoaded] = useState(false);
-
-    const { app }: ApplicationState = useApplication();
 
     const trunkRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const canopyRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
@@ -78,6 +80,13 @@ export const TreeContainer = () => {
             }
         },
     });
+
+    // resize renderer if view of component changes size
+    useEffect(() => {
+        if (app) {
+            // app.renderer.resize(bounds.width, bounds.height);
+        }
+    }, [app, bounds]);
 
     useEffect(() => {
         if (assetLoadSuccess &&
@@ -166,7 +175,7 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
         <Application
             autoStart
             sharedTicker
-            resizeTo={ ref }
+            resizeTo={ ref as  MutableRefObject<HTMLDivElement>}
             background={ 'white' }
             backgroundAlpha={ 0 }
         >
