@@ -51,8 +51,8 @@ export const TreeContainer = () => {
             //     const transformedPoint = graphics.toLocal(new PIXI.Point(110, 110));
             //     console.log(graphics.containsPoint(transformedPoint));
             treeBounds.current = tree.getBounds();
-                tree.position = {
-                x: app.screen.width / 2 + (treeBounds.current.width / 6) ,
+            tree.position = {
+                x: app.screen.width / 2 + (treeBounds.current.width / 6),
                 y: app.screen.height / 2 - ((2 * treeBounds.current.height) / 5)
             };
             setTreeTrunkScale(0.65);
@@ -70,7 +70,7 @@ export const TreeContainer = () => {
                     pivot={ treeTrunkPivot }
                     scale={ treeTrunkScale }
                     x={ app.screen.width / 2 }
-                    y={ app.screen.height / 2}
+                    y={ app.screen.height / 2 }
                 />
             ) }
         </container>
