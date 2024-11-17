@@ -248,10 +248,12 @@ export function Home() {
                             </div>
                         </div>
 
-                        <div id="pixi-app" className={ clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none') }>
-                            <HomeDemo ref={ myRef }/>
-                        </div>
+
                     </div>
+                </div>
+
+                <div id="pixi-app" className={ clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none') }>
+                    {<HomeDemo ref={ myRef }/> }
                 </div>
 
                 <Clients/>
