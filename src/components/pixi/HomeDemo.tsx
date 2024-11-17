@@ -129,89 +129,44 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             containerRef.current
         ) {
 
-            console.log(`app screen width: ${ app.screen.width }, height: ${app.screen.height}`);
+            console.log(`app screen width: ${ app.screen.width }, height: ${ app.screen.height }`);
+            console.log(`current x: ${ containerRef.current.x }, y: ${ containerRef.current.y }`);
+            console.log(`(getBounds) current x: ${ containerRef.current.getBounds().x }, y: ${ containerRef.current.y }`);
 
 
             let containerBounds = containerRef.current.getBounds();
             const opt = calculateTreePos(app.screen, containerBounds);
-            // containerRef.current.scale = opt.scale;
+            containerRef.current.scale = opt.scale;
 
             containerBounds = containerRef.current.getBounds();
-            console.log(`current x: ${containerRef.current.x}, y: ${containerRef.current.y}`);
-            console.log(`(getbounds) current x: ${containerBounds.x}, y: ${containerBounds.y}`);
-            containerRef.current.x = app.screen.width / 2;
-            containerRef.current.y = app.screen.height / 2;
+            console.log(`current x: ${ containerRef.current.x }, y: ${ containerRef.current.y }`);
+            console.log(`(getbounds) current x: ${ containerBounds.x }, y: ${ containerBounds.y }`);
 
+            console.log(`trunkref position: ${ trunkRef.current.bounds.x }, ${ trunkRef.current.getLocalBounds().y }`);
+            console.log(`canopy position: ${ canopyRef.current.getLocalBounds().x }, ${ canopyRef.current.getLocalBounds().y }`);
 
-            containerBounds = containerRef.current.getBounds();
-            // containerRef.current.width = Math.max(canopyRef.current.width, trunkRef.current.width);
-            // make the pivot at the center of the container
-            console.log(`pivoted bounds calc: containerBounds.x = ${containerBounds.x} ; containerBounds.width / 2 = ${containerBounds.width / 2}`);
-            // // then, adjust its position accordingly (offset needs to be adjusted + width/height div 2)
-            // containerRef.current.x = 43.25 + (containerBounds.width / 2);// initial x offset; this is the "position of the pivot in the parent's local space"
-            // so should be initial offset plus the container width /2 to get the same distance
-
-            const line = new Graphics();
-            line.zIndex = 51;
-            app.stage.addChild(line);
-
-            line.moveTo(containerBounds.x, containerBounds.y);
-            line.lineTo(containerBounds.x + 100, containerBounds.y + 100);
-            line.stroke({ width: 4, color: 0x11f0ff });
-
-            // containerRef.current.position = new Point(100, 100);
-
-            containerBounds = containerRef.current.getBounds();
-            const testingCircle = new Graphics();
-            testingCircle.circle(containerBounds.x + (containerBounds.width /2), containerBounds.height + (containerBounds.height /2), 30);
-            console.log(`testingcircle: ${containerBounds.x + (containerBounds.width /2)} ${containerBounds.height + (containerBounds.height /2)}`);
-            testingCircle.fill(0x0000ff);
-            testingCircle.zIndex = 50;
-            app.stage.addChild(testingCircle);
-
-            line.moveTo(containerBounds.x, containerBounds.y);
-            line.lineTo(containerBounds.width, containerBounds.y);
-            line.stroke({ width: 4, color: 0x11f0ff });
-
-            console.log(`canopyRef: ${canopyRef.current.x} | width: ${canopyRef.current.width}`);
-            line.moveTo(containerBounds.x, containerBounds.y + 5);
-            line.lineTo(containerBounds.x + containerBounds.width, containerBounds.y+5);
-            line.stroke({ width: 2, color: 0xaaaaaa });
-
-            console.log(`trunkref: ${trunkRef.current.x} | width: ${trunkRef.current.width}`);
-            line.moveTo(containerBounds.x, containerBounds.y + 10);
-            line.lineTo(containerBounds.maxX, containerBounds.y + 10);
-            line.stroke({ width: 2, color: 0x000000 });
-
-
-            line.moveTo(screen.width / 2, (containerBounds.height/2) + containerBounds.y);
-            line.lineTo(containerBounds.x + screen.width, (containerBounds.height/2) + containerBounds.y);
-            line.stroke({ width: 2, color: 0xff0fff });
-
-            line.moveTo(screen.width - (2 * containerBounds.width / 3), (containerBounds.height/2) + containerBounds.y - 5);
-            line.lineTo(containerBounds.x + screen.width, (containerBounds.height/2) + containerBounds.y -5);
-            line.stroke({ width: 2, color: 0x001FFA });
-
-            const pivotCircle = new Graphics();
-            pivotCircle.circle(containerRef.current.pivot.x, containerRef.current.pivot.y, 30);
-            pivotCircle.fill(0xff0000);
-            app.stage.addChild(pivotCircle);
+            containerRef.current.x = (app.screen.width / 2) - containerBounds.minX;
+            containerRef.current.y = (app.screen.height / 2) - containerBounds.minY;
 
             const circle = new Graphics();
-            circle.circle(app.screen.width - (trunkRef.current.getBounds().width/2), opt.position.y, 30);
+            circle.circle(app.screen.width / 2, app.screen.height / 2, 5);
             circle.fill(0x00ff00);
             app.stage.addChild(circle);
 
-            const otherCircle = new Graphics();
-            otherCircle.circle(865, 350, 15);
-            otherCircle.fill(0x00ff00);
-            app.stage.addChild(otherCircle);
+            circle.circle(app.screen.width / 2, app.screen.height / 2, 1);
+            circle.fill(0x000000);
 
-            // change pivot AFTER any positioning
-            // containerRef.current.pivot = {
-            //     x: (containerRef.current.width / 2),
-            //     y: (containerRef.current.height / 2)
-            // };
+            circle.circle(containerRef.current.width + containerRef.current.getBounds().x, app.screen.height / 2, 5);
+            circle.fill(0x00ff00);
+            circle.circle(containerRef.current.width + containerRef.current.getBounds().x, app.screen.height / 2, 1);
+            circle.fill(0x000000);
+
+            containerBounds = containerRef.current.getBounds();
+            containerRef.current.pivot = {
+                x: (containerRef.current.getLocalBounds().maxX - containerRef.current.getLocalBounds().minX) / 2,
+                y: (containerRef.current.getLocalBounds().maxY - containerRef.current.getLocalBounds().minY) / 2,
+            };
+
             // canopyRef.current.position = opt.position;
             canopyRef.current.visible = true;
 
@@ -311,7 +266,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
     useEffect(() => {
         if (treeTrunk && treeCanopy) {
-            console.log(`treeTrunk width: ${treeTrunk.width} | canopy width: ${treeCanopy.width}`);
+            console.log(`treeTrunk width: ${ treeTrunk.width } | canopy width: ${ treeCanopy.width }`);
         }
         console.log();
         resizeTreeContainer();
