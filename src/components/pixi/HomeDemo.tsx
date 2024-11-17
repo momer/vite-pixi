@@ -134,8 +134,11 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
             let containerBounds = containerRef.current.getBounds();
             const opt = calculateTreePos(app.screen, containerBounds);
-            containerRef.current.scale = opt.scale;
+            // containerRef.current.scale = opt.scale;
 
+            containerBounds = containerRef.current.getBounds();
+            console.log(`current x: ${containerRef.current.x}, y: ${containerRef.current.y}`);
+            console.log(`(getbounds) current x: ${containerBounds.x}, y: ${containerBounds.y}`);
             containerRef.current.x = app.screen.width / 2;
             containerRef.current.y = app.screen.height / 2;
 
@@ -143,7 +146,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             containerBounds = containerRef.current.getBounds();
             // containerRef.current.width = Math.max(canopyRef.current.width, trunkRef.current.width);
             // make the pivot at the center of the container
-            console.log(`current x: ${containerRef.current.x}, y: ${containerRef.current.y}`);
             console.log(`pivoted bounds calc: containerBounds.x = ${containerBounds.x} ; containerBounds.width / 2 = ${containerBounds.width / 2}`);
             // // then, adjust its position accordingly (offset needs to be adjusted + width/height div 2)
             // containerRef.current.x = 43.25 + (containerBounds.width / 2);// initial x offset; this is the "position of the pivot in the parent's local space"
@@ -199,6 +201,11 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             circle.circle(app.screen.width - (trunkRef.current.getBounds().width/2), opt.position.y, 30);
             circle.fill(0x00ff00);
             app.stage.addChild(circle);
+
+            const otherCircle = new Graphics();
+            otherCircle.circle(865, 350, 15);
+            otherCircle.fill(0x00ff00);
+            app.stage.addChild(otherCircle);
 
             // change pivot AFTER any positioning
             // containerRef.current.pivot = {
