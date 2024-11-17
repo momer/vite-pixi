@@ -50,8 +50,9 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const [divResized, setDivResized] = useState(false);
 
     // Both should be the same for trunk and canopy
-    const [treePivot, setTreePivot] = useState({ x: 0, y: 0 });
-    const [treeScale, setTreeScale] = useState<number>(1);
+    const [trunkPivot, setTrunkPivot] = useState({ x: 0, y: 0 });
+    const [canopyPivot, setCanopyPivot] = useState({ x: 0, y: 0 });
+    const [treeScale, setTreeScale] = useState<number>(0.65);
 
     const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(true);
     const [isCanopyGraphicsLoaded, setIsCanopyGraphicsLoaded] = useState(false);
@@ -61,7 +62,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const canopyRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
 
     const resizeTreeContainer = useCallback(() => {
-        console.log(`${assetLoadSuccess}, ${trunkRef}, ${canopyRef}, ${app}, ${app?.renderer}, ${app?.ticker}, ${trunkRef?.current}, ${canopyRef?.current}`);
+        console.log(`${ assetLoadSuccess }, ${ trunkRef }, ${ canopyRef }, ${ app }, ${ app?.renderer }, ${ app?.ticker }, ${ trunkRef?.current }, ${ canopyRef?.current }`);
         if (assetLoadSuccess &&
             trunkRef &&
             canopyRef &&
@@ -71,19 +72,39 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             trunkRef.current &&
             canopyRef.current
         ) {
-            const bounds = trunkRef.current.getBounds();
+            // setTreeScale(() => 0.65);
 
-            setTreeScale(0.65);
-            setTreePivot({
-                x: (bounds.x + bounds.width) / 2,
-                y: (bounds.y + bounds.height) / 2,
-            });
+            // const trunkBounds = trunkRef.current.getBounds();
+            // const canopyBounds = canopyRef.current.getBounds();
+            // console.log(`setting tree position according to bounds: ${ trunkBounds }`);
+            //setTrunkPivot(() => {
+            //    return {
+            //        x: (trunkBounds.x + trunkBounds.width) / 2,
+            //        y: (trunkBounds.y + trunkBounds.height) / 2,
+            //    };
+            //});
+            //setCanopyPivot(() => {
+            //    return {
+            //        x: (canopyBounds.x + canopyBounds.width) / 2,
+            //        y: (canopyBounds.y + canopyBounds.height) / 2,
+            //    };
+            //});
+            // const position = {
+            //     x: (app.screen.width / 2) + (3 * app.screen.width / 7),
+            //     y: (5 * app.screen.height / 8)
+            // };
+
             const position = {
-                x: (app.screen.width / 2) + (3 * app.screen.width / 7),
-                y: (5 * app.screen.height / 8)
+                x: (app.screen.width / 2) + ((app.screen.width) / 12),
+                y: 0
             };
             canopyRef.current.position = position;
+            canopyRef.current.scale = treeScale;
+            canopyRef.current.visible = true;
+
             trunkRef.current.position = position;
+            trunkRef.current.scale = treeScale;
+            trunkRef.current.visible = true;
         }
     }, [assetLoadSuccess, isTrunkGraphicsLoaded, isCanopyGraphicsLoaded, app]);
 
@@ -116,17 +137,18 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         console.log('in use effect that should render 3 times if this is re-rendering...');
     });
 
+    // initial load, start observingt he div parent for sizing
     useEffect(() => {
-        console.log(`app? ${app} ; renderer? ${app.renderer}`);
+        console.log(`app? ${ app } ; renderer? ${ app.renderer }`);
         if (ref) {
             ref = ref as MutableRefObject<HTMLDivElement>;
-            console.log(`found ref: ${ref.current}`);
+            console.log(`found ref: ${ ref.current }`);
             const observer = new ResizeObserver((entries) => {
                 for (const entry of entries) {
                     const { width, height } = entry.contentRect;
                     console.log('Div resized:', width, height);
                     if (app && app.renderer) {
-                        console.log(`resizin ${isTrunkGraphicsLoaded}`);
+                        console.log(`resizin ${ isTrunkGraphicsLoaded }`);
                         // app.renderer.resize(width, height);
                         resizeTreeContainer();
                     }
@@ -145,7 +167,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     }, [app, bounds]);
 
     const handleTreeTrunkGraphics = useCallback((trunk: Graphics) => {
-        console.log(`in the callback, here's trunk: ${trunk}`);
+        console.log(`in the callback, here's trunk: ${ trunk }`);
         if (trunk) {
             // https://www.pixiplayground.com/#/edit/RMMgRsw1qqxpfUbS6-BEw
             //
@@ -184,18 +206,12 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                     <graphics
                         ref={ handleTreeTrunkGraphics }
                         context={ treeTrunk }
-                        pivot={ treePivot }
-                        scale={ treeScale }
-                        x={ app.screen.width / 2 }
-                        y={ app.screen.height / 2 }
+                        // pivot={ trunkPivot }
                     />
                     <graphics
                         ref={ handleTreeCanopyGraphics }
                         context={ treeCanopy }
-                        pivot={ treePivot }
-                        scale={ treeScale }
-                        x={ app.screen.width / 2 }
-                        y={ app.screen.height / 2 }
+                        // pivot={ canopyPivot }
                     />
                 </>
             ) }
@@ -217,8 +233,9 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
             resizeTo={ ref }
             background={ 'white' }
             backgroundAlpha={ 0 }
+            antialias={true}
         >
-            <TreeContainer ref={ref}/>
+            <TreeContainer ref={ ref }/>
         </Application>
     );
 });
