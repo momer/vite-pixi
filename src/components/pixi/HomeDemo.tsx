@@ -1,5 +1,5 @@
 import { Application, extend, useApplication, useAssets, useTick } from '@pixi/react';
-import { Bounds, Container, Graphics, Sprite } from 'pixi.js';
+import { Bounds, Container, Graphics, Rectangle, Sprite } from 'pixi.js';
 import { ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 import useMeasure from 'react-use-measure';
 
@@ -7,6 +7,29 @@ import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
 import leafClusterFullOpenUrl from '/static/images/pixi/sakura/leaf-clusters/full-open.png';
 import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
+
+// todo, this can be exported and isolated
+// ref if needed:
+// https://tailwindcss.com/docs/screens
+// https://stackoverflow.com/questions/59982018/how-do-i-get-tailwinds-active-breakpoint-in-javascript
+const cssScreens = {
+    'sm': 640,
+    // => @media (min-width: 640px) { ... }
+
+    'md': 768,
+    // => @media (min-width: 768px) { ... }
+
+    'lg': 1024,
+    // => @media (min-width: 1024px) { ... }
+
+    'xl': 1280,
+    // => @media (min-width: 1280px) { ... }
+
+    '2xl': 1536,
+    // => @media (min-width: 1536px) { ... }
+
+    '3xl': 1792,
+};
 
 extend({
     Container,
@@ -52,17 +75,50 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     // Both should be the same for trunk and canopy
     const [trunkPivot, setTrunkPivot] = useState({ x: 0, y: 0 });
     const [canopyPivot, setCanopyPivot] = useState({ x: 0, y: 0 });
-    const [treeScale, setTreeScale] = useState<number>(0.65);
 
     const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(true);
     const [isCanopyGraphicsLoaded, setIsCanopyGraphicsLoaded] = useState(false);
     const [isTrunkGraphicsLoaded, setIsTrunkGraphicsLoaded] = useState(false);
 
+    const containerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const trunkRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const canopyRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
 
+    interface TreePosOptions {
+        position: {
+            x: number;
+            y: number;
+        };
+        scale: number;
+    }
+
+    const calculateTreePos = (screen: Rectangle, treeBounds: Bounds): TreePosOptions => {
+        const opt = {
+            position: { x: 0, y: 0 },
+            scale: 0.65, // defaults
+        };
+        const sw = screen.width;
+        const sh = screen.height;
+        const baseW = sw / 2;
+
+        if (sw >= cssScreens['2xl']) {
+            opt.position.x = (baseW + (sw / 10) + bounds.width);
+            // opt.position.y = (sh / 2) + (bounds.height);
+        } else if (sw >= cssScreens['xl']) {
+            opt.position.x = (baseW / 2);
+            opt.scale = 0.6;
+        } else if (sw >= cssScreens['lg']) {
+            opt.position.x = (baseW / 2);
+            opt.scale = 0.6;
+        } else if (sw >= cssScreens['md']) {
+            opt.position.x = (baseW / 2);
+            opt.scale = 0.6;
+        }
+
+        return opt;
+    };
+
     const resizeTreeContainer = useCallback(() => {
-        console.log(`${ assetLoadSuccess }, ${ trunkRef }, ${ canopyRef }, ${ app }, ${ app?.renderer }, ${ app?.ticker }, ${ trunkRef?.current }, ${ canopyRef?.current }`);
         if (assetLoadSuccess &&
             trunkRef &&
             canopyRef &&
@@ -70,41 +126,25 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             app?.ticker &&
             app?.screen &&
             trunkRef.current &&
-            canopyRef.current
+            canopyRef.current &&
+            containerRef.current
         ) {
-            // setTreeScale(() => 0.65);
-
-            // const trunkBounds = trunkRef.current.getBounds();
-            // const canopyBounds = canopyRef.current.getBounds();
-            // console.log(`setting tree position according to bounds: ${ trunkBounds }`);
-            //setTrunkPivot(() => {
-            //    return {
-            //        x: (trunkBounds.x + trunkBounds.width) / 2,
-            //        y: (trunkBounds.y + trunkBounds.height) / 2,
-            //    };
-            //});
-            //setCanopyPivot(() => {
-            //    return {
-            //        x: (canopyBounds.x + canopyBounds.width) / 2,
-            //        y: (canopyBounds.y + canopyBounds.height) / 2,
-            //    };
-            //});
-            // const position = {
-            //     x: (app.screen.width / 2) + (3 * app.screen.width / 7),
-            //     y: (5 * app.screen.height / 8)
-            // };
-
-            const position = {
-                x: (app.screen.width / 2) + ((app.screen.width) / 12),
-                y: 0
+            const bounds = containerRef.current.getBounds();
+            containerRef.current.pivot = {
+                x: (bounds.x + bounds.width) / 2,
+                y: (bounds.y + bounds.height) / 2
             };
-            canopyRef.current.position = position;
-            canopyRef.current.scale = treeScale;
+            console.log(`app screen width: ${ app.screen.width }`);
+            const opt = calculateTreePos(app.screen, bounds);
+
+            canopyRef.current.position = opt.position;
             canopyRef.current.visible = true;
 
-            trunkRef.current.position = position;
-            trunkRef.current.scale = treeScale;
+            trunkRef.current.position = opt.position;
             trunkRef.current.visible = true;
+
+
+            containerRef.current.scale = opt.scale;
         }
     }, [assetLoadSuccess, isTrunkGraphicsLoaded, isCanopyGraphicsLoaded, app]);
 
@@ -200,8 +240,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     }, [assetLoadSuccess, isTrunkGraphicsLoaded, isCanopyGraphicsLoaded, app, treeTrunk, treeCanopy]);
 
     return (
-        <container sortableChildren={ true }>
-            { isSuccess && app?.renderer && app?.screen && (
+        isSuccess && app?.renderer && app?.screen && (
+            <container ref={ containerRef } sortableChildren={ true }>
                 <>
                     <graphics
                         ref={ handleTreeTrunkGraphics }
@@ -214,8 +254,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                         // pivot={ canopyPivot }
                     />
                 </>
-            ) }
-        </container>
+            </container>
+        )
     );
 });
 
@@ -233,7 +273,7 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
             resizeTo={ ref }
             background={ 'white' }
             backgroundAlpha={ 0 }
-            antialias={true}
+            antialias={ true }
         >
             <TreeContainer ref={ ref }/>
         </Application>

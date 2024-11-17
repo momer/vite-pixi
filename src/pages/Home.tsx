@@ -212,16 +212,16 @@ export function Home() {
                 </Helmet>
 
                 <div
-                    className={ clsx('flex h-[calc(100vh-10rem)]') }
+                    className={ clsx('flex h-[calc(100vh)] lg:h-[calc(100vh-10rem)]') }
                     ref={ myRefCallback }
                 >
 
                     <div
-                        className={ clsx('mx-auto max-w-screen-3xl px-6 ml-12 lg:px-8 lg:ml-16 mt-24 sm:mt-32 md:mt-[36rem]') }
+                        className={ clsx('mx-auto max-w-screen-3xl px-6 ml-12 lg:px-8 lg:ml-16 mt-96 md:mt-[36rem]') }
                     >
-                        <div className="mx-auto max-w-2xl lg:max-w-none">
-                            <div className="max-w-4xl">
-                                <FadeIn className="max-w-4xl"
+                        <div className="mx-auto md:w-full">
+                            <div className="md:w-full">
+                                <FadeIn className="w-full"
                                         viewport={ { once: true, margin: '0px 0px 0px' } }
                                         transition={ {
                                             duration: 1,
