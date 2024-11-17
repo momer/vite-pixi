@@ -1,5 +1,5 @@
 import { Application, extend, useApplication, useAssets, useTick } from '@pixi/react';
-import { Bounds, Container, Graphics, Rectangle, Sprite } from 'pixi.js';
+import { Bounds, Circle, Container, Graphics, Rectangle, Sprite } from 'pixi.js';
 import { ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 import useMeasure from 'react-use-measure';
 
@@ -73,8 +73,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const [divResized, setDivResized] = useState(false);
 
     // Both should be the same for trunk and canopy
-    const [trunkPivot, setTrunkPivot] = useState({ x: 0, y: 0 });
-    const [canopyPivot, setCanopyPivot] = useState({ x: 0, y: 0 });
 
     const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(true);
     const [isCanopyGraphicsLoaded, setIsCanopyGraphicsLoaded] = useState(false);
@@ -99,11 +97,12 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         };
         const sw = screen.width;
         const sh = screen.height;
+        console.log(`found screen width: ${ sw } and screen height: ${ sh }`);
         const baseW = sw / 2;
 
         if (sw >= cssScreens['2xl']) {
-            opt.position.x = (baseW + (sw / 10) + bounds.width);
-            // opt.position.y = (sh / 2) + (bounds.height);
+            opt.position.x = (baseW);
+            opt.position.y = (sh / 2);
         } else if (sw >= cssScreens['xl']) {
             opt.position.x = (baseW / 2);
             opt.scale = 0.6;
@@ -130,21 +129,58 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             containerRef.current
         ) {
             const bounds = containerRef.current.getBounds();
-            containerRef.current.pivot = {
-                x: (bounds.x + bounds.width) / 2,
-                y: (bounds.y + bounds.height) / 2
-            };
+            //containerRef.current.pivot = {
+            //    x: (bounds.x + (bounds.width / 2)),
+            //    y: (bounds.y + (bounds.height / 2))
+            //};
             console.log(`app screen width: ${ app.screen.width }`);
             const opt = calculateTreePos(app.screen, bounds);
+            containerRef.current.scale = opt.scale;
+            // containerRef.current.width = Math.max(canopyRef.current.width, trunkRef.current.width);
 
-            canopyRef.current.position = opt.position;
+            const testingCircle = new Graphics();
+            testingCircle.circle(bounds.x, bounds.y, 30);
+            testingCircle.fill(0x0000ff);
+            app.stage.addChild(testingCircle);
+
+            const line = new Graphics();
+            app.stage.addChild(line);
+            line.moveTo(bounds.x, bounds.y);
+            line.lineTo(containerRef.current.width, bounds.y);
+            line.stroke({ width: 2, color: 0x11f0ff });
+
+            console.log(`canopyRef: ${canopyRef.current.x} | width: ${canopyRef.current.width}`);
+            line.moveTo(containerRef.current.getBounds().x, bounds.y + 5);
+            line.lineTo(containerRef.current.getBounds().x + containerRef.current.getBounds().width, bounds.y+5);
+            line.stroke({ width: 2, color: 0xaaaaaa });
+
+            console.log(`trunkref: ${trunkRef.current.x} | width: ${trunkRef.current.width}`);
+            line.moveTo(containerRef.current.getBounds().x, bounds.y + 10);
+            line.lineTo(containerRef.current.getBounds().maxX, bounds.y + 10);
+            line.stroke({ width: 2, color: 0x000000 });
+
+
+            line.moveTo(bounds.width, bounds.height/2);
+            line.lineTo(bounds.x + screen.width, bounds.height/2);
+            line.stroke({ width: 10, color: 0xff0fff });
+
+
+            const pivotCircle = new Graphics();
+            pivotCircle.circle(containerRef.current.pivot.x, containerRef.current.pivot.y, 30);
+            pivotCircle.fill(0xff0000);
+            app.stage.addChild(pivotCircle);
+
+            const circle = new Graphics();
+            circle.circle(app.screen.width - (trunkRef.current.getBounds().width/2), opt.position.y, 30);
+            circle.fill(0x00ff00);
+            app.stage.addChild(circle);
+
+            // canopyRef.current.position = opt.position;
             canopyRef.current.visible = true;
 
-            trunkRef.current.position = opt.position;
+            // trunkRef.current.position = opt.position;
             trunkRef.current.visible = true;
 
-
-            containerRef.current.scale = opt.scale;
         }
     }, [assetLoadSuccess, isTrunkGraphicsLoaded, isCanopyGraphicsLoaded, app]);
 
@@ -207,7 +243,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     }, [app, bounds]);
 
     const handleTreeTrunkGraphics = useCallback((trunk: Graphics) => {
-        console.log(`in the callback, here's trunk: ${ trunk }`);
+        console.log(`in the callback, here's trunk: ${ trunk.width }`);
         if (trunk) {
             // https://www.pixiplayground.com/#/edit/RMMgRsw1qqxpfUbS6-BEw
             //
@@ -230,12 +266,17 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             //     console.log(graphics.containsPoint(transformedPoint));
 
             // set the ref for other components
+            console.log(`in the callback, here's canopy: ${ canopy.width }`);
             canopyRef.current = canopy;
             setIsCanopyGraphicsLoaded(true);
         }
     }, []);
 
     useEffect(() => {
+        if (treeTrunk && treeCanopy) {
+            console.log(`treeTrunk width: ${treeTrunk.width} | canopy width: ${treeCanopy.width}`);
+        }
+        console.log();
         resizeTreeContainer();
     }, [assetLoadSuccess, isTrunkGraphicsLoaded, isCanopyGraphicsLoaded, app, treeTrunk, treeCanopy]);
 
@@ -246,12 +287,10 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                     <graphics
                         ref={ handleTreeTrunkGraphics }
                         context={ treeTrunk }
-                        // pivot={ trunkPivot }
                     />
                     <graphics
                         ref={ handleTreeCanopyGraphics }
                         context={ treeCanopy }
-                        // pivot={ canopyPivot }
                     />
                 </>
             </container>
