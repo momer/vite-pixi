@@ -171,23 +171,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             canopyRef.current &&
             containerRef.current
         ) {
-
-            console.log(`app screen width: ${ app.screen.width }, height: ${ app.screen.height }`);
-            console.log(`current x: ${ containerRef.current.x }, y: ${ containerRef.current.y }`);
-            console.log(`(getBounds) current x: ${ containerRef.current.getBounds().x }, y: ${ containerRef.current.y }`);
-
             containerRef.current.scale = calculateTreeScale(app.screen);
             containerRef.current.position = calculateTreePos(app.screen, containerRef.current);
-            console.log(`(getBounds) current x: ${ containerRef.current.getBounds().x }, y: ${ containerRef.current.y }`);
-
-            const circle = new Graphics();
-            circle.circle((app.screen.width / 2), app.screen.height / 2, 5);
-            circle.fill(0x00ff00);
-            app.stage.addChild(circle);
-
-            circle.circle(app.screen.width / 2, app.screen.height / 2, 1);
-            circle.fill(0x000000);
-
             containerRef.current.pivot = calculateCenterPivot(containerRef.current);
 
             canopyRef.current.visible = true;
