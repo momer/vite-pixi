@@ -1,5 +1,5 @@
-import { Application, extend, useApplication, useAssets, useTick } from '@pixi/react';
-import { Bounds, Circle, Container, Graphics, Point, Rectangle, Sprite } from 'pixi.js';
+import { Application, extend, useApplication, useAssets } from '@pixi/react';
+import { Bounds, Container, ContainerChild, Graphics, Point, Rectangle, Sprite } from 'pixi.js';
 import { ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 import useMeasure from 'react-use-measure';
 
@@ -7,6 +7,7 @@ import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
 import leafClusterFullOpenUrl from '/static/images/pixi/sakura/leaf-clusters/full-open.png';
 import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
+import type { PointData } from 'pixi.js/lib/maths/point/PointData';
 
 // todo, this can be exported and isolated
 // ref if needed:
@@ -30,6 +31,9 @@ const cssScreens = {
 
     '3xl': 1792,
 };
+
+
+const TREE_DEFAULT_SCALE = 0.65;
 
 extend({
     Container,
@@ -82,39 +86,69 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const trunkRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const canopyRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
 
-    interface TreePosOptions {
-        position: {
-            x: number;
-            y: number;
-        };
-        scale: number;
-    }
+    const calculateTreeScale = (screen: Rectangle): PointData | number => {
+        let scale: number = 1;
 
-    const calculateTreePos = (screen: Rectangle, treeBounds: Bounds): TreePosOptions => {
-        const opt = {
-            position: { x: 0, y: 0 },
-            scale: 0.65, // defaults
-        };
         const sw = screen.width;
-        const sh = screen.height;
-        console.log(`found screen width: ${ sw } and screen height: ${ sh }`);
-        const baseW = sw / 2;
 
         if (sw >= cssScreens['2xl']) {
-            opt.position.x = (baseW);
-            opt.position.y = (sh / 2);
+            scale = TREE_DEFAULT_SCALE;
         } else if (sw >= cssScreens['xl']) {
-            opt.position.x = (baseW / 2);
-            opt.scale = 0.6;
+            scale = 0.6;
         } else if (sw >= cssScreens['lg']) {
-            opt.position.x = (baseW / 2);
-            opt.scale = 0.6;
+            scale = 0.6;
         } else if (sw >= cssScreens['md']) {
-            opt.position.x = (baseW / 2);
-            opt.scale = 0.6;
+            scale = 0.6;
         }
 
-        return opt;
+        return scale;
+    };
+
+    const calculateTreePos = (screen: Rectangle, container: Container<ContainerChild> | null): PointData => {
+        const screenW = screen.width;
+        const screenH = screen.height;
+
+        // default position is center of the screen
+        const pos = new Point((screenW / 2), (screenH / 2));
+
+        if (!container) {
+            return pos;
+        }
+
+        const containerBounds = container.getBounds();
+
+        // Handle container offset - in order to get the container to be a perfect fit around
+        // the tree. This effectively centers the tree, given its offset within the container
+        pos.x -= containerBounds.minX;
+        pos.y -= containerBounds.minY;
+
+        if (screenW >= cssScreens['2xl']) {
+            // pos.x -= containerBounds.minX;
+            // pos.y -= containerBounds.minY;
+
+        } else if (screenW >= cssScreens['xl']) {
+            pos.x -= containerBounds.minX;
+            pos.y -= containerBounds.minY;
+        } else if (screenW >= cssScreens['lg']) {
+            pos.x -= containerBounds.minX;
+            pos.y -= containerBounds.minY;
+        } else if (screenW >= cssScreens['md']) {
+            pos.x -= containerBounds.minX;
+            pos.y -= containerBounds.minY;
+        }
+
+        return pos;
+    };
+
+    const calculateCenterPivot = (container: Container<ContainerChild> | null): PointData => {
+        if (!container) {
+            return new Point(0, 0);
+        }
+
+        return {
+            x: (container.getLocalBounds().maxX - container.getLocalBounds().minX) / 2,
+            y: (container.getLocalBounds().maxY - container.getLocalBounds().minY) / 2,
+        };
     };
 
     const resizeTreeContainer = useCallback(() => {
@@ -133,20 +167,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             console.log(`current x: ${ containerRef.current.x }, y: ${ containerRef.current.y }`);
             console.log(`(getBounds) current x: ${ containerRef.current.getBounds().x }, y: ${ containerRef.current.y }`);
 
-
-            let containerBounds = containerRef.current.getBounds();
-            const opt = calculateTreePos(app.screen, containerBounds);
-            containerRef.current.scale = opt.scale;
-
-            containerBounds = containerRef.current.getBounds();
-            console.log(`current x: ${ containerRef.current.x }, y: ${ containerRef.current.y }`);
-            console.log(`(getbounds) current x: ${ containerBounds.x }, y: ${ containerBounds.y }`);
-
-            console.log(`trunkref position: ${ trunkRef.current.bounds.x }, ${ trunkRef.current.getLocalBounds().y }`);
-            console.log(`canopy position: ${ canopyRef.current.getLocalBounds().x }, ${ canopyRef.current.getLocalBounds().y }`);
-
-            containerRef.current.x = (app.screen.width / 2) - containerBounds.minX;
-            containerRef.current.y = (app.screen.height / 2) - containerBounds.minY;
+            containerRef.current.scale = calculateTreeScale(app.screen);
+            containerRef.current.position = calculateTreePos(app.screen, containerRef.current);
 
             const circle = new Graphics();
             circle.circle(app.screen.width / 2, app.screen.height / 2, 5);
@@ -156,23 +178,17 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             circle.circle(app.screen.width / 2, app.screen.height / 2, 1);
             circle.fill(0x000000);
 
-            circle.circle(containerRef.current.width + containerRef.current.getBounds().x, app.screen.height / 2, 5);
-            circle.fill(0x00ff00);
-            circle.circle(containerRef.current.width + containerRef.current.getBounds().x, app.screen.height / 2, 1);
-            circle.fill(0x000000);
-
-            containerBounds = containerRef.current.getBounds();
-            containerRef.current.pivot = {
-                x: (containerRef.current.getLocalBounds().maxX - containerRef.current.getLocalBounds().minX) / 2,
-                y: (containerRef.current.getLocalBounds().maxY - containerRef.current.getLocalBounds().minY) / 2,
-            };
+            containerRef.current.pivot = calculateCenterPivot(containerRef.current);
+            // containerRef.current.pivot = {
+            //     x: (containerRef.current.getLocalBounds().maxX - containerRef.current.getLocalBounds().minX) / 2,
+            //     y: (containerRef.current.getLocalBounds().maxY - containerRef.current.getLocalBounds().minY) / 2,
+            // };
 
             // canopyRef.current.position = opt.position;
             canopyRef.current.visible = true;
 
             // trunkRef.current.position = opt.position;
             trunkRef.current.visible = true;
-
         }
     }, [assetLoadSuccess, isTrunkGraphicsLoaded, isCanopyGraphicsLoaded, app]);
 
