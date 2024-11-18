@@ -1,13 +1,13 @@
 import { Application, extend, useApplication, useAssets } from '@pixi/react';
-import { Bounds, Container, ContainerChild, Graphics, Point, Rectangle, Sprite } from 'pixi.js';
+import { Container, ContainerChild, Graphics, Point, Rectangle, Sprite } from 'pixi.js';
 import { ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 import useMeasure from 'react-use-measure';
 
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
-import leafClusterFullOpenUrl from '/static/images/pixi/sakura/leaf-clusters/full-open.png';
 import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
 import type { PointData } from 'pixi.js/lib/maths/point/PointData';
+import { LeafClusterSprite } from '@/components/pixi/LeafCluster';
 
 extend({
     Container,
@@ -49,21 +49,37 @@ export interface LeafCollectionProps {
     tree: Tree;
 }
 
-export const LeafCollection = ({ tree }: LeafCollectionProps) => {
+export const LeafCollection = forwardRef<HTMLDivElement>((props, ref) => {
+    const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
+    const [isInitializing, setIsInitializing] = useState(true);
+    const [error, setError] = useState<unknown>(null);
 
-    const {
-        assets: [
-            leafClusterFullOpen,
-        ],
-        isSuccess,
-    } = useAssets([
-        {
-            alias: 'leafClusterFullOpen',
-            src: leafClusterFullOpenUrl,
-        }
-    ]);
+    // initialize the LeafCluster assets
+    useEffect(() => {
+        const initAssets = async () => {
+            setIsInitializing(true);
+            try {
+                await LeafClusterSprite.init();
+            } catch (err: unknown) {
+                setError(err);
+            } finally {
+                setIsInitializing(false);
+            }
+        };
 
-};
+        initAssets();
+    }, []);
+
+    if (isInitializing) {
+        return <></>;
+    }
+
+    return (
+        <container isRenderGroup={ true } ref={ collectionContainerRef } sortableChildren={ true }>
+        </container>
+    );
+});
+LeafCollection.displayName = 'LeafCollection';
 
 export interface TreeContainerOptions {
     ref: ForwardedRef<HTMLDivElement>;
@@ -81,7 +97,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const [isCanopyGraphicsLoaded, setIsCanopyGraphicsLoaded] = useState(false);
     const [isTrunkGraphicsLoaded, setIsTrunkGraphicsLoaded] = useState(false);
 
-    const containerRef: MutableRefObject<Container | null> = useRef<Container>(null);
+    const primaryTreeContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const trunkRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const canopyRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
 
@@ -141,7 +157,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             pos.y -= containerBounds.minY;
         } else {
             // pos.x -= containerBounds.minX;
-            pos.y -= (4 * containerBounds.minY)/3;
+            pos.y -= (4 * containerBounds.minY) / 3;
         }
 
         return pos;
@@ -167,11 +183,11 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             app?.screen &&
             trunkRef.current &&
             canopyRef.current &&
-            containerRef.current
+            primaryTreeContainerRef.current
         ) {
-            containerRef.current.scale = calculateTreeScale(app.screen);
-            containerRef.current.position = calculateTreePos(app.screen, containerRef.current);
-            containerRef.current.pivot = calculateCenterPivot(containerRef.current);
+            primaryTreeContainerRef.current.scale = calculateTreeScale(app.screen);
+            primaryTreeContainerRef.current.position = calculateTreePos(app.screen, primaryTreeContainerRef.current);
+            primaryTreeContainerRef.current.pivot = calculateCenterPivot(primaryTreeContainerRef.current);
 
             canopyRef.current.visible = true;
             trunkRef.current.visible = true;
@@ -255,7 +271,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
     return (
         isSuccess && app?.renderer && app?.screen && (
-            <container isRenderGroup={ true } ref={ containerRef } sortableChildren={ true }>
+            <container isRenderGroup={ true } ref={ primaryTreeContainerRef } sortableChildren={ true }>
                 <>
                     <graphics
                         ref={ handleTreeTrunkGraphics }
@@ -265,13 +281,17 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                         ref={ handleTreeCanopyGraphics }
                         context={ treeCanopy }
                     />
+                    <LeafCollection
+                        isRenderGroup={ true }
+                        ref={ primaryTreeContainerRef }
+                        sortableChildren={ true }
+                    />
                 </>
             </container>
         )
     );
 });
-
-TreeContainer.displayName = 'HomeDemo';
+TreeContainer.displayName = 'TreeContainer';
 
 export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
     return (
