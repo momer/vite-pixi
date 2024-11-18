@@ -212,15 +212,15 @@ export function Home() {
                 </Helmet>
 
                 <div
-                    className={ clsx('flex h-[calc(100vh)] lg:h-[calc(100vh-10rem)]') }
+                    className={ clsx('flex h-[calc(100vh)] md:h-[calc(100vh-4rem)] lg:h-[calc(100vh-10rem)]') }
                     ref={ myRefCallback }
                 >
 
                     <div
-                        className={ clsx('mx-auto max-w-screen-3xl px-8 md:px-6 md:ml-12 lg:px-8 2xl:ml-16 mt-96 md:mt-[36rem]') }
+                        className={ clsx('mx-auto 2xl:max-w-screen-3xl px-8 md:px-0 2xl:ml-16 xs:mt-[34rem] sm:mt-[32rem] md:mt-[36rem] lg:mt-[36rem]') }
                     >
                         <div className="mx-auto md:w-full">
-                            <div className="md:w-full bg-white border-8 border-black mx-auto p-4">
+                            <div className="md:w-full bg-white  mx-auto p-4">
                                 <FadeIn className="w-full"
                                         viewport={ { once: true, margin: '0px 0px 0px' } }
                                         transition={ {
@@ -229,11 +229,11 @@ export function Home() {
                                             delayChildren: 0.5,
                                             staggerChildren: 0.5
                                         } }>
-                                    <h1 className="font-display text-5xl font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
+                                    <h1 className="font-display text-5xl text-center 2xl:text-left font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
                                         Systems thinking in bloom.
                                     </h1>
                                 </FadeIn>
-                                <motion.p className="mt-6 text-xl text-neutral-500"
+                                <motion.p className="mt-6 text-xl text-neutral-500 text-center 2xl:text-left"
                                           variants={ {
                                               hidden: { opacity: 0, },
                                               visible: { opacity: 1, y: 0 },

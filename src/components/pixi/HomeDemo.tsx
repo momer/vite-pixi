@@ -38,7 +38,7 @@ const cssScreens = {
     '3xl': 1792,
 };
 
-const TREE_DEFAULT_SCALE = 0.7;
+const TREE_DEFAULT_SCALE = 0.75;
 
 export type Tree = {
     trunk: MutableRefObject<Graphics | null>;
@@ -97,7 +97,11 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         } else if (sw >= cssScreens['lg']) {
             scale = 0.6;
         } else if (sw >= cssScreens['md']) {
-            scale = 0.6;
+            scale = 0.55;
+        } else if (sw >= cssScreens['sm']) {
+            scale = 0.5;
+        } else {
+            scale = 0.45;
         }
 
         return scale;
@@ -123,18 +127,22 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         pos.x -= containerBounds.minX * container.scale.x;
         pos.y -= containerBounds.minY * container.scale.y;
 
+        // offset x for 2xl screens
         if (screenW >= cssScreens['2xl']) {
-            // pos.x += (3 * containerBounds.width) / 4;
-            // pos.y -= containerBounds.height / 16;
+            pos.x += (4 * containerBounds.width) / 7;
+            // pos.y -= containerBounds.height / 32;
         } else if (screenW >= cssScreens['xl']) {
-            pos.x -= containerBounds.minX;
+            // pos.x -= containerBounds.minX;
             pos.y -= containerBounds.minY;
         } else if (screenW >= cssScreens['lg']) {
-            pos.x -= containerBounds.minX;
+            // pos.x -= containerBounds.minX;
             pos.y -= containerBounds.minY;
         } else if (screenW >= cssScreens['md']) {
-            pos.x -= containerBounds.minX;
+            // pos.x -= containerBounds.minX;
             pos.y -= containerBounds.minY;
+        } else {
+            // pos.x -= containerBounds.minX;
+            pos.y -= (4 * containerBounds.minY)/3;
         }
 
         console.log(`[after] container bounds: ${container.getBounds()} | pos: ${JSON.stringify(pos)}`);
