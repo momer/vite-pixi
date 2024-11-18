@@ -9,6 +9,12 @@ import leafClusterFullOpenUrl from '/static/images/pixi/sakura/leaf-clusters/ful
 import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
 import type { PointData } from 'pixi.js/lib/maths/point/PointData';
 
+extend({
+    Container,
+    Graphics,
+    Sprite,
+});
+
 // todo, this can be exported and isolated
 // ref if needed:
 // https://tailwindcss.com/docs/screens
@@ -32,14 +38,7 @@ const cssScreens = {
     '3xl': 1792,
 };
 
-
-const TREE_DEFAULT_SCALE = 0.65;
-
-extend({
-    Container,
-    Graphics,
-    Sprite,
-});
+const TREE_DEFAULT_SCALE = 0.7;
 
 export type Tree = {
     trunk: MutableRefObject<Graphics | null>;
@@ -115,17 +114,18 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             return pos;
         }
 
-        const containerBounds = container.getBounds();
+        console.log(`[before] container bounds: ${container.getBounds()} | pos: ${JSON.stringify(pos)}`);
+        const containerBounds = container.getLocalBounds();
 
         // Handle container offset - in order to get the container to be a perfect fit around
         // the tree. This effectively centers the tree, given its offset within the container
-        pos.x -= containerBounds.minX;
-        pos.y -= containerBounds.minY;
+        // Should use container.getLocalBounds.x (or minX) for this instead.
+        pos.x -= containerBounds.minX * container.scale.x;
+        pos.y -= containerBounds.minY * container.scale.y;
 
         if (screenW >= cssScreens['2xl']) {
-            // pos.x -= containerBounds.minX;
-            // pos.y -= containerBounds.minY;
-
+            // pos.x += (3 * containerBounds.width) / 4;
+            // pos.y -= containerBounds.height / 16;
         } else if (screenW >= cssScreens['xl']) {
             pos.x -= containerBounds.minX;
             pos.y -= containerBounds.minY;
@@ -137,6 +137,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             pos.y -= containerBounds.minY;
         }
 
+        console.log(`[after] container bounds: ${container.getBounds()} | pos: ${JSON.stringify(pos)}`);
         return pos;
     };
 
@@ -169,9 +170,10 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
             containerRef.current.scale = calculateTreeScale(app.screen);
             containerRef.current.position = calculateTreePos(app.screen, containerRef.current);
+            console.log(`(getBounds) current x: ${ containerRef.current.getBounds().x }, y: ${ containerRef.current.y }`);
 
             const circle = new Graphics();
-            circle.circle(app.screen.width / 2, app.screen.height / 2, 5);
+            circle.circle((app.screen.width / 2), app.screen.height / 2, 5);
             circle.fill(0x00ff00);
             app.stage.addChild(circle);
 
@@ -179,15 +181,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             circle.fill(0x000000);
 
             containerRef.current.pivot = calculateCenterPivot(containerRef.current);
-            // containerRef.current.pivot = {
-            //     x: (containerRef.current.getLocalBounds().maxX - containerRef.current.getLocalBounds().minX) / 2,
-            //     y: (containerRef.current.getLocalBounds().maxY - containerRef.current.getLocalBounds().minY) / 2,
-            // };
 
-            // canopyRef.current.position = opt.position;
             canopyRef.current.visible = true;
-
-            // trunkRef.current.position = opt.position;
             trunkRef.current.visible = true;
         }
     }, [assetLoadSuccess, isTrunkGraphicsLoaded, isCanopyGraphicsLoaded, app]);
@@ -232,8 +227,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                     const { width, height } = entry.contentRect;
                     console.log('Div resized:', width, height);
                     if (app && app.renderer) {
-                        console.log(`resizin ${ isTrunkGraphicsLoaded }`);
-                        // app.renderer.resize(width, height);
+                        app.renderer.resize(width, height);
                         resizeTreeContainer();
                     }
                 }
@@ -243,15 +237,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         }
     }, [ref, app]);
 
-    // resize renderer if view of component changes size
-    useEffect(() => {
-        if (app) {
-            // app.renderer.resize(bounds.width, bounds.height);
-        }
-    }, [app, bounds]);
-
     const handleTreeTrunkGraphics = useCallback((trunk: Graphics) => {
-        console.log(`in the callback, here's trunk: ${ trunk.width }`);
         if (trunk) {
             // https://www.pixiplayground.com/#/edit/RMMgRsw1qqxpfUbS6-BEw
             //
@@ -290,7 +276,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
     return (
         isSuccess && app?.renderer && app?.screen && (
-            <container ref={ containerRef } sortableChildren={ true }>
+            <container isRenderGroup={ true } ref={ containerRef } sortableChildren={ true }>
                 <>
                     <graphics
                         ref={ handleTreeTrunkGraphics }

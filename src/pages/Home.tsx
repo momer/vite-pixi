@@ -217,10 +217,10 @@ export function Home() {
                 >
 
                     <div
-                        className={ clsx('mx-auto max-w-screen-3xl px-6 ml-12 lg:px-8 lg:ml-16 mt-96 md:mt-[36rem]') }
+                        className={ clsx('mx-auto max-w-screen-3xl px-8 md:px-6 md:ml-12 lg:px-8 2xl:ml-16 mt-96 md:mt-[36rem]') }
                     >
                         <div className="mx-auto md:w-full">
-                            <div className="md:w-full">
+                            <div className="md:w-full bg-white border-8 border-black mx-auto p-4">
                                 <FadeIn className="w-full"
                                         viewport={ { once: true, margin: '0px 0px 0px' } }
                                         transition={ {
