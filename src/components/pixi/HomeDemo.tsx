@@ -118,7 +118,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             return pos;
         }
 
-        console.log(`[before] container bounds: ${container.getBounds()} | pos: ${JSON.stringify(pos)}`);
         const containerBounds = container.getLocalBounds();
 
         // Handle container offset - in order to get the container to be a perfect fit around
@@ -145,7 +144,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             pos.y -= (4 * containerBounds.minY)/3;
         }
 
-        console.log(`[after] container bounds: ${container.getBounds()} | pos: ${JSON.stringify(pos)}`);
         return pos;
     };
 
@@ -200,25 +198,18 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     ], {
         onProgress: (progress: number) => {
             if (progress >= 1) {
-                console.log('progress completed:', progress);
                 setAssetLoadSuccess(true);
             }
         },
     });
-    useEffect(() => {
-        console.log('in use effect that should render 3 times if this is re-rendering...');
-    });
 
     // initial load, start observingt he div parent for sizing
     useEffect(() => {
-        console.log(`app? ${ app } ; renderer? ${ app.renderer }`);
         if (ref) {
             ref = ref as MutableRefObject<HTMLDivElement>;
-            console.log(`found ref: ${ ref.current }`);
             const observer = new ResizeObserver((entries) => {
                 for (const entry of entries) {
                     const { width, height } = entry.contentRect;
-                    console.log('Div resized:', width, height);
                     if (app && app.renderer) {
                         app.renderer.resize(width, height);
                         resizeTreeContainer();
@@ -253,17 +244,12 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             //     console.log(graphics.containsPoint(transformedPoint));
 
             // set the ref for other components
-            console.log(`in the callback, here's canopy: ${ canopy.width }`);
             canopyRef.current = canopy;
             setIsCanopyGraphicsLoaded(true);
         }
     }, []);
 
     useEffect(() => {
-        if (treeTrunk && treeCanopy) {
-            console.log(`treeTrunk width: ${ treeTrunk.width } | canopy width: ${ treeCanopy.width }`);
-        }
-        console.log();
         resizeTreeContainer();
     }, [assetLoadSuccess, isTrunkGraphicsLoaded, isCanopyGraphicsLoaded, app, treeTrunk, treeCanopy]);
 
@@ -288,10 +274,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 TreeContainer.displayName = 'HomeDemo';
 
 export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
-    useEffect(() => {
-        console.log('calling ref callback');
-    }, [ref]);
-
     return (
         <Application
             autoStart
