@@ -76,17 +76,18 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
 
         let pointIsContained = false;
         // assume bounds will hold during this loop
-        const bounds = props.tree.canopy.current.getLocalBounds();
-        let leafClusterPoint: Point | null = null;
+        const bounds = props.tree.canopy.current.getBounds();
+        let leafClusterPoint: PointData | null = null;
         while (!pointIsContained) {
             if (leafClusterPoint) {
                 console.log('Leaf cluster point miss! Generating again.');
             }
-             leafClusterPoint = new Point(
+             const globalLeafClusterPoint = new Point(
                 quickRound(randomFloatFromInterval(bounds.minX, bounds.maxX), 2),
                 quickRound(randomFloatFromInterval(bounds.minY, bounds.maxY), 2)
             );
-            pointIsContained = bounds.containsPoint(leafClusterPoint.x, leafClusterPoint.y);
+            leafClusterPoint = props.tree.canopy.current.toLocal(globalLeafClusterPoint);
+            pointIsContained = props.tree.canopy.current.containsPoint(leafClusterPoint);
         }
 
         if (!leafClusterPoint) {

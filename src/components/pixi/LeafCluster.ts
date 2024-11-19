@@ -172,7 +172,7 @@ export class LeafCluster {
 
     constructor(
         animationTitle: AnimationTitle,
-        initialPosition?: Point,
+        initialPosition?: PointData,
         anchor?: PointData | number,
         animationSpeed?: number,
         stage?: Container,
