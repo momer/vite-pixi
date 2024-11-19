@@ -11,8 +11,8 @@ import {
 } from 'pixi.js';
 
 import { AnimatedSprite } from '@/lib/pixi/scene/AnimatedSprite';
-// @ts-expect-error import static asset
 import leafClusterFullOpenUrl from '/static/images/pixi/sakura/leaf-clusters/full-open.png';
+import { Mutex } from 'async-mutex';
 
 let spritesheet: Spritesheet;
 
@@ -67,6 +67,11 @@ export class LeafCluster {
     private static frameH = 75;
     private static spritesheetFramesPerRow = 1;
 
+    private static _isInitializing = false;
+    private static _isInitialized = false;
+
+    private static loadMutex = new Mutex();
+
     private _sprite!: AnimatedSprite;
 
     private _currentAnimationTitle?: AnimationTitle;
@@ -76,6 +81,19 @@ export class LeafCluster {
     private _previousAnimationSpeed = 0.1;
 
     public static async init()  {
+        let shouldInitialize = false;
+        await this.loadMutex.runExclusive(async () => {
+            if (this._isInitializing || spritesheet) {
+                return;
+            }
+            this._isInitializing = true;
+            shouldInitialize = true;
+        });
+
+        if (!shouldInitialize) {
+            return;
+        }
+
         if (Object.keys(leafClusterData.frames).length === 0) {
             for (const [key, frame] of spritesheetGenerator(leafClusterFrames, this.frameW, this.frameH, this.spritesheetFramesPerRow)) {
                 leafClusterData.frames[key] = frame;
@@ -91,6 +109,7 @@ export class LeafCluster {
         );
 
         await spritesheet.parse();
+        this._isInitialized = true;
     }
 
     public get sprite(): AnimatedSprite {

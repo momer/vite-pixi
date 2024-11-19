@@ -104,7 +104,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
 
         // I'm not a huge fan of digging into it like this, but there we are
         // I also don't want to extend sprite.
-        leafCluster.sprite.scale.set(0.35 * Math.random() * 0.3);
+        leafCluster.sprite.scale.set(5.35 * Math.random() * 0.3);
         leafClusters.current.push(leafCluster);
     };
 
@@ -115,6 +115,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
             try {
                 await LeafCluster.init();
             } catch (err: unknown) {
+                console.log(`caught an error: ${err}`);
                 setError(err);
             } finally {
                 setIsInitializing(false);
@@ -128,6 +129,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
         if (isInitializing || !collectionContainerRef?.current) {
             return;
         }
+        console.log('continuing as isInitializing is false');
 
         // create a leaf
         addLeafCluster(
