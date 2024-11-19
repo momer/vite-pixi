@@ -62,7 +62,7 @@ function* spritesheetGenerator(frames: string[], w: number, h: number, framesPer
     }
 }
 
-export class LeafClusterSprite {
+export class LeafCluster {
     private static frameW = 75; // sprite size * number of sprites per row
     private static frameH = 75;
     private static spritesheetFramesPerRow = 1;
@@ -172,7 +172,6 @@ export class LeafClusterSprite {
             this.addToStage(stage);
         }
         if (play) {
-
             this.sprite.play();
         }
     }

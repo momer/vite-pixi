@@ -7,7 +7,9 @@ import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
 import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
 import type { PointData } from 'pixi.js/lib/maths/point/PointData';
-import { LeafClusterSprite } from '@/components/pixi/LeafCluster';
+import { AnimationTitle as LeafClusterAnimationTitle, LeafCluster } from '@/components/pixi/LeafCluster';
+import { randomFloatFromInterval, randomIntFromInterval } from '@/utils/math/rand';
+import { quickRound } from '@/utils/math/floats';
 
 extend({
     Container,
@@ -47,19 +49,71 @@ export type Tree = {
 
 export interface LeafCollectionProps {
     tree: Tree;
+    isCanopyGraphicsLoading: boolean;
+    isTrunkGraphicsLoading: boolean;
 }
 
-export const LeafCollection = forwardRef<HTMLDivElement>((props, ref) => {
+export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((props, primaryTreeContainerRef) => {
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
+    const [numLeafClusters, setNumLeafClusters] = useState<number>(1000);
+    const leafClusters = useRef<Array<LeafCluster>>([]);
+
+    const addLeafCluster = (
+        animationTitle: LeafClusterAnimationTitle,
+        initialPosition?: Point,
+        anchor?: Point | number,
+        animationSpeed?: number,
+        stage?: Container,
+        play?: boolean
+    ) => {
+        if (!props.tree.canopy?.current || !props.tree.trunk?.current) {
+            return;
+        }
+        // ref: https://pixijs.com/8.x/examples/basic/particle-container
+
+
+        let pointIsContained = false;
+        // assume bounds will hold during this loop
+        const bounds = props.tree.canopy.current.getLocalBounds();
+        let leafClusterPoint: Point | null = null;
+        while (!pointIsContained) {
+            if (leafClusterPoint) {
+                console.log('Leaf cluster point miss! Generating again.');
+            }
+             leafClusterPoint = new Point(
+                quickRound(randomFloatFromInterval(bounds.minX, bounds.maxX), 2),
+                quickRound(randomFloatFromInterval(bounds.minY, bounds.maxY), 2)
+            );
+            pointIsContained = bounds.containsPoint(leafClusterPoint.x, leafClusterPoint.y);
+        }
+
+        if (!leafClusterPoint) {
+            throw new Error('failed to find a cluster point!');
+        }
+
+        const leafCluster = new LeafCluster(
+            animationTitle,
+            leafClusterPoint,
+            anchor,
+            animationSpeed,
+            stage,
+            play
+        );
+
+        // I'm not a huge fan of digging into it like this, but there we are
+        // I also don't want to extend sprite.
+        leafCluster.sprite.scale.set(0.35 * Math.random() * 0.3);
+        leafClusters.current.push(leafCluster);
+    };
 
     // initialize the LeafCluster assets
     useEffect(() => {
         const initAssets = async () => {
             setIsInitializing(true);
             try {
-                await LeafClusterSprite.init();
+                await LeafCluster.init();
             } catch (err: unknown) {
                 setError(err);
             } finally {
@@ -69,6 +123,23 @@ export const LeafCollection = forwardRef<HTMLDivElement>((props, ref) => {
 
         initAssets();
     }, []);
+
+    useEffect(() => {
+        if (isInitializing || !collectionContainerRef?.current) {
+            return;
+        }
+
+        // create a leaf
+        addLeafCluster(
+            LeafClusterAnimationTitle.FULL_OPEN,
+            undefined,
+            0.5,
+            1,
+            collectionContainerRef.current,
+            true
+        );
+
+    }, [isInitializing]);
 
     if (isInitializing) {
         return <></>;
@@ -94,8 +165,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     // Both should be the same for trunk and canopy
 
     const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(true);
-    const [isCanopyGraphicsLoaded, setIsCanopyGraphicsLoaded] = useState(false);
-    const [isTrunkGraphicsLoaded, setIsTrunkGraphicsLoaded] = useState(false);
+    const [isCanopyGraphicsLoading, setIsCanopyGraphicsLoading] = useState(true);
+    const [isTrunkGraphicsLoading, setIsTrunkGraphicsLoading] = useState(true);
 
     const primaryTreeContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const trunkRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
@@ -192,7 +263,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             canopyRef.current.visible = true;
             trunkRef.current.visible = true;
         }
-    }, [assetLoadSuccess, isTrunkGraphicsLoaded, isCanopyGraphicsLoaded, app]);
+    }, [assetLoadSuccess, isTrunkGraphicsLoading, isCanopyGraphicsLoading, app]);
 
     const {
         assets: [
@@ -247,7 +318,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
             // set the ref for other components
             trunkRef.current = trunk;
-            setIsTrunkGraphicsLoaded(true);
+            setIsTrunkGraphicsLoading(false);
         }
     }, []);
 
@@ -261,13 +332,13 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
             // set the ref for other components
             canopyRef.current = canopy;
-            setIsCanopyGraphicsLoaded(true);
+            setIsCanopyGraphicsLoading(false);
         }
     }, []);
 
     useEffect(() => {
         resizeTreeContainer();
-    }, [assetLoadSuccess, isTrunkGraphicsLoaded, isCanopyGraphicsLoaded, app, treeTrunk, treeCanopy]);
+    }, [assetLoadSuccess, isTrunkGraphicsLoading, isCanopyGraphicsLoading, app, treeTrunk, treeCanopy]);
 
     return (
         isSuccess && app?.renderer && app?.screen && (
@@ -282,6 +353,14 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                         context={ treeCanopy }
                     />
                     <LeafCollection
+                        tree={
+                            {
+                                trunk: trunkRef,
+                                canopy: canopyRef
+                            }
+                        }
+                        isCanopyGraphicsLoading={ isCanopyGraphicsLoading }
+                        isTrunkGraphicsLoading={ isTrunkGraphicsLoading }
                         isRenderGroup={ true }
                         ref={ primaryTreeContainerRef }
                         sortableChildren={ true }
