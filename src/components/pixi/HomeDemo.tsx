@@ -70,7 +70,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
-    const [numLeafClusters, setNumLeafClusters] = useState<number>(10000);
+    const [numLeafClusters, setNumLeafClusters] = useState<number>(1000);
     const leafClusters = useRef<Array<LeafCluster>>([]);
 
     const addLeafCluster = async (
@@ -164,14 +164,14 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
 
             // assume bounds will hold during this loop
             const blossomableArea = props.tree.blossomableArea.current;
-            const containerBounds = blossomableArea.getBounds();
-            const availableBlossomArea = containerBounds.width * containerBounds.height * TREE_BLOSSOMABLE_AREA_DENSITY;
-            const leafClusterPoint: PointData | null = null;
-            // ref: GraphicsContext#.containsPoint
+            const containerBounds = blossomableArea.getLocalBounds();
+            const availableBlossomArea: number = containerBounds.width * containerBounds.height;
+            let leafClusterPoint: PointData | null = null;
 
             const instructions = blossomableArea.context.instructions;
             const tmpPoint = new Point();
 
+            // ref: GraphicsContext#.containsPoint
             for (let i = 0; i < instructions.length; i++) {
                 const instruction = instructions[i];
 
@@ -195,55 +195,62 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
                     // will need to use a while loop to make sure the shape contains the point,
                     // holes mean that it could be missed.
 
-                    let leafClusterPoint: PointData | null = null;
+                    leafClusterPoint = null;
                     const shapeRect: Rectangle = shape.getBounds();
+                    const shapeArea: number = shapeRect.width * shapeRect.height;
+                    const pctTotalArea: number = quickRound(shapeArea / availableBlossomArea, 2);
+                    // scale num clusters according to density estimate
+                    const targetNumLeafClusters: number = quickRound(pctTotalArea * numLeafClusters, 0);
 
-                    while (!pointIsContained) {
-                        const localLeafClusterPoint = new Point(
-                            quickRound(randomFloatFromInterval(shapeRect.x, shapeRect.x + shapeRect.width), 2),
-                            quickRound(randomFloatFromInterval(shapeRect.y, shapeRect.y + shapeRect.height), 2)
-                        );
+                    for (let k = 0; k < targetNumLeafClusters; k++) {
+                        pointIsContained = false;
+                        while (!pointIsContained) {
+                            const localLeafClusterPoint = new Point(
+                                quickRound(randomFloatFromInterval(shapeRect.x, shapeRect.x + shapeRect.width), 2),
+                                quickRound(randomFloatFromInterval(shapeRect.y, shapeRect.y + shapeRect.height), 2)
+                            );
 
-                        if (instruction.action === 'fill') {
-                            pointIsContained = shape.contains(localLeafClusterPoint.x, localLeafClusterPoint.y);
-                        } else {
-                            pointIsContained = shape.strokeContains(localLeafClusterPoint.x, localLeafClusterPoint.y, (style as ConvertedStrokeStyle).width);
-                        }
+                            if (instruction.action === 'fill') {
+                                pointIsContained = shape.contains(localLeafClusterPoint.x, localLeafClusterPoint.y);
+                            } else {
+                                pointIsContained = shape.strokeContains(localLeafClusterPoint.x, localLeafClusterPoint.y, (style as ConvertedStrokeStyle).width);
+                            }
 
-                        const holes = data.hole;
+                            const holes = data.hole;
 
-                        if (holes) {
-                            const holeShapes = holes.shapePath?.shapePrimitives;
+                            if (holes) {
+                                const holeShapes = holes.shapePath?.shapePrimitives;
 
-                            if (holeShapes) {
-                                for (let k = 0; k < holeShapes.length; k++) {
-                                    if (holeShapes[k].shape.contains(localLeafClusterPoint.x, localLeafClusterPoint.y)) {
-                                        pointIsContained = false;
+                                if (holeShapes) {
+                                    for (let l = 0; l < holeShapes.length; l++) {
+                                        if (holeShapes[l].shape.contains(localLeafClusterPoint.x, localLeafClusterPoint.y)) {
+                                            pointIsContained = false;
+                                        }
                                     }
                                 }
                             }
+
+                            leafClusterPoint = transform ? transform.apply(localLeafClusterPoint, tmpPoint) : localLeafClusterPoint;
                         }
 
-                        leafClusterPoint = transform ? transform.apply(localLeafClusterPoint, tmpPoint) : localLeafClusterPoint;
+                        if (!leafClusterPoint) {
+                            throw new Error('failed to find a cluster point!');
+                        }
+
+                        const leafCluster = new LeafCluster(
+                            LeafClusterAnimationTitle.FULL_OPEN,
+                            leafClusterPoint,
+                            0.5,
+                            1,
+                            collectionContainerRef.current,
+                            true,
+                        );
+
+                        // I'm not a huge fan of digging into it like this, but there we are
+                        // I also don't want to extend sprite.
+                        leafCluster.sprite.scale.set(1 * (Math.random() * 0.5));
+                        leafClusters.current.push(leafCluster);
                     }
-
-                    if (!leafClusterPoint) {
-                        throw new Error('failed to find a cluster point!');
-                    }
-
-                    const leafCluster = new LeafCluster(
-                        LeafClusterAnimationTitle.FULL_OPEN,
-                        leafClusterPoint,
-                        0.5,
-                        1,
-                        collectionContainerRef.current,
-                        true,
-                    );
-
-                    // I'm not a huge fan of digging into it like this, but there we are
-                    // I also don't want to extend sprite.
-                    leafCluster.sprite.scale.set(1 * (Math.random() * 0.5));
-                    leafClusters.current.push(leafCluster);
                 }
             }
         })();
