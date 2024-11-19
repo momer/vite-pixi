@@ -1,5 +1,14 @@
 import { Application, extend, useApplication, useAssets } from '@pixi/react';
-import { Container, ContainerChild, Graphics, Point, Rectangle, Sprite } from 'pixi.js';
+import {
+    Container,
+    ContainerChild,
+    ConvertedStrokeStyle,
+    FillInstruction,
+    Graphics,
+    Point,
+    Rectangle,
+    Sprite
+} from 'pixi.js';
 import { ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 import useMeasure from 'react-use-measure';
 
@@ -42,6 +51,7 @@ const cssScreens = {
 };
 
 const TREE_DEFAULT_SCALE = 0.75;
+const TREE_BLOSSOMABLE_AREA_DENSITY = 0.6;
 
 export type Tree = {
     trunk: MutableRefObject<Graphics | null>;
@@ -79,15 +89,23 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
 
         let pointIsContained = false;
         // assume bounds will hold during this loop
-        const bounds = props.tree.blossomableArea.current.getBounds();
+        const containerBounds = props.tree.blossomableArea.current.getBounds();
+        const availableBlossomArea = containerBounds.width * containerBounds.height * TREE_BLOSSOMABLE_AREA_DENSITY;
         let leafClusterPoint: PointData | null = null;
+        // ref: GraphicsContext#.containsPoint
+        // The goal:
+        // 1. iterate through each instruction, and
+        // 2. iterate each instruction's shape paths,
+        // 3. For each shape path, calculate its area, and calculate that area's percentage of availableBlossomArea
+        // 4. Multiply that percentage against
+
         while (!pointIsContained) {
             if (leafClusterPoint) {
                 console.log('Leaf cluster point miss! Generating again.');
             }
             const globalLeafClusterPoint = new Point(
-                quickRound(randomFloatFromInterval(bounds.minX, bounds.maxX), 2),
-                quickRound(randomFloatFromInterval(bounds.minY, bounds.maxY), 2)
+                quickRound(randomFloatFromInterval(containerBounds.minX, containerBounds.maxX), 2),
+                quickRound(randomFloatFromInterval(containerBounds.minY, containerBounds.maxY), 2)
             );
             leafClusterPoint = props.tree.blossomableArea.current.toLocal(globalLeafClusterPoint);
             pointIsContained = props.tree.blossomableArea.current.containsPoint(leafClusterPoint);
@@ -134,17 +152,99 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
             if (isInitializing || !collectionContainerRef?.current) {
                 return;
             }
+            if (!props.tree.canopy?.current || !props.tree.trunk?.current || !props.tree.blossomableArea?.current) {
+                return;
+            }
+            // The goal:
+            // 1. iterate through each instruction, and
+            // 2. iterate each instruction's shape paths,
+            // 3. For each shape path, calculate its area, and calculate that area's percentage of availableBlossomArea
+            // 4. Multiply that percentage against numLeafClusters to discover how many points this section should have
+            // 5. generate that many random points within its bounds, and move on to the next path
 
-            for (let i = 0; i < numLeafClusters; i++) {
-                // create a leaf
-                addLeafCluster(
-                    LeafClusterAnimationTitle.FULL_OPEN,
-                    undefined,
-                    0.5,
-                    1,
-                    collectionContainerRef.current,
-                    true
-                );
+            // assume bounds will hold during this loop
+            const blossomableArea = props.tree.blossomableArea.current;
+            const containerBounds = blossomableArea.getBounds();
+            const availableBlossomArea = containerBounds.width * containerBounds.height * TREE_BLOSSOMABLE_AREA_DENSITY;
+            const leafClusterPoint: PointData | null = null;
+            // ref: GraphicsContext#.containsPoint
+
+            const instructions = blossomableArea.context.instructions;
+            const tmpPoint = new Point();
+
+            for (let i = 0; i < instructions.length; i++) {
+                const instruction = instructions[i];
+
+                const data = instruction.data as FillInstruction['data'];
+                const path = data.path;
+
+                if (!instruction.action || !path) continue;
+
+                const style = data.style;
+                const shapes = path.shapePath.shapePrimitives;
+
+                // TODO: Starting point is to create 1 point per shape. Next: calculate area
+                for (let j = 0; j < shapes.length; j++) {
+                    const shape = shapes[j].shape;
+
+                    if (!style || !shape) continue;
+
+                    const transform = shapes[j].transform;
+
+                    let pointIsContained = false;
+                    // will need to use a while loop to make sure the shape contains the point,
+                    // holes mean that it could be missed.
+
+                    let leafClusterPoint: PointData | null = null;
+                    const shapeRect: Rectangle = shape.getBounds();
+
+                    while (!pointIsContained) {
+                        const localLeafClusterPoint = new Point(
+                            quickRound(randomFloatFromInterval(shapeRect.x, shapeRect.x + shapeRect.width), 2),
+                            quickRound(randomFloatFromInterval(shapeRect.y, shapeRect.y + shapeRect.height), 2)
+                        );
+
+                        if (instruction.action === 'fill') {
+                            pointIsContained = shape.contains(localLeafClusterPoint.x, localLeafClusterPoint.y);
+                        } else {
+                            pointIsContained = shape.strokeContains(localLeafClusterPoint.x, localLeafClusterPoint.y, (style as ConvertedStrokeStyle).width);
+                        }
+
+                        const holes = data.hole;
+
+                        if (holes) {
+                            const holeShapes = holes.shapePath?.shapePrimitives;
+
+                            if (holeShapes) {
+                                for (let k = 0; k < holeShapes.length; k++) {
+                                    if (holeShapes[k].shape.contains(localLeafClusterPoint.x, localLeafClusterPoint.y)) {
+                                        pointIsContained = false;
+                                    }
+                                }
+                            }
+                        }
+
+                        leafClusterPoint = transform ? transform.apply(localLeafClusterPoint, tmpPoint) : localLeafClusterPoint;
+                    }
+
+                    if (!leafClusterPoint) {
+                        throw new Error('failed to find a cluster point!');
+                    }
+
+                    const leafCluster = new LeafCluster(
+                        LeafClusterAnimationTitle.FULL_OPEN,
+                        leafClusterPoint,
+                        0.5,
+                        1,
+                        collectionContainerRef.current,
+                        true,
+                    );
+
+                    // I'm not a huge fan of digging into it like this, but there we are
+                    // I also don't want to extend sprite.
+                    leafCluster.sprite.scale.set(1 * (Math.random() * 0.5));
+                    leafClusters.current.push(leafCluster);
+                }
             }
         })();
 
@@ -345,12 +445,9 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         if (blossomableArea) {
             blossomableAreaRef.current = blossomableArea;
             blossomableAreaRef.current.fill({
-               color: 0x000000,
+                color: 0x000000,
                 alpha: 0.0,
             });
-            // blossomableAreaRef.current.fill({
-            //    color: 0xff0000,   alpha: 0.5,   texture: null,   matrix: null
-            // });
             setIsBlossomableAreaGraphicsLoading(false);
         }
     }, []);
