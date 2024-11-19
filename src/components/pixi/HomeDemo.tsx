@@ -60,10 +60,10 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
-    const [numLeafClusters, setNumLeafClusters] = useState<number>(1000);
+    const [numLeafClusters, setNumLeafClusters] = useState<number>(10000);
     const leafClusters = useRef<Array<LeafCluster>>([]);
 
-    const addLeafCluster = (
+    const addLeafCluster = async (
         animationTitle: LeafClusterAnimationTitle,
         initialPosition?: Point,
         anchor?: Point | number,
@@ -130,22 +130,23 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
     }, []);
 
     useEffect(() => {
-        if (isInitializing || !collectionContainerRef?.current) {
-            return;
-        }
-        console.log('continuing as isInitializing is false');
+        (async () => {
+            if (isInitializing || !collectionContainerRef?.current) {
+                return;
+            }
 
-        for (let i = 0; i < numLeafClusters; i++) {
-          // create a leaf
-          addLeafCluster(
-              LeafClusterAnimationTitle.FULL_OPEN,
-              undefined,
-              0.5,
-              1,
-              collectionContainerRef.current,
-              true
-          );
-        }
+            for (let i = 0; i < numLeafClusters; i++) {
+                // create a leaf
+                addLeafCluster(
+                    LeafClusterAnimationTitle.FULL_OPEN,
+                    undefined,
+                    0.5,
+                    1,
+                    collectionContainerRef.current,
+                    true
+                );
+            }
+        })();
 
     }, [isInitializing]);
 
@@ -343,9 +344,10 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const handleBlossomableAreaGraphics = useCallback((blossomableArea: Graphics) => {
         if (blossomableArea) {
             blossomableAreaRef.current = blossomableArea;
-            blossomableAreaRef.current.fill(
-               0xff0000,
-            );
+            blossomableAreaRef.current.fill({
+               color: 0x000000,
+                alpha: 0.0,
+            });
             // blossomableAreaRef.current.fill({
             //    color: 0xff0000,   alpha: 0.5,   texture: null,   matrix: null
             // });
