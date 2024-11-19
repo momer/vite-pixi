@@ -57,7 +57,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
-    const [numLeafClusters, setNumLeafClusters] = useState<number>(1000);
+    const [numLeafClusters, setNumLeafClusters] = useState<number>(10000);
     const leafClusters = useRef<Array<LeafCluster>>([]);
 
     const addLeafCluster = (
@@ -82,7 +82,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
             if (leafClusterPoint) {
                 console.log('Leaf cluster point miss! Generating again.');
             }
-             const globalLeafClusterPoint = new Point(
+            const globalLeafClusterPoint = new Point(
                 quickRound(randomFloatFromInterval(bounds.minX, bounds.maxX), 2),
                 quickRound(randomFloatFromInterval(bounds.minY, bounds.maxY), 2)
             );
@@ -105,7 +105,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
 
         // I'm not a huge fan of digging into it like this, but there we are
         // I also don't want to extend sprite.
-        leafCluster.sprite.scale.set(5.35 * Math.random() * 0.3);
+        leafCluster.sprite.scale.set(1 * (Math.random() * 0.5));
         leafClusters.current.push(leafCluster);
     };
 
@@ -116,7 +116,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
             try {
                 await LeafCluster.init();
             } catch (err: unknown) {
-                console.log(`caught an error: ${err}`);
+                console.log(`caught an error: ${ err }`);
                 setError(err);
             } finally {
                 setIsInitializing(false);
@@ -132,15 +132,17 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
         }
         console.log('continuing as isInitializing is false');
 
-        // create a leaf
-        addLeafCluster(
-            LeafClusterAnimationTitle.FULL_OPEN,
-            undefined,
-            0.5,
-            1,
-            collectionContainerRef.current,
-            true
-        );
+        for (let i = 0; i < numLeafClusters; i++) {
+            // create a leaf
+            addLeafCluster(
+                LeafClusterAnimationTitle.FULL_OPEN,
+                undefined,
+                0.5,
+                1,
+                collectionContainerRef.current,
+                true
+            );
+        }
 
     }, [isInitializing]);
 
