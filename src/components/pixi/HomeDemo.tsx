@@ -444,6 +444,11 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const handleBlossomableAreaGraphics = useCallback((blossomableArea: Graphics) => {
         if (blossomableArea) {
             blossomableAreaRef.current = blossomableArea;
+            blossomableAreaRef.current.stroke({
+                color: 0x000000,
+                width: 4,
+                alpha: 1,
+            });
             blossomableAreaRef.current.fill({
                 color: 0x000000,
                 alpha: 0.0,
