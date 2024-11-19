@@ -5,10 +5,11 @@ import useMeasure from 'react-use-measure';
 
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
+import blossomableSvgUrl from '/static/images/pixi/sakura/blossomable.svg';
 import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
 import type { PointData } from 'pixi.js/lib/maths/point/PointData';
 import { AnimationTitle as LeafClusterAnimationTitle, LeafCluster } from '@/components/pixi/LeafCluster';
-import { randomFloatFromInterval, randomIntFromInterval } from '@/utils/math/rand';
+import { randomFloatFromInterval } from '@/utils/math/rand';
 import { quickRound } from '@/utils/math/floats';
 
 extend({
@@ -45,19 +46,21 @@ const TREE_DEFAULT_SCALE = 0.75;
 export type Tree = {
     trunk: MutableRefObject<Graphics | null>;
     canopy: MutableRefObject<Graphics | null>;
+    blossomableArea: MutableRefObject<Graphics | null>;
 }
 
 export interface LeafCollectionProps {
     tree: Tree;
     isCanopyGraphicsLoading: boolean;
     isTrunkGraphicsLoading: boolean;
+    isBlossomableAreaGraphicsLoading: boolean;
 }
 
 export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((props, primaryTreeContainerRef) => {
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
-    const [numLeafClusters, setNumLeafClusters] = useState<number>(10000);
+    const [numLeafClusters, setNumLeafClusters] = useState<number>(1000);
     const leafClusters = useRef<Array<LeafCluster>>([]);
 
     const addLeafCluster = (
@@ -68,7 +71,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
         stage?: Container,
         play?: boolean
     ) => {
-        if (!props.tree.canopy?.current || !props.tree.trunk?.current) {
+        if (!props.tree.canopy?.current || !props.tree.trunk?.current || !props.tree.blossomableArea?.current) {
             return;
         }
         // ref: https://pixijs.com/8.x/examples/basic/particle-container
@@ -76,7 +79,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
 
         let pointIsContained = false;
         // assume bounds will hold during this loop
-        const bounds = props.tree.canopy.current.getBounds();
+        const bounds = props.tree.blossomableArea.current.getBounds();
         let leafClusterPoint: PointData | null = null;
         while (!pointIsContained) {
             if (leafClusterPoint) {
@@ -86,8 +89,8 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
                 quickRound(randomFloatFromInterval(bounds.minX, bounds.maxX), 2),
                 quickRound(randomFloatFromInterval(bounds.minY, bounds.maxY), 2)
             );
-            leafClusterPoint = props.tree.canopy.current.toLocal(globalLeafClusterPoint);
-            pointIsContained = props.tree.canopy.current.containsPoint(leafClusterPoint);
+            leafClusterPoint = props.tree.blossomableArea.current.toLocal(globalLeafClusterPoint);
+            pointIsContained = props.tree.blossomableArea.current.containsPoint(leafClusterPoint);
         }
 
         if (!leafClusterPoint) {
@@ -133,15 +136,15 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
         console.log('continuing as isInitializing is false');
 
         for (let i = 0; i < numLeafClusters; i++) {
-            // create a leaf
-            addLeafCluster(
-                LeafClusterAnimationTitle.FULL_OPEN,
-                undefined,
-                0.5,
-                1,
-                collectionContainerRef.current,
-                true
-            );
+          // create a leaf
+          addLeafCluster(
+              LeafClusterAnimationTitle.FULL_OPEN,
+              undefined,
+              0.5,
+              1,
+              collectionContainerRef.current,
+              true
+          );
         }
 
     }, [isInitializing]);
@@ -172,10 +175,12 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(true);
     const [isCanopyGraphicsLoading, setIsCanopyGraphicsLoading] = useState(true);
     const [isTrunkGraphicsLoading, setIsTrunkGraphicsLoading] = useState(true);
+    const [isBlossomableAreaGraphicsLoading, setIsBlossomableAreaGraphicsLoading] = useState(true);
 
     const primaryTreeContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const trunkRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const canopyRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
+    const blossomableAreaRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
 
     const calculateTreeScale = (screen: Rectangle): PointData | number => {
         let scale: number = 1;
@@ -259,6 +264,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             app?.screen &&
             trunkRef.current &&
             canopyRef.current &&
+            blossomableAreaRef.current &&
             primaryTreeContainerRef.current
         ) {
             primaryTreeContainerRef.current.scale = calculateTreeScale(app.screen);
@@ -267,6 +273,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
             canopyRef.current.visible = true;
             trunkRef.current.visible = true;
+            blossomableAreaRef.current.visible = true;
         }
     }, [assetLoadSuccess, isTrunkGraphicsLoading, isCanopyGraphicsLoading, app]);
 
@@ -274,6 +281,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         assets: [
             treeTrunk,
             treeCanopy,
+            blossomableArea,
         ],
         isSuccess,
     } = useAssets([
@@ -285,6 +293,11 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         {
             alias: 'treeCanopy',
             src: canopySvgUrl,
+            data: { parseAsGraphicsContext: true }
+        },
+        {
+            alias: 'blossomableArea',
+            src: blossomableSvgUrl,
             data: { parseAsGraphicsContext: true }
         }
     ], {
@@ -315,13 +328,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
     const handleTreeTrunkGraphics = useCallback((trunk: Graphics) => {
         if (trunk) {
-            // https://www.pixiplayground.com/#/edit/RMMgRsw1qqxpfUbS6-BEw
-            //
-            //     console.log(graphics.getLocalBounds().containsPoint(new PIXI.Point(110, 110)));
-            //     const transformedPoint = graphics.toLocal(new PIXI.Point(110, 110));
-            //     console.log(graphics.containsPoint(transformedPoint));
-
-            // set the ref for other components
             trunkRef.current = trunk;
             setIsTrunkGraphicsLoading(false);
         }
@@ -329,15 +335,21 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
     const handleTreeCanopyGraphics = useCallback((canopy: Graphics) => {
         if (canopy) {
-            // https://www.pixiplayground.com/#/edit/RMMgRsw1qqxpfUbS6-BEw
-            //
-            //     console.log(graphics.getLocalBounds().containsPoint(new PIXI.Point(110, 110)));
-            //     const transformedPoint = graphics.toLocal(new PIXI.Point(110, 110));
-            //     console.log(graphics.containsPoint(transformedPoint));
-
-            // set the ref for other components
             canopyRef.current = canopy;
             setIsCanopyGraphicsLoading(false);
+        }
+    }, []);
+
+    const handleBlossomableAreaGraphics = useCallback((blossomableArea: Graphics) => {
+        if (blossomableArea) {
+            blossomableAreaRef.current = blossomableArea;
+            blossomableAreaRef.current.fill(
+               0xff0000,
+            );
+            // blossomableAreaRef.current.fill({
+            //    color: 0xff0000,   alpha: 0.5,   texture: null,   matrix: null
+            // });
+            setIsBlossomableAreaGraphicsLoading(false);
         }
     }, []);
 
@@ -357,15 +369,21 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                         ref={ handleTreeCanopyGraphics }
                         context={ treeCanopy }
                     />
+                    <graphics
+                        ref={ handleBlossomableAreaGraphics }
+                        context={ blossomableArea }
+                    />
                     <LeafCollection
                         tree={
                             {
                                 trunk: trunkRef,
-                                canopy: canopyRef
+                                canopy: canopyRef,
+                                blossomableArea: blossomableAreaRef,
                             }
                         }
                         isCanopyGraphicsLoading={ isCanopyGraphicsLoading }
                         isTrunkGraphicsLoading={ isTrunkGraphicsLoading }
+                        isBlossomableAreaGraphicsLoading={ isBlossomableAreaGraphicsLoading }
                         isRenderGroup={ true }
                         ref={ primaryTreeContainerRef }
                         sortableChildren={ true }
