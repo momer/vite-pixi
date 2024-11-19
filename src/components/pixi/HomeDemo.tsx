@@ -70,7 +70,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
-    const [numLeafClusters, setNumLeafClusters] = useState<number>(5000);
+    const [numLeafClusters, setNumLeafClusters] = useState<number>(2000);
     const leafClusters = useRef<Array<LeafCluster>>([]);
 
     const addLeafCluster = async (
@@ -250,6 +250,10 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
                         // I also don't want to extend sprite.
                         leafCluster.sprite.scale.set(1 - (randomFloatFromInterval(50, 70)/100));
                         leafClusters.current.push(leafCluster);
+
+                        if (leafClusters.current.length % 100 === 0) {
+                            await new Promise((resolve) => requestAnimationFrame(resolve));
+                        }
                     }
                 }
             }
