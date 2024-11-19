@@ -70,7 +70,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
-    const [numLeafClusters, setNumLeafClusters] = useState<number>(1000);
+    const [numLeafClusters, setNumLeafClusters] = useState<number>(5000);
     const leafClusters = useRef<Array<LeafCluster>>([]);
 
     const addLeafCluster = async (
@@ -248,7 +248,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
 
                         // I'm not a huge fan of digging into it like this, but there we are
                         // I also don't want to extend sprite.
-                        leafCluster.sprite.scale.set(1 * (Math.random() * 0.5));
+                        leafCluster.sprite.scale.set(1 - (randomFloatFromInterval(50, 70)/100));
                         leafClusters.current.push(leafCluster);
                     }
                 }
@@ -451,11 +451,11 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const handleBlossomableAreaGraphics = useCallback((blossomableArea: Graphics) => {
         if (blossomableArea) {
             blossomableAreaRef.current = blossomableArea;
-            blossomableAreaRef.current.stroke({
-                color: 0x000000,
-                width: 4,
-                alpha: 1,
-            });
+            // blossomableAreaRef.current.stroke({
+            //     color: 0x000000,
+            //     width: 4,
+            //     alpha: 1,
+            // });
             blossomableAreaRef.current.fill({
                 color: 0x000000,
                 alpha: 0.0,
