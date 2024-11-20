@@ -18,7 +18,7 @@ import blossomableSvgUrl from '/static/images/pixi/sakura/blossomable.svg';
 import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
 import type { PointData } from 'pixi.js/lib/maths/point/PointData';
 import { AnimationTitle as LeafClusterAnimationTitle, LeafCluster } from '@/components/pixi/LeafCluster';
-import { randomFloatFromInterval } from '@/utils/math/rand';
+import { randomFloatFromInterval, randomIntFromInterval } from '@/utils/math/rand';
 import { quickRound } from '@/utils/math/floats';
 
 extend({
@@ -70,65 +70,8 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
-    const [numLeafClusters, setNumLeafClusters] = useState<number>(2000);
+    const [numLeafClusters, setNumLeafClusters] = useState<number>(3500);
     const leafClusters = useRef<Array<LeafCluster>>([]);
-
-    const addLeafCluster = async (
-        animationTitle: LeafClusterAnimationTitle,
-        initialPosition?: Point,
-        anchor?: Point | number,
-        animationSpeed?: number,
-        stage?: Container,
-        play?: boolean
-    ) => {
-        if (!props.tree.canopy?.current || !props.tree.trunk?.current || !props.tree.blossomableArea?.current) {
-            return;
-        }
-        // ref: https://pixijs.com/8.x/examples/basic/particle-container
-
-
-        let pointIsContained = false;
-        // assume bounds will hold during this loop
-        const containerBounds = props.tree.blossomableArea.current.getBounds();
-        const availableBlossomArea = containerBounds.width * containerBounds.height * TREE_BLOSSOMABLE_AREA_DENSITY;
-        let leafClusterPoint: PointData | null = null;
-        // ref: GraphicsContext#.containsPoint
-        // The goal:
-        // 1. iterate through each instruction, and
-        // 2. iterate each instruction's shape paths,
-        // 3. For each shape path, calculate its area, and calculate that area's percentage of availableBlossomArea
-        // 4. Multiply that percentage against
-
-        while (!pointIsContained) {
-            if (leafClusterPoint) {
-                console.log('Leaf cluster point miss! Generating again.');
-            }
-            const globalLeafClusterPoint = new Point(
-                quickRound(randomFloatFromInterval(containerBounds.minX, containerBounds.maxX), 2),
-                quickRound(randomFloatFromInterval(containerBounds.minY, containerBounds.maxY), 2)
-            );
-            leafClusterPoint = props.tree.blossomableArea.current.toLocal(globalLeafClusterPoint);
-            pointIsContained = props.tree.blossomableArea.current.containsPoint(leafClusterPoint);
-        }
-
-        if (!leafClusterPoint) {
-            throw new Error('failed to find a cluster point!');
-        }
-
-        const leafCluster = new LeafCluster(
-            animationTitle,
-            leafClusterPoint,
-            anchor,
-            animationSpeed,
-            stage,
-            play
-        );
-
-        // I'm not a huge fan of digging into it like this, but there we are
-        // I also don't want to extend sprite.
-        leafCluster.sprite.scale.set(1 * (Math.random() * 0.5));
-        leafClusters.current.push(leafCluster);
-    };
 
     // initialize the LeafCluster assets
     useEffect(() => {
@@ -179,6 +122,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
                 const path = data.path;
 
                 if (!instruction.action || !path) continue;
+                if (instruction.action !== 'fill') continue;
 
                 const style = data.style;
                 const shapes = path.shapePath.shapePrimitives;
@@ -200,7 +144,11 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
                     const shapeArea: number = shapeRect.width * shapeRect.height;
                     const pctTotalArea: number = quickRound(shapeArea / availableBlossomArea, 2);
                     // scale num clusters according to density estimate
-                    const targetNumLeafClusters: number = quickRound(pctTotalArea * numLeafClusters, 0);
+                    let targetNumLeafClusters: number = quickRound(pctTotalArea * numLeafClusters, 0);
+
+                    if (targetNumLeafClusters < 5) {
+                        targetNumLeafClusters = randomIntFromInterval(7, 20);
+                    }
 
                     for (let k = 0; k < targetNumLeafClusters; k++) {
                         pointIsContained = false;
@@ -248,7 +196,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
 
                         // I'm not a huge fan of digging into it like this, but there we are
                         // I also don't want to extend sprite.
-                        leafCluster.sprite.scale.set(1 - (randomFloatFromInterval(50, 70)/100));
+                        leafCluster.sprite.scale.set(1 - (randomFloatFromInterval(75, 80)/100));
                         leafClusters.current.push(leafCluster);
 
                         if (leafClusters.current.length % 100 === 0) {
@@ -455,14 +403,14 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const handleBlossomableAreaGraphics = useCallback((blossomableArea: Graphics) => {
         if (blossomableArea) {
             blossomableAreaRef.current = blossomableArea;
-            // blossomableAreaRef.current.stroke({
-            //     color: 0x000000,
-            //     width: 4,
-            //     alpha: 1,
-            // });
+            blossomableAreaRef.current.stroke({
+                color: 0xEEADC1,
+                width: 4,
+                alpha: 0,
+            });
             blossomableAreaRef.current.fill({
-                color: 0x000000,
-                alpha: 0.0,
+                color: 0xEEADC1,
+                alpha: 0,
             });
             setIsBlossomableAreaGraphicsLoading(false);
         }
