@@ -254,9 +254,9 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         if (sw >= cssScreens['2xl']) {
             scale = TREE_DEFAULT_SCALE;
         } else if (sw >= cssScreens['xl']) {
-            scale = 0.6;
+            scale = TREE_DEFAULT_SCALE;
         } else if (sw >= cssScreens['lg']) {
-            scale = 0.55;
+            scale = 0.7;
         } else if (sw >= cssScreens['md']) {
             scale = 0.55;
         } else if (sw >= cssScreens['sm']) {
@@ -290,20 +290,15 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         // offset x for 2xl screens
         if (screenW >= cssScreens['2xl']) {
             pos.x += (4 * containerBounds.width) / 8;
-            // pos.y -= containerBounds.height / 32;
         } else if (screenW >= cssScreens['xl']) {
-            // pos.x -= containerBounds.minX;
-            pos.y -= containerBounds.height/16;
+            pos.x += (4 * containerBounds.width) / 8;
         } else if (screenW >= cssScreens['lg']) {
-            // pos.x -= containerBounds.minX;
-            pos.y -= containerBounds.height/32;
+            pos.x += (3 * containerBounds.width) / 8;
         } else if (screenW >= cssScreens['md']) {
-            // pos.x -= containerBounds.minX;
             pos.y -= containerBounds.height/8;
         } else if (screenW >= cssScreens['sm']) {
             pos.y -= containerBounds.height/8;
         } else {
-            // pos.x -= containerBounds.minX;
             pos.y -= containerBounds.height/10;
         }
 
