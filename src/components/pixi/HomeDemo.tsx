@@ -70,7 +70,7 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
-    const [numLeafClusters, setNumLeafClusters] = useState<number>(3500);
+    const [numLeafClusters, setNumLeafClusters] = useState<number>(500);
     const leafClusters = useRef<Array<LeafCluster>>([]);
 
     // initialize the LeafCluster assets
@@ -256,13 +256,13 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         } else if (sw >= cssScreens['xl']) {
             scale = 0.6;
         } else if (sw >= cssScreens['lg']) {
-            scale = 0.6;
+            scale = 0.55;
         } else if (sw >= cssScreens['md']) {
             scale = 0.55;
         } else if (sw >= cssScreens['sm']) {
-            scale = 0.5;
+            scale = 0.55;
         } else {
-            scale = 0.45;
+            scale = 0.5;
         }
 
         return scale;
@@ -289,20 +289,22 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
         // offset x for 2xl screens
         if (screenW >= cssScreens['2xl']) {
-            pos.x += (4 * containerBounds.width) / 7;
+            pos.x += (4 * containerBounds.width) / 8;
             // pos.y -= containerBounds.height / 32;
         } else if (screenW >= cssScreens['xl']) {
             // pos.x -= containerBounds.minX;
-            pos.y -= containerBounds.minY;
+            pos.y -= containerBounds.height/16;
         } else if (screenW >= cssScreens['lg']) {
             // pos.x -= containerBounds.minX;
-            pos.y -= containerBounds.minY;
+            pos.y -= containerBounds.height/32;
         } else if (screenW >= cssScreens['md']) {
             // pos.x -= containerBounds.minX;
-            pos.y -= containerBounds.minY;
+            pos.y -= containerBounds.height/8;
+        } else if (screenW >= cssScreens['sm']) {
+            pos.y -= containerBounds.height/8;
         } else {
             // pos.x -= containerBounds.minX;
-            pos.y -= (4 * containerBounds.minY) / 3;
+            pos.y -= containerBounds.height/10;
         }
 
         return pos;
@@ -413,8 +415,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                 alpha: 0,
             });
             blossomableAreaRef.current.fill({
-                color: 0xEEADC1,
-                alpha: 0,
+                color: 0xFFDAE6,
+                alpha: 1,
             });
             setIsBlossomableAreaGraphicsLoading(false);
         }
