@@ -233,7 +233,7 @@ export function Home() {
                                         Systems thinking, in bloom.
                                     </h1>
                                 </FadeIn>
-                                <motion.p className="hidden md:block mx-auto mt-3 2xl:mt-6 text-lg lg:text-xl text-neutral-500 text-center 2xl:text-left"
+                                <motion.p className="hidden md:block mx-auto 2xl:mx-0 mt-3 2xl:mt-6 text-lg lg:text-xl 2xl:text-2xl text-neutral-500 text-center 2xl:text-left"
                                           variants={ {
                                               hidden: { opacity: 0, },
                                               visible: { opacity: 1, y: 0 },
