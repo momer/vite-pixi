@@ -13,12 +13,12 @@ module.exports = {
         './dist/*.{html, js}',
     ],
     theme: {
-        screens: {
-            'xs': '475px',
-            ...defaultTheme.screens,
-            '3xl': '1792px',
-        },
+
         extend: {
+            screens: {
+                'xs': '550px',
+                '3xl': '1792px',
+            },
             boxShadow: {
                 'solid-l-sm': '-3px 3px 0 0 rgb(59, 130, 246)',
                 'solid-l-md': '-6px 6px 0 0 rgb(59, 130, 246)',
