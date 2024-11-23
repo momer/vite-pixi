@@ -258,7 +258,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         } else if (sw >= cssScreens['lg']) {
             scale = 0.7;
         } else if (sw >= cssScreens['md']) {
-            scale = 0.55;
+            scale = 0.65;
         } else if (sw >= cssScreens['sm']) {
             scale = 0.55;
         } else {
@@ -295,7 +295,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         } else if (screenW >= cssScreens['lg']) {
             pos.x += (3 * containerBounds.width) / 8;
         } else if (screenW >= cssScreens['md']) {
-            pos.y -= containerBounds.height/8;
+            pos.y -= containerBounds.height/12;
         } else if (screenW >= cssScreens['sm']) {
             pos.y -= containerBounds.height/8;
         } else {

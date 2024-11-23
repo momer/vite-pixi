@@ -212,40 +212,41 @@ export function Home() {
                 </Helmet>
 
                 <div
-                    className={ clsx('h-[calc(100vh)] md:h-[calc(100vh-4rem)] lg:h-[calc(100vh-8rem)] relative') }
+                    className={ clsx('h-[calc(100vh)] sm:h-[calc(100vh-8rem)] lg:h-[calc(100vh-8rem)] relative') }
                     ref={ myRefCallback }
                 >
 
                     <div
-                        className={ clsx('flex items-end mx-auto md:ml-4 h-1/2 w-full 2xl:max-w-screen-2xl mt-[40rem] md:mt-[42rem] lg:top-1/2 lg:mt-0 lg:absolute') }
+                        className={ clsx('flex items-end mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl mt-[40rem] sm:top-1/2 sm:mt-0 sm:absolute') }
                     >
-                        <div className="mx-auto md:w-full md:bg-white lg:bg-transparent">
-                            <div className="flex flex-wrap mt-0 md:w-full mx-auto md:p-4 text-center lg:text-left">
-                                <FadeIn className="w-full md:-mt-16 lg:mt-0 "
-                                        viewport={ { once: true, margin: '0px 0px 0px' } }
-                                        transition={ {
-                                            duration: 1,
-                                            delay: 0.5,
-                                            delayChildren: 0.5,
-                                            staggerChildren: 0.5
-                                        } }>
-                                    <h1 className="font-display text-6xl xs:text-7xl lg:text-9xl xl:text-9xl font-medium tracking-tight text-neutral-950 [text-wrap:balance]">
-                                        Systems thinking, in bloom.
-                                    </h1>
-                                </FadeIn>
-                                <motion.p className="hidden md:block mx-auto lg:mx-0 mt-3 2xl:mt-6 text-lg md:text-xl lg:text-2xl text-neutral-500 rounded-full lg:bg-white"
-                                          variants={ {
-                                              hidden: { opacity: 0, },
-                                              visible: { opacity: 1, y: 0 },
-                                          } }
-                                          transition={ { duration: 1, delay: 1.5 } }
-                                          initial="hidden"
-                                          whileInView="visible"
-                                >
-                                    We connect ideas, strategy, and technology; helping challenges blossom into
-                                    solutions.
-                                </motion.p>
-                            </div>
+                        <div
+                            className="flex flex-wrap mt-0 w-full mx-auto sm:px-2 md:px-4 text-center lg:text-left ">
+                            <FadeIn className="mx-auto sm:mt-0 md:-mt-16 lg:mt-0 "
+                                    viewport={ { once: true, margin: '0px 0px 0px' } }
+                                    transition={ {
+                                        duration: 1,
+                                        delay: 0.5,
+                                        delayChildren: 0.5,
+                                        staggerChildren: 0.5
+                                    } }>
+                                {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/ }
+                                <h1 className="font-display mx-auto sm:text-7xl xs:text-7xl lg:text-9xl xl:text-9xl font-medium tracking-tight text-neutral-950 [text-wrap:balance]">
+                                    Systems thinking, in bloom.
+                                </h1>
+                            </FadeIn>
+                            <motion.p
+                                className="hidden md:block mx-auto lg:mx-0 mt-3 text-lg md:text-xl lg:text-2xl text-neutral-500 rounded-full sm:bg-white"
+                                variants={ {
+                                    hidden: { opacity: 0, },
+                                    visible: { opacity: 1, y: 0 },
+                                } }
+                                transition={ { duration: 1, delay: 1.5 } }
+                                initial="hidden"
+                                whileInView="visible"
+                            >
+                                We connect ideas, strategy, and technology; helping challenges blossom into
+                                solutions.
+                            </motion.p>
                         </div>
 
 
@@ -253,7 +254,7 @@ export function Home() {
                 </div>
 
                 <div id="pixi-app" className={ clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none') }>
-                    {<HomeDemo ref={ myRef }/> }
+                    { <HomeDemo ref={ myRef }/> }
                 </div>
 
                 <Clients/>
