@@ -212,16 +212,16 @@ export function Home() {
                 </Helmet>
 
                 <div
-                    className={ clsx('h-[calc(100vh)] sm:h-[calc(100vh-8rem)] lg:h-[calc(100vh-8rem)] relative') }
+                    className={ clsx('h-[calc(100vh-8rem)] relative') }
                     ref={ myRefCallback }
                 >
 
                     <div
-                        className={ clsx('flex items-end mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl mt-[40rem] sm:top-1/2 sm:mt-0 sm:absolute') }
+                        className={ clsx('flex flex-col items-end mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute') }
                     >
                         <div
-                            className="flex flex-wrap mt-0 w-full mx-auto sm:px-2 md:px-4 text-center lg:text-left ">
-                            <FadeIn className="mx-auto sm:mt-0 md:-mt-16 lg:mt-0 "
+                            className="flex flex-col mt-auto flex-wrap w-full mx-auto sm:px-2 md:px-4 text-center lg:text-left ">
+                            <FadeIn className="mx-auto lg:mx-0 -mt-16 lg:mt-0 "
                                     viewport={ { once: true, margin: '0px 0px 0px' } }
                                     transition={ {
                                         duration: 1,
@@ -230,12 +230,12 @@ export function Home() {
                                         staggerChildren: 0.5
                                     } }>
                                 {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/ }
-                                <h1 className="font-display mx-auto sm:text-7xl xs:text-7xl lg:text-9xl xl:text-9xl font-medium tracking-tight text-neutral-950 [text-wrap:balance]">
+                                <h1 className="font-display mx-auto lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight text-neutral-950 [text-wrap:balance]">
                                     Systems thinking, in bloom.
                                 </h1>
                             </FadeIn>
                             <motion.p
-                                className="hidden md:block mx-auto lg:mx-0 mt-3 text-lg md:text-xl lg:text-2xl text-neutral-500 rounded-full sm:bg-white"
+                                className="inline mx-auto lg:mx-0 lg:mt-3 text-lg md:text-xl lg:text-lg text-neutral-500 rounded-full"
                                 variants={ {
                                     hidden: { opacity: 0, },
                                     visible: { opacity: 1, y: 0 },
@@ -244,8 +244,14 @@ export function Home() {
                                 initial="hidden"
                                 whileInView="visible"
                             >
-                                We connect ideas, strategy, and technology; helping challenges blossom into
-                                solutions.
+                                <span className="sm:bg-white">
+                                    <span className="hidden md:inline">
+                                        We connect ideas, strategy, and technology; helping challenges blossom into solutions.
+                                    </span>
+                                    <span className="inline md:hidden">
+                                        We help challenges blossom into solutions.
+                                    </span>
+                                </span>
                             </motion.p>
                         </div>
 
