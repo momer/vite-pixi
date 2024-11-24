@@ -9,8 +9,7 @@ import {
     Rectangle,
     Sprite
 } from 'pixi.js';
-import { ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
-import useMeasure from 'react-use-measure';
+import { ForwardedRef, forwardRef, MutableRefObject, RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
@@ -51,7 +50,6 @@ const cssScreens = {
 };
 
 const TREE_DEFAULT_SCALE = 0.75;
-const TREE_BLOSSOMABLE_AREA_DENSITY = 0.6;
 
 export type Tree = {
     trunk: MutableRefObject<Graphics | null>;
@@ -66,10 +64,12 @@ export interface LeafCollectionProps {
     isBlossomableAreaGraphicsLoading: boolean;
 }
 
-export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((props, primaryTreeContainerRef) => {
+export const LeafCollection = ((props: LeafCollectionProps) => {
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
+    // TODO: dynamically set leaf clusters
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [numLeafClusters, setNumLeafClusters] = useState<number>(500);
     const leafClusters = useRef<Array<LeafCluster>>([]);
 
@@ -81,11 +81,15 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
                 await LeafCluster.init();
             } catch (err: unknown) {
                 console.log(`caught an error: ${ err }`);
-                setError(err);
+                setError(() => err);
             } finally {
                 setIsInitializing(false);
             }
         };
+
+        if (error) {
+            console.log(`fatal error while loading assets: ${error}`);
+        }
 
         initAssets();
     }, []);
@@ -218,11 +222,11 @@ export const LeafCollection = forwardRef<HTMLDivElement, LeafCollectionProps>((p
     }
 
     return (
+        // eslint-disable-next-line react/no-unknown-property
         <container isRenderGroup={ true } ref={ collectionContainerRef } sortableChildren={ true }>
         </container>
     );
 });
-LeafCollection.displayName = 'LeafCollection';
 
 export interface TreeContainerOptions {
     ref: ForwardedRef<HTMLDivElement>;
@@ -230,9 +234,9 @@ export interface TreeContainerOptions {
 
 // Following from https://pixijs.com/8.x/examples/graphics/svg-load
 export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
-    const [measureRef, bounds] = useMeasure();
+    // alternate way of tracking measurement in pixi
+    // const [measureRef, bounds] = useMeasure();
     const { app }: ApplicationState = useApplication();
-    const [divResized, setDivResized] = useState(false);
 
     // Both should be the same for trunk and canopy
 
@@ -423,6 +427,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
     return (
         isSuccess && app?.renderer && app?.screen && (
+            // eslint-disable-next-line react/no-unknown-property
             <container isRenderGroup={ true } ref={ primaryTreeContainerRef } sortableChildren={ true }>
                 <>
                     <graphics
@@ -464,7 +469,7 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
         <Application
             autoStart
             sharedTicker
-            resizeTo={ ref }
+            resizeTo={ ref as RefObject<HTMLElement> }
             background={ 'white' }
             backgroundAlpha={ 0 }
             antialias={ true }
