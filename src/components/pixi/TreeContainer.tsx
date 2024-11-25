@@ -352,7 +352,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         },
     });
 
-    // initial load, start observingt he div parent for sizing
+    // initial load, start observing the div parent for sizing
     useEffect(() => {
         if (ref) {
             ref = ref as MutableRefObject<HTMLDivElement>;
