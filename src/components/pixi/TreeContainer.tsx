@@ -1,7 +1,6 @@
-import {extend, useApplication, useAssets} from '@pixi/react';
+import { extend, useApplication, useAssets } from '@pixi/react';
 import {
     Container,
-    ContainerChild,
     ConvertedStrokeStyle,
     FillInstruction,
     Graphics,
@@ -10,16 +9,16 @@ import {
     Rectangle,
     Sprite
 } from 'pixi.js';
-import {ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState} from 'react';
+import { ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
 import blossomableSvgUrl from '/static/images/pixi/sakura/blossomable.svg';
-import {ApplicationState} from '@pixi/react/types/typedefs/ApplicationState';
-import {AnimationTitle as LeafClusterAnimationTitle, LeafCluster} from '@/components/pixi/LeafCluster';
-import {TreeEnvironment} from '@/components/pixi/TreeEnvironment';
-import {randomFloatFromInterval, randomIntFromInterval} from '@/utils/math/rand';
-import {quickRound} from '@/utils/math/floats';
+import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
+import { AnimationTitle as LeafClusterAnimationTitle, LeafCluster } from '@/components/pixi/LeafCluster';
+import { TreeEnvironment } from '@/components/pixi/TreeEnvironment';
+import { randomFloatFromInterval, randomIntFromInterval } from '@/utils/math/rand';
+import { quickRound } from '@/utils/math/floats';
 // import { cssScreens } from '@/lib/tailwind/screenSizes';
 
 const cssScreens = {
@@ -71,7 +70,7 @@ export const LeafCollection = forwardRef<Tree, LeafCollectionProps>((props, ref)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [numLeafClusters, setNumLeafClusters] = useState<number>(500);
     const leafClusters = useRef<Array<LeafCluster>>([]);
-    const { trunkRef, canopyRef, blossomableAreaRef } = ref as unknown as Tree;
+    const {trunkRef, canopyRef, blossomableAreaRef} = ref as unknown as Tree;
 
     // initialize the LeafCluster assets
     useEffect(() => {
@@ -425,6 +424,13 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     useEffect(() => {
         resizeTreeContainer();
     }, [assetLoadSuccess, isTrunkGraphicsLoading, isCanopyGraphicsLoading, app, treeTrunk, treeCanopy]);
+
+    useEffect(() => {
+        if (app) {
+            // @ts-ignore
+            globalThis.__PIXI_APP__ = app;
+        }
+    }, [app]);
 
     return (
         isSuccess && app?.renderer && app?.screen && (

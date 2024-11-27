@@ -74,9 +74,9 @@ const hardRainConfig = {
 };
 
 export function TreeEnvironment({
-                           children,
-                       }: {
-    children: React.ReactNode
+                                    children,
+                                }: {
+    children?: React.ReactNode
 }) {
     const environmentContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const emitterRef: MutableRefObject<Emitter | null> = useRef<Emitter>(null);
@@ -134,28 +134,24 @@ export function TreeEnvironment({
 
     useEffect(() => {
         // TODO: change based on envirnment settings, like rain==true, etc.
-        if (isEnvironmentContainerLoading && environmentContainerRef?.current !== null && assetLoadSuccess && hardRain && isSuccess) {
+        if (!isEnvironmentContainerLoading && environmentContainerRef?.current !== null && assetLoadSuccess && hardRain && isSuccess) {
             emitterRef.current = new Emitter(
                 environmentContainerRef.current,
                 hardRainConfig,
             );
-            // emitterRef.current.updateOwnerPos(window.innerWidth / 2, window.innerHeight / 2);
+            emitterRef.current.updateOwnerPos(window.innerWidth / 2, window.innerHeight / 2);
 
             updateEmitter();
         }
     }, [isEnvironmentContainerLoading, assetLoadSuccess, isSuccess]);
 
     return (
-        <container
-            dynamicProperties={{
-                position: true,
-                rotation: true,
-                uvs: true,
-                alpha: true,
-            }}
-            ref={handleParticleContainer}
-        >
-            {children}
-        </container>
+        isSuccess && (
+            <container
+                ref={handleParticleContainer}
+            >
+                {children}
+            </container>
+        )
     );
 }
