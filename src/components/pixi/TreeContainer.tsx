@@ -19,7 +19,26 @@ import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
 import { AnimationTitle as LeafClusterAnimationTitle, LeafCluster } from '@/components/pixi/LeafCluster';
 import { randomFloatFromInterval, randomIntFromInterval } from '@/utils/math/rand';
 import { quickRound } from '@/utils/math/floats';
-import { cssScreens } from '@/lib/tailwind/screenSizes';
+// import { cssScreens } from '@/lib/tailwind/screenSizes';
+
+const cssScreens = {
+    'sm': 640,
+    // => @media (min-width: 640px) { ... }
+
+    'md': 768,
+    // => @media (min-width: 768px) { ... }
+
+    'lg': 1024,
+    // => @media (min-width: 1024px) { ... }
+
+    'xl': 1280,
+    // => @media (min-width: 1280px) { ... }
+
+    '2xl': 1536,
+    // => @media (min-width: 1536px) { ... }
+
+    '3xl': 1792,
+};
 
 extend({
     Container,
