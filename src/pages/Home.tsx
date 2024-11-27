@@ -133,15 +133,6 @@ export function Home() {
         return element;
     }, []);
 
-    useEffect(() => {
-        async function getCaseStudies() {
-            // this isn't available, todo: think about what I want
-            setCaseStudies([]);
-        }
-
-        getCaseStudies();
-    }, []);
-
     return (
         <>
             <HelmetProvider>

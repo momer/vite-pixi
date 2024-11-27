@@ -1,4 +1,4 @@
-import { extend, useApplication, useAssets } from '@pixi/react';
+import {extend, useApplication, useAssets} from '@pixi/react';
 import {
     Container,
     ContainerChild,
@@ -10,15 +10,15 @@ import {
     Rectangle,
     Sprite
 } from 'pixi.js';
-import { ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import {ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState} from 'react';
 
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
 import blossomableSvgUrl from '/static/images/pixi/sakura/blossomable.svg';
-import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
-import { AnimationTitle as LeafClusterAnimationTitle, LeafCluster } from '@/components/pixi/LeafCluster';
-import { randomFloatFromInterval, randomIntFromInterval } from '@/utils/math/rand';
-import { quickRound } from '@/utils/math/floats';
+import {ApplicationState} from '@pixi/react/types/typedefs/ApplicationState';
+import {AnimationTitle as LeafClusterAnimationTitle, LeafCluster} from '@/components/pixi/LeafCluster';
+import {randomFloatFromInterval, randomIntFromInterval} from '@/utils/math/rand';
+import {quickRound} from '@/utils/math/floats';
 // import { cssScreens } from '@/lib/tailwind/screenSizes';
 
 const cssScreens = {
@@ -50,19 +50,19 @@ extend({
 const TREE_DEFAULT_SCALE = 0.75;
 
 export type Tree = {
-    trunk: MutableRefObject<Graphics | null>;
-    canopy: MutableRefObject<Graphics | null>;
-    blossomableArea: MutableRefObject<Graphics | null>;
+    trunkRef: MutableRefObject<Graphics | null>;
+    canopyRef: MutableRefObject<Graphics | null>;
+    blossomableAreaRef: MutableRefObject<Graphics | null>;
+    primaryTreeContainerRef: MutableRefObject<Container | null>;
 }
 
 export interface LeafCollectionProps {
-    tree: Tree;
     isCanopyGraphicsLoading: boolean;
     isTrunkGraphicsLoading: boolean;
     isBlossomableAreaGraphicsLoading: boolean;
 }
 
-export const LeafCollection = ((props: LeafCollectionProps) => {
+export const LeafCollection = forwardRef<Tree, LeafCollectionProps>((props, ref) => {
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
@@ -70,6 +70,7 @@ export const LeafCollection = ((props: LeafCollectionProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [numLeafClusters, setNumLeafClusters] = useState<number>(500);
     const leafClusters = useRef<Array<LeafCluster>>([]);
+    const { trunkRef, canopyRef, blossomableAreaRef } = ref as unknown as Tree;
 
     // initialize the LeafCluster assets
     useEffect(() => {
@@ -78,7 +79,7 @@ export const LeafCollection = ((props: LeafCollectionProps) => {
             try {
                 await LeafCluster.init();
             } catch (err: unknown) {
-                console.log(`caught an error: ${ err }`);
+                console.log(`caught an error: ${err}`);
                 setError(() => err);
             } finally {
                 setIsInitializing(false);
@@ -86,7 +87,7 @@ export const LeafCollection = ((props: LeafCollectionProps) => {
         };
 
         if (error) {
-            console.log(`fatal error while loading assets: ${ error }`);
+            console.log(`fatal error while loading assets: ${error}`);
         }
 
         initAssets();
@@ -97,7 +98,7 @@ export const LeafCollection = ((props: LeafCollectionProps) => {
             if (isInitializing || !collectionContainerRef?.current) {
                 return;
             }
-            if (!props.tree.canopy?.current || !props.tree.trunk?.current || !props.tree.blossomableArea?.current) {
+            if (!canopyRef?.current || !trunkRef?.current || !blossomableAreaRef?.current) {
                 return;
             }
             // The goal:
@@ -108,7 +109,7 @@ export const LeafCollection = ((props: LeafCollectionProps) => {
             // 5. generate that many random points within its bounds, and move on to the next path
 
             // assume bounds will hold during this loop
-            const blossomableArea = props.tree.blossomableArea.current;
+            const blossomableArea = blossomableAreaRef.current;
             const containerBounds = blossomableArea.getLocalBounds();
             const availableBlossomArea: number = containerBounds.width * containerBounds.height;
             let leafClusterPoint: PointData | null = null;
@@ -221,10 +222,11 @@ export const LeafCollection = ((props: LeafCollectionProps) => {
 
     return (
         // eslint-disable-next-line react/no-unknown-property
-        <container isRenderGroup={ true } ref={ collectionContainerRef } sortableChildren={ true }>
+        <container isRenderGroup={true} ref={collectionContainerRef} sortableChildren={true}>
         </container>
     );
 });
+LeafCollection.displayName = 'LeafCollection';
 
 export interface TreeContainerOptions {
     ref: ForwardedRef<HTMLDivElement>;
@@ -234,7 +236,7 @@ export interface TreeContainerOptions {
 export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     // alternate way of tracking measurement in pixi
     // const [measureRef, bounds] = useMeasure();
-    const { app }: ApplicationState = useApplication();
+    const {app}: ApplicationState = useApplication();
 
     // Both should be the same for trunk and canopy
 
@@ -270,7 +272,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         return scale;
     };
 
-    const calculateTreePos = (screen: Rectangle, container: Container<ContainerChild> | null): PointData => {
+    const calculateTreePos = (screen: Rectangle, container: Container | null): PointData => {
         const screenW = screen.width;
         const screenH = screen.height;
 
@@ -307,7 +309,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         return pos;
     };
 
-    const calculateCenterPivot = (container: Container<ContainerChild> | null): PointData => {
+    const calculateCenterPivot = (container: Container | null): PointData => {
         if (!container) {
             return new Point(0, 0);
         }
@@ -351,17 +353,17 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         {
             alias: 'treeTrunk',
             src: trunkSvgUrl,
-            data: { parseAsGraphicsContext: true }
+            data: {parseAsGraphicsContext: true}
         },
         {
             alias: 'treeCanopy',
             src: canopySvgUrl,
-            data: { parseAsGraphicsContext: true }
+            data: {parseAsGraphicsContext: true}
         },
         {
             alias: 'blossomableArea',
             src: blossomableSvgUrl,
-            data: { parseAsGraphicsContext: true }
+            data: {parseAsGraphicsContext: true}
         }
     ], {
         onProgress: (progress: number) => {
@@ -377,7 +379,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             ref = ref as MutableRefObject<HTMLDivElement>;
             const observer = new ResizeObserver((entries) => {
                 for (const entry of entries) {
-                    const { width, height } = entry.contentRect;
+                    const {width, height} = entry.contentRect;
                     if (app && app.renderer) {
                         app.renderer.resize(width, height);
                         resizeTreeContainer();
@@ -426,34 +428,31 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     return (
         isSuccess && app?.renderer && app?.screen && (
             // eslint-disable-next-line react/no-unknown-property
-            <container isRenderGroup={ true } ref={ primaryTreeContainerRef } sortableChildren={ true }>
+            <container isRenderGroup={true} ref={primaryTreeContainerRef} sortableChildren={true}>
                 <>
                     <graphics
-                        ref={ handleTreeTrunkGraphics }
-                        context={ treeTrunk }
+                        ref={handleTreeTrunkGraphics}
+                        context={treeTrunk}
                     />
                     <graphics
-                        ref={ handleTreeCanopyGraphics }
-                        context={ treeCanopy }
+                        ref={handleTreeCanopyGraphics}
+                        context={treeCanopy}
                     />
                     <graphics
-                        ref={ handleBlossomableAreaGraphics }
-                        context={ blossomableArea }
+                        ref={handleBlossomableAreaGraphics}
+                        context={blossomableArea}
                     />
                     <LeafCollection
-                        tree={
+                        ref={
                             {
-                                trunk: trunkRef,
-                                canopy: canopyRef,
-                                blossomableArea: blossomableAreaRef,
+                                trunkRef: trunkRef,
+                                canopyRef: canopyRef,
+                                blossomableAreaRef: blossomableAreaRef,
+                                primaryTreeContainerRef,
                             }
                         }
-                        isCanopyGraphicsLoading={ isCanopyGraphicsLoading }
-                        isTrunkGraphicsLoading={ isTrunkGraphicsLoading }
-                        isBlossomableAreaGraphicsLoading={ isBlossomableAreaGraphicsLoading }
-                        isRenderGroup={ true }
-                        ref={ primaryTreeContainerRef }
-                        sortableChildren={ true }
+                        isRenderGroup={true}
+                        sortableChildren={true}
                     />
                 </>
             </container>

@@ -12,7 +12,7 @@ import {
 } from 'pixi.js';
 
 import leafClusterFullOpenUrl from '/static/images/pixi/sakura/leaf-clusters/full-open.png';
-import { Mutex } from 'async-mutex';
+import {Mutex} from 'async-mutex';
 
 let spritesheet: Spritesheet;
 
@@ -33,7 +33,7 @@ export const leafClusterData: SpritesheetData = {
     meta: {
         image: leafClusterFullOpenUrl,
         format: 'RGBA8888',
-        size: { w: 75, h: 75 },
+        size: {w: 75, h: 75},
         scale: 1
     },
     animations: {
@@ -56,8 +56,8 @@ function* spritesheetGenerator(frames: string[], w: number, h: number, framesPer
                 w: w,
                 h: h
             },
-            spriteSourceSize: { x: 0, y: 0, w: w, h: h },
-            sourceSize: { w: w, h: h },
+            spriteSourceSize: {x: 0, y: 0, w: w, h: h},
+            sourceSize: {w: w, h: h},
         }];
     }
 }
@@ -80,7 +80,7 @@ export class LeafCluster {
     private _previousAnchor: PointData | number = 0.5;
     private _previousAnimationSpeed = 0.1;
 
-    public static async init()  {
+    public static async init() {
         let shouldInitialize = false;
         await this.loadMutex.runExclusive(async () => {
             if (this._isInitializing || spritesheet) {
@@ -100,7 +100,7 @@ export class LeafCluster {
             }
         }
 
-        Assets.add({ alias: 'leafCluster', src: leafClusterData.meta.image });
+        Assets.add({alias: 'leafCluster', src: leafClusterData.meta.image});
         const texture = await Assets.load('leafCluster');
 
         spritesheet = new Spritesheet(
@@ -198,7 +198,7 @@ export class LeafCluster {
     private animationFor(animationTitle: AnimationTitle): Texture<TextureSource<any>>[] {
         // If the animatedSprite hasn't been created yet, add it to the cached list
         if (!(animationTitle in spritesheet.animations)) {
-            throw new Error(`Unable to find animation ${ animationTitle } in spritesheet!`);
+            throw new Error(`Unable to find animation ${animationTitle} in spritesheet!`);
         }
 
         return spritesheet.animations[animationTitle];
