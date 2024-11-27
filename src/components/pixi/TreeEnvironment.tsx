@@ -1,12 +1,12 @@
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import hardRainImageUrl from '/static/images/pixi/sakura/environment/HardRain.png';
-import { ParticleContainer } from 'pixi.js';
-import { extend } from '@pixi/react';
+import { Container } from 'pixi.js';
+import { extend, useAssets } from '@pixi/react';
 import { Emitter } from '@momer/pixi-particle-emitter';
 
 extend({
-    ParticleContainer
+    Container
 });
 
 const hardRainConfig = {
@@ -54,7 +54,7 @@ const hardRainConfig = {
             'type': 'textureRandom',
             'config': {
                 'textures': [
-                    hardRainImageUrl
+                    'hardRain',
                 ]
             }
         },
@@ -78,19 +78,40 @@ export function TreeEnvironment({
                        }: {
     children: React.ReactNode
 }) {
-    const environmentContainerRef: MutableRefObject<ParticleContainer | null> = useRef<ParticleContainer>(null);
+    const environmentContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const emitterRef: MutableRefObject<Emitter | null> = useRef<Emitter>(null);
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
     const [precipitationParticleCount, setPrecipitationParticleCount] = useState(500);
 
-    const handleParticleContainer = useCallback((container: ParticleContainer) => {
+    const handleParticleContainer = useCallback((container: Container) => {
         environmentContainerRef.current = container;
         setIsEnvironmentContainerLoading(false);
     }, []);
 
+    const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(true);
+
     const elapsedRef: MutableRefObject<number | null> = useRef<number | null>(Date.now());
     const updateIdRef: MutableRefObject<number | null> = useRef<number | null>(null);
     const updateHookRef: MutableRefObject<((val: number) => void) | null> = useRef<((val: number) => void) | null>(null);
+
+    const {
+        assets: [
+            hardRain,
+        ],
+        isSuccess,
+    } = useAssets([
+        {
+            alias: 'hardRain',
+            src: hardRainImageUrl,
+            data: {parseAsGraphicsContext: true}
+        },
+    ], {
+        onProgress: (progress: number) => {
+            if (progress >= 1) {
+                setAssetLoadSuccess(true);
+            }
+        },
+    });
 
     // Update function every frame
     const updateEmitter = () => {
@@ -113,19 +134,19 @@ export function TreeEnvironment({
 
     useEffect(() => {
         // TODO: change based on envirnment settings, like rain==true, etc.
-        if (isEnvironmentContainerLoading && environmentContainerRef?.current !== null) {
+        if (isEnvironmentContainerLoading && environmentContainerRef?.current !== null && assetLoadSuccess && hardRain && isSuccess) {
             emitterRef.current = new Emitter(
                 environmentContainerRef.current,
                 hardRainConfig,
             );
-            emitterRef.current.updateOwnerPos(window.innerWidth / 2, window.innerHeight / 2);
+            // emitterRef.current.updateOwnerPos(window.innerWidth / 2, window.innerHeight / 2);
 
             updateEmitter();
         }
-    }, [isEnvironmentContainerLoading]);
+    }, [isEnvironmentContainerLoading, assetLoadSuccess, isSuccess]);
 
     return (
-        <particleContainer
+        <container
             dynamicProperties={{
                 position: true,
                 rotation: true,
@@ -135,6 +156,6 @@ export function TreeEnvironment({
             ref={handleParticleContainer}
         >
             {children}
-        </particleContainer>
+        </container>
     );
 }
