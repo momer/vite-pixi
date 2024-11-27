@@ -17,6 +17,7 @@ import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
 import blossomableSvgUrl from '/static/images/pixi/sakura/blossomable.svg';
 import {ApplicationState} from '@pixi/react/types/typedefs/ApplicationState';
 import {AnimationTitle as LeafClusterAnimationTitle, LeafCluster} from '@/components/pixi/LeafCluster';
+import {TreeEnvironment} from '@/components/pixi/TreeEnvironment';
 import {randomFloatFromInterval, randomIntFromInterval} from '@/utils/math/rand';
 import {quickRound} from '@/utils/math/floats';
 // import { cssScreens } from '@/lib/tailwind/screenSizes';
@@ -454,6 +455,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                         isRenderGroup={true}
                         sortableChildren={true}
                     />
+                    <TreeEnvironment></TreeEnvironment>
                 </>
             </container>
         )
