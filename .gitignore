@@ -54,7 +54,6 @@ coverage
 coverage.lcov
 .nyc_output
 dist
-lib
 out
 src/*/**/index.ts
 
