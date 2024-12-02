@@ -1,9 +1,10 @@
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import hardRainImageUrl from '/static/images/pixi/sakura/environment/HardRain.png';
 import { Container } from 'pixi.js';
 import { extend, useAssets } from '@pixi/react';
 import { Emitter } from '@momer/pixi-particle-emitter';
+import { Tree } from '@/components/pixi/TreeContainer';
 
 extend({
     Container
@@ -63,8 +64,8 @@ const hardRainConfig = {
             'config': {
                 'type': 'rect',
                 'data': {
-                    'x': -600,
-                    'y': -460,
+                    'x': 0,
+                    'y': 0,
                     'w': 900,
                     'h': 20
                 }
@@ -73,15 +74,17 @@ const hardRainConfig = {
     ]
 };
 
-export function TreeEnvironment({
-                                    children,
-                                }: {
-    children?: React.ReactNode
-}) {
+
+export interface TreeEnvironmentProps {
+    children?: React.ReactNode;
+}
+
+export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, ref) => {
     const environmentContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const emitterRef: MutableRefObject<Emitter | null> = useRef<Emitter>(null);
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
     const [precipitationParticleCount, setPrecipitationParticleCount] = useState(500);
+    const { treeWorldContainerRef } = ref as unknown as Tree;
 
     const handleParticleContainer = useCallback((container: Container) => {
         environmentContainerRef.current = container;
@@ -94,6 +97,7 @@ export function TreeEnvironment({
     const updateIdRef: MutableRefObject<number | null> = useRef<number | null>(null);
     const updateHookRef: MutableRefObject<((val: number) => void) | null> = useRef<((val: number) => void) | null>(null);
 
+
     const {
         assets: [
             hardRain,
@@ -103,7 +107,7 @@ export function TreeEnvironment({
         {
             alias: 'hardRain',
             src: hardRainImageUrl,
-            data: {parseAsGraphicsContext: true}
+            data: { parseAsGraphicsContext: true }
         },
     ], {
         onProgress: (progress: number) => {
@@ -148,10 +152,11 @@ export function TreeEnvironment({
     return (
         isSuccess && (
             <container
-                ref={handleParticleContainer}
+                ref={ handleParticleContainer }
             >
-                {children}
+                { props.children }
             </container>
         )
     );
-}
+});
+TreeEnvironment.displayName = 'TreeEnvironment';

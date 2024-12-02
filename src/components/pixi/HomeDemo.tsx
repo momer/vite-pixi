@@ -16,7 +16,6 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
         >
             <TreeContainer ref={ ref }/>
 
-            <TreeEnvironment></TreeEnvironment>
         </Application>
     );
 });
