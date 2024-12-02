@@ -7,6 +7,7 @@ node_modules
 *.cpuprofile
 *.local
 *.log
+lib2/
 /.vscode/
 /docs/.vitepress/cache
 /packages/vite/LICENSE
