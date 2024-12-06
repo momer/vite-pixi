@@ -29,6 +29,7 @@ import { randomFloatFromInterval, randomIntFromInterval } from '@/utils/math/ran
 import { quickRound } from '@/utils/math/floats';
 import { cssScreens } from '@/lib/tailwind/screenSizes';
 import { TreeEnvironment } from '@/components/pixi/TreeEnvironment';
+import { Dimension } from '@/components/pixi/Dimension';
 
 extend({
     Container,
@@ -235,6 +236,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const [isCanopyGraphicsLoading, setIsCanopyGraphicsLoading] = useState(true);
     const [isTrunkGraphicsLoading, setIsTrunkGraphicsLoading] = useState(true);
     const [isBlossomableAreaGraphicsLoading, setIsBlossomableAreaGraphicsLoading] = useState(true);
+    const [drawableTreeDimensions, setDrawableTreeDimensions] = useState<Dimension | null>(null);
 
     const treeWorldContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const treeObjectContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
@@ -330,11 +332,20 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             trunkRef.current &&
             canopyRef.current &&
             blossomableAreaRef.current &&
-            treeWorldContainerRef.current
+            treeWorldContainerRef.current &&
+            treeObjectContainerRef.current
         ) {
             treeWorldContainerRef.current.scale = calculateTreeScale(app.screen);
             treeWorldContainerRef.current.position = calculateTreePos(app.screen, treeWorldContainerRef.current);
             treeWorldContainerRef.current.pivot = calculateCenterPivot(treeWorldContainerRef.current);
+
+            // set the shared state for child components to set their width/height if desired (no scaling)
+            setDrawableTreeDimensions({
+                x: treeObjectContainerRef.current.getBounds().x,
+                y: treeObjectContainerRef.current.getBounds().y,
+                width: treeObjectContainerRef.current.getBounds().width,
+                height: treeObjectContainerRef.current.getBounds().height,
+            });
 
             canopyRef.current.visible = true;
             trunkRef.current.visible = true;
@@ -391,6 +402,12 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         }
     }, [ref, app]);
 
+    const handleTreeObjectContainer = useCallback((container: Container) => {
+        if (container) {
+            treeObjectContainerRef.current = container;
+        }
+    }, []);
+
     const handleTreeTrunkGraphics = useCallback((trunk: Graphics) => {
         if (trunk) {
             trunkRef.current = trunk;
@@ -437,7 +454,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             // eslint-disable-next-line react/no-unknown-property
             <container sortableChildren={ true } ref={ treeWorldContainerRef }>
                 {/* tree container*/}
-                <container isRenderGroup={ true } ref={ treeObjectContainerRef }>
+                <container isRenderGroup={ true } ref={ handleTreeObjectContainer }>
                     <graphics
                         ref={ handleTreeTrunkGraphics }
                         context={ treeTrunk }
@@ -459,9 +476,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                     />
                 </container>
 
-                <TreeEnvironment ref={
-                    treeRefObject
-                }></TreeEnvironment>
+                <TreeEnvironment ref={ treeRefObject } drawableTreeDimensions={drawableTreeDimensions}></TreeEnvironment>
             </container>
         )
     );
