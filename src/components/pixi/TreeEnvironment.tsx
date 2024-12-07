@@ -22,7 +22,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     const environmentContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
     const [precipitationParticleCount, setPrecipitationParticleCount] = useState(500);
-    const { treeWorldContainerRef } = ref as unknown as Tree;
+    const { treeObjectContainerRef } = ref?.current as unknown as Tree;
 
     const generateRainConfig = useCallback(() => {
         return {
@@ -172,7 +172,8 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                         emitter.spawnPos = new Point();
                         emitter.init(precipConfig);
                     }
-                    if (!emitter) {
+                    console.log(`checking for conditions: ${Object.keys(ref?.current)}`);
+                    if (!emitter && treeObjectContainerRef?.current) {
                         const newPrecipConfig = generateRainConfig();
                         setPrecipConfig(() => precipConfig);
                         console.log('creating emitter');
@@ -182,7 +183,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                                 return prevState;
                             }
                             return new Emitter(
-                                environmentContainerRef.current as Container<ContainerChild>,
+                                treeObjectContainerRef.current as Container<ContainerChild>,
                                 newPrecipConfig,
                             );
                         });
