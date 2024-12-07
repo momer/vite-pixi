@@ -1,7 +1,7 @@
 import { forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import hardRainImageUrl from '/static/images/pixi/sakura/environment/HardRain.png';
-import { Container, ContainerChild } from 'pixi.js';
+import { Container, ContainerChild, Point } from 'pixi.js';
 import { extend, useAssets } from '@pixi/react';
 import { Emitter } from '@momer/pixi-particle-emitter';
 import { Tree } from '@/components/pixi/TreeContainer';
@@ -131,7 +131,11 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
         const now = Date.now();
         if (emitter && elapsedRef.current) {
             // update emitter (convert to seconds)
-            emitter.update((now - elapsedRef.current) * 0.001);
+            try {
+                emitter.update((now - elapsedRef.current) * 0.001);
+            } catch (error) {
+                console.log(`caught error: ${error}`);
+            }
         }
 
         // call update hook for specialist examples
@@ -160,18 +164,20 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                 console.log('setting emitter');
                 emitterMutex.isLocked();
                 emitterMutex.runExclusive(() => {
-                    let createEmitter = false;
-                    if (emitter) {
+                    if (emitter && environmentContainerRef.current) {
                         console.log('destroying emitter');
                         emitter.destroy();
-                        createEmitter = true;
+                        emitter.parent = environmentContainerRef.current;
+                        emitter.ownerPos = new Point();
+                        emitter.spawnPos = new Point();
+                        emitter.init(precipConfig);
                     }
-                    if (createEmitter || !emitter) {
+                    if (!emitter) {
                         const newPrecipConfig = generateRainConfig();
                         setPrecipConfig(() => precipConfig);
                         console.log('creating emitter');
                         setEmitter((prevState) => {
-                            if (!createEmitter && prevState !== null) {
+                            if (prevState !== null) {
                                 console.log('returning prevstate');
                                 return prevState;
                             }
