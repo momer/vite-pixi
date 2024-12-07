@@ -143,9 +143,11 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     };
 
     useEffect(() => {
-        console.log('setting emitter to update');
+        console.log('triggering update');
         emitterMutex.runExclusive(() => {
+            console.log('obtained update lock');
             if (emitter) {
+                console.log('setting emitter to update');
                 updateEmitter();
             }
         });
@@ -158,16 +160,18 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                 console.log('setting emitter');
                 emitterMutex.isLocked();
                 emitterMutex.runExclusive(() => {
+                    let createEmitter = false;
                     if (emitter) {
                         console.log('destroying emitter');
-                        // emitter.destroy();
+                        emitter.destroy();
+                        createEmitter = true;
                     }
-                    if (!emitter) {
+                    if (createEmitter || !emitter) {
                         const newPrecipConfig = generateRainConfig();
                         setPrecipConfig(() => precipConfig);
                         console.log('creating emitter');
                         setEmitter((prevState) => {
-                            if (prevState !== null) {
+                            if (!createEmitter && prevState !== null) {
                                 console.log('returning prevstate');
                                 return prevState;
                             }
@@ -184,13 +188,14 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
 
     useEffect(() => {
         // console.log(`outer update: updating ownerpos: (${ props?.drawableTreeDimensions })`);
-        if (emitter && props.drawableTreeDimensions) {
-            // console.log(`inner update: updating ownerpos: (${ props.drawableTreeDimensions.x }, ${ props.drawableTreeDimensions.y })`);
-            // emitterMutex.runExclusive(() => {
-            //     emitter.updateOwnerPos(0, 0);
-            //     emitter.resetPositionTracking();
-            // });
-        }
+        // console.log(`inner update: updating ownerpos: (${ props.drawableTreeDimensions.x }, ${ props.drawableTreeDimensions.y })`);
+        emitterMutex.runExclusive(() => {
+            if (emitter && emitter.ownerPos && props.drawableTreeDimensions) {
+                console.log('updating owner pos');
+                // emitter.updateOwnerPos(0, 0);
+                //     emitter.resetPositionTracking();
+            }
+        });
     }, [props.drawableTreeDimensions, emitter]);
 
     return (
