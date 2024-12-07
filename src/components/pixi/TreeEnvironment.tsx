@@ -81,8 +81,8 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                         'data': {
                             'x': 0,
                             'y': 0,
-                            'w': 400,
-                            'h': 400
+                            'w': 100,
+                            'h': 100
                         }
                     }
                 }
@@ -131,11 +131,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
         const now = Date.now();
         if (emitter && elapsedRef.current) {
             // update emitter (convert to seconds)
-            emitterMutex.runExclusive(() => {
-                if (elapsedRef.current) {
-                    emitter.update((now - elapsedRef.current) * 0.001);
-                }
-            });
+            emitter.update((now - elapsedRef.current) * 0.001);
         }
 
         // call update hook for specialist examples
@@ -147,47 +143,53 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     };
 
     useEffect(() => {
+        console.log('setting emitter to update');
+        emitterMutex.runExclusive(() => {
+            if (emitter) {
+                updateEmitter();
+            }
+        });
+    }, [emitter]);
 
-        if (environmentContainerRef.current) {
+    useEffect(() => {
+        if (environmentContainerRef.current && assetLoadSuccess && isSuccess && hardRain) {
             environmentContainerRef.current.scale = 1;
             if (props.drawableTreeDimensions.width && props.drawableTreeDimensions.height) {
                 console.log('setting emitter');
-                if (emitter) {
-                    emitterMutex.runExclusive(() => emitter.destroy());
-                }
-                setPrecipConfig(() => generateRainConfig());
-                setEmitter(() => new Emitter(
-                    environmentContainerRef.current as Container<ContainerChild>,
-                    precipConfig,
-                ));
-
-                updateEmitter();
-                // console.log(`setting environment width and height: ${props.drawableTreeDimensions.width} x ${props.drawableTreeDimensions.height}`);
-                // environmentContainerRef.current.width = props.drawableTreeDimensions.width;
-                // environmentContainerRef.current.height = props.drawableTreeDimensions.height;
+                emitterMutex.isLocked();
+                emitterMutex.runExclusive(() => {
+                    if (emitter) {
+                        console.log('destroying emitter');
+                        // emitter.destroy();
+                    }
+                    if (!emitter) {
+                        const newPrecipConfig = generateRainConfig();
+                        setPrecipConfig(() => precipConfig);
+                        console.log('creating emitter');
+                        setEmitter((prevState) => {
+                            if (prevState !== null) {
+                                console.log('returning prevstate');
+                                return prevState;
+                            }
+                            return new Emitter(
+                                environmentContainerRef.current as Container<ContainerChild>,
+                                newPrecipConfig,
+                            );
+                        });
+                    }
+                });
             }
         }
-    }, [props.drawableTreeDimensions, isEnvironmentContainerLoading]);
+    }, [props.drawableTreeDimensions, isEnvironmentContainerLoading, assetLoadSuccess, isSuccess]);
 
     useEffect(() => {
-        // TODO: change based on envirnment settings, like rain==true, etc.
-        if (!isEnvironmentContainerLoading && environmentContainerRef.current !== null && assetLoadSuccess && hardRain && isSuccess && precipConfig) {
-
-            console.log('updating emitter');
-
-            // emitterRef.current.updateOwnerPos(window.innerWidth / 2, window.innerHeight / 2);
-
-        }
-    }, [isEnvironmentContainerLoading, assetLoadSuccess, isSuccess, precipConfig]);
-
-    useEffect(() => {
-        console.log(`outer update: updating ownerpos: (${ props?.drawableTreeDimensions })`);
-        if (emitter) {
+        // console.log(`outer update: updating ownerpos: (${ props?.drawableTreeDimensions })`);
+        if (emitter && props.drawableTreeDimensions) {
             // console.log(`inner update: updating ownerpos: (${ props.drawableTreeDimensions.x }, ${ props.drawableTreeDimensions.y })`);
-            emitterMutex.runExclusive(() => {
-                emitter.updateOwnerPos(0, 0);
-                emitter.resetPositionTracking();
-            });
+            // emitterMutex.runExclusive(() => {
+            //     emitter.updateOwnerPos(0, 0);
+            //     emitter.resetPositionTracking();
+            // });
         }
     }, [props.drawableTreeDimensions, emitter]);
 
