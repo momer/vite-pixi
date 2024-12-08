@@ -47,6 +47,7 @@ export type Tree = {
     trunkRef: MutableRefObject<Graphics | null>;
     canopyRef: MutableRefObject<Graphics | null>;
     blossomableAreaRef: MutableRefObject<Graphics | null>;
+    totalTreeAreaGraphicsRef: MutableRefObject<Graphics | null>;
     treeWorldContainerRef: MutableRefObject<Container | null>;
     treeObjectContainerRef: MutableRefObject<Container | null>;
 }
@@ -245,6 +246,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const treeObjectContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const trunkRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const canopyRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
+    const totalTreeAreaGraphicsRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const blossomableAreaRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
 
     const [emitter, setEmitter] = useState<Emitter | null>(null);
@@ -439,6 +441,12 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         }
     }, []);
 
+    const handleTotalTreeAreaGraphics = useCallback((totalTreeAreaGraphics: Graphics) => {
+        if (totalTreeAreaGraphics) {
+            totalTreeAreaGraphicsRef.current = totalTreeAreaGraphics;
+        }
+    }, []);
+
     const handleTreeCanopyGraphics = useCallback((canopy: Graphics) => {
         if (canopy) {
             canopyRef.current = canopy;
@@ -461,6 +469,24 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             setIsBlossomableAreaGraphicsLoading(false);
         }
     }, []);
+
+    const drawTotalTreeAreaGraphics = useCallback((graphix: Graphics) => {
+        graphix.clear();
+
+        if (treeWorldContainerRef?.current) {
+            console.log('draw total tree area:', graphix);
+            graphix.rect(0,
+                0,
+                treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
+                treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
+            );
+            graphix.stroke({
+                color: 0xFFDAE6,
+                width: 4,
+                alpha: 1,
+            });
+        }
+    }, [assetLoadSuccess, app, resizeTreeContainer, drawableTreeDimensions]);
 
     useEffect(() => {
         console.log(`asset load success is now: ${ assetLoadSuccess }`);
@@ -495,6 +521,10 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                         ref={ handleBlossomableAreaGraphics }
                         context={ blossomableArea }
                     />
+                    <graphics
+                        ref={ handleTotalTreeAreaGraphics }
+                        draw={ drawTotalTreeAreaGraphics }
+                    />
                     <LeafCollection
                         ref={
                             treeRefObject
@@ -507,8 +537,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                 <TreeEnvironment
                     ref={ treeRefObject }
                     drawableTreeDimensions={ drawableTreeDimensions }
-                    emitter={emitter}
-                    setEmitter={setEmitter}
+                    emitter={ emitter }
+                    setEmitter={ setEmitter }
                 ></TreeEnvironment>
             </container>
         )

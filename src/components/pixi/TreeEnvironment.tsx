@@ -81,8 +81,8 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                     'config': {
                         'type': 'rect',
                         'data': {
-                            'x': 0,
-                            'y': 0,
+                            'x': 100,
+                            'y': 100,
                             'w': 100,
                             'h': 100
                         }
