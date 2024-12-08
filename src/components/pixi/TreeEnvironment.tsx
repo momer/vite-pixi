@@ -91,6 +91,14 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                             'h': 1
                         }
                     }
+                },
+                {
+                    type: 'color',
+                    config: {
+                        color: {
+                            list: [{value: '#78b2f4', time: 0}, {value: '#4091ec', time: 1}]
+                        },
+                    }
                 }
             ]
         };
@@ -195,7 +203,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
             if (props.emitter) {
                 console.log('destroying emitter');
                 // props.emitter.destroy();
-                // props.emitter.parent = environmentContainerRef.current;
+                props.emitter.parent = environmentContainerRef.current;
                 // props.emitter.ownerPos = new Point();
                 // props.emitter.spawnPos = new Point();
                 const newPrecipConfig = generateRainConfig();
@@ -205,7 +213,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                 console.log('setting emitter');
                 emitterMutex.isLocked();
                 emitterMutex.runExclusive(() => {
-                    if (!props.emitter && treeObjectContainerRef?.current) {
+                    if (!props.emitter && environmentContainerRef?.current) {
                         const newPrecipConfig = generateRainConfig();
                         setPrecipConfig(() => newPrecipConfig);
                         console.log('creating emitter');
@@ -216,7 +224,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                             }
 
                             return new Emitter(
-                                treeObjectContainerRef.current as Container<ContainerChild>,
+                                environmentContainerRef.current as Container<ContainerChild>,
                                 newPrecipConfig,
                             );
                         });
