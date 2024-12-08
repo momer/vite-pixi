@@ -31,6 +31,7 @@ import { quickRound } from '@/utils/math/floats';
 import { cssScreens } from '@/lib/tailwind/screenSizes';
 import { TreeEnvironment } from '@/components/pixi/TreeEnvironment';
 import { Dimension } from '@/components/pixi/Dimension';
+import { Emitter } from '@momer/pixi-particle-emitter';
 
 extend({
     Container,
@@ -246,6 +247,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const canopyRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const blossomableAreaRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
 
+    const [emitter, setEmitter] = useState<Emitter | null>(null);
+
     const treeRefObject: RefObject<Tree> = useRef<Tree>({
         trunkRef,
         canopyRef,
@@ -338,6 +341,11 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             treeObjectContainerRef.current
         ) {
             console.log('inside resizeTreeContainer callback');
+            if (emitter) {
+                console.log('stopping emitter');
+                emitter.emit = false;
+                emitter.cleanup();
+            }
 
             treeWorldContainerRef.current.scale = calculateTreeScale(app.screen);
             treeWorldContainerRef.current.position = calculateTreePos(app.screen, treeWorldContainerRef.current);
@@ -354,8 +362,13 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             canopyRef.current.visible = true;
             trunkRef.current.visible = true;
             blossomableAreaRef.current.visible = true;
+
+            if (emitter) {
+                // restart the emitter
+                emitter.emit = true;
+            }
         }
-    }, [assetLoadSuccess, app]);
+    }, [assetLoadSuccess, app, emitter]);
 
     const {
         assets: [
@@ -500,6 +513,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                 <TreeEnvironment
                     ref={ treeRefObject }
                     drawableTreeDimensions={ drawableTreeDimensions }
+                    emitter={emitter}
+                    setEmitter={setEmitter}
                 ></TreeEnvironment>
             </container>
         )
