@@ -7,7 +7,8 @@ import {
     Point,
     PointData,
     Rectangle,
-    Sprite, Ticker
+    Sprite,
+    Text,
 } from 'pixi.js';
 import React, {
     ForwardedRef,
@@ -35,6 +36,7 @@ extend({
     Container,
     Graphics,
     Sprite,
+    Text,
 });
 
 
@@ -340,10 +342,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         ) {
             console.log('inside resizeTreeContainer callback');
             if (emitterIsPaused) {
-                console.log(`resizing window because paused: ${emitterIsPaused}`);
-                const ticker = Ticker.shared;
-                ticker.autoStart = false;
-                ticker.stop();
+                console.log(`resizing window because paused: ${ emitterIsPaused }`);
 
                 treeWorldContainerRef.current.scale = calculateTreeScale(app.screen);
                 treeWorldContainerRef.current.position = calculateTreePos(app.screen, treeWorldContainerRef.current);
@@ -360,7 +359,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                 canopyRef.current.visible = true;
                 trunkRef.current.visible = true;
                 blossomableAreaRef.current.visible = true;
-                ticker.start();
 
                 console.log('setting tree did resize to false');
                 setTreeContainerDidResize(() => false);
@@ -423,7 +421,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             observer.observe(ref.current as Element, {});
 
         }
-    }, [ref, app]);
+    }, [ref, app, resizeTreeContainer]);
 
     const handleTreeObjectContainer = useCallback((container: Container) => {
         if (container) {
@@ -462,6 +460,10 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     }, []);
 
     useEffect(() => {
+        console.log(`asset load success is now: ${ assetLoadSuccess }`);
+    }, [assetLoadSuccess]);
+
+    useEffect(() => {
         resizeTreeContainer();
     }, [assetLoadSuccess, isTrunkGraphicsLoading, isCanopyGraphicsLoading, app, treeTrunk, treeCanopy]);
 
@@ -476,6 +478,12 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         isSuccess && app?.renderer && app?.screen && (
             // eslint-disable-next-line react/no-unknown-property
             <container sortableChildren={ true } ref={ treeWorldContainerRef }>
+                <container x={ 100 } y={ 100 }>
+
+                    <text
+                        anchor={ { x: 0.5, y: 0.5 } }
+                        text={ `${assetLoadSuccess}` }/>
+                </container>
                 {/* tree container*/ }
                 <container isRenderGroup={ true } ref={ handleTreeObjectContainer }>
                     <graphics
