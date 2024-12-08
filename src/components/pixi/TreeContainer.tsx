@@ -481,12 +481,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         isSuccess && app?.renderer && app?.screen && (
             // eslint-disable-next-line react/no-unknown-property
             <container sortableChildren={ true } ref={ treeWorldContainerRef }>
-                <container x={ 100 } y={ 100 }>
-
-                    <text
-                        anchor={ { x: 0.5, y: 0.5 } }
-                        text={ `${ assetLoadSuccess }` }/>
-                </container>
                 {/* tree container*/ }
                 <container isRenderGroup={ true } ref={ handleTreeObjectContainer }>
                     <graphics
