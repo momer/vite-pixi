@@ -7,7 +7,7 @@ import {
     Point,
     PointData,
     Rectangle,
-    Sprite
+    Sprite, Ticker
 } from 'pixi.js';
 import React, {
     ForwardedRef,
@@ -232,7 +232,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
     // Both should be the same for trunk and canopy
 
-    const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(true);
+    const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(false);
     const [isCanopyGraphicsLoading, setIsCanopyGraphicsLoading] = useState(true);
     const [isTrunkGraphicsLoading, setIsTrunkGraphicsLoading] = useState(true);
     const [isBlossomableAreaGraphicsLoading, setIsBlossomableAreaGraphicsLoading] = useState(true);
@@ -243,6 +243,9 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const trunkRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const canopyRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const blossomableAreaRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
+    // emitter state
+    const [emitterIsPaused, setEmitterIsPaused] = useState<boolean>(true);
+    const [treeContainerDidResize, setTreeContainerDidResize] = useState<boolean>(false);
 
     const treeRefObject: RefObject<Tree> = useRef<Tree>({
         trunkRef,
@@ -311,7 +314,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         return pos;
     };
 
-    const calculateCenterPivot = (container: Container<ContainerChild>  | null): PointData => {
+    const calculateCenterPivot = (container: Container<ContainerChild> | null): PointData => {
         if (!container) {
             return new Point(0, 0);
         }
@@ -335,23 +338,38 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             treeWorldContainerRef.current &&
             treeObjectContainerRef.current
         ) {
-            treeWorldContainerRef.current.scale = calculateTreeScale(app.screen);
-            treeWorldContainerRef.current.position = calculateTreePos(app.screen, treeWorldContainerRef.current);
-            treeWorldContainerRef.current.pivot = calculateCenterPivot(treeWorldContainerRef.current);
+            console.log('inside resizeTreeContainer callback');
+            if (emitterIsPaused) {
+                console.log(`resizing window because paused: ${emitterIsPaused}`);
+                const ticker = Ticker.shared;
+                ticker.autoStart = false;
+                ticker.stop();
 
-            // set the shared state for child components to set their width/height if desired (no scaling)
-            setDrawableTreeDimensions({
-                x: treeObjectContainerRef.current.getBounds().x,
-                y: treeObjectContainerRef.current.getBounds().y,
-                width: treeObjectContainerRef.current.getBounds().width,
-                height: treeObjectContainerRef.current.getBounds().height,
-            });
+                treeWorldContainerRef.current.scale = calculateTreeScale(app.screen);
+                treeWorldContainerRef.current.position = calculateTreePos(app.screen, treeWorldContainerRef.current);
+                treeWorldContainerRef.current.pivot = calculateCenterPivot(treeWorldContainerRef.current);
 
-            canopyRef.current.visible = true;
-            trunkRef.current.visible = true;
-            blossomableAreaRef.current.visible = true;
+                // set the shared state for child components to set their width/height if desired (no scaling)
+                setDrawableTreeDimensions({
+                    x: treeObjectContainerRef.current.getBounds().x,
+                    y: treeObjectContainerRef.current.getBounds().y,
+                    width: treeObjectContainerRef.current.getBounds().width,
+                    height: treeObjectContainerRef.current.getBounds().height,
+                });
+
+                canopyRef.current.visible = true;
+                trunkRef.current.visible = true;
+                blossomableAreaRef.current.visible = true;
+                ticker.start();
+
+                console.log('setting tree did resize to false');
+                setTreeContainerDidResize(() => false);
+            } else {
+                console.log('setting tree did resize to true');
+                setTreeContainerDidResize(() => true);
+            }
         }
-    }, [assetLoadSuccess, isTrunkGraphicsLoading, isCanopyGraphicsLoading, app]);
+    }, [assetLoadSuccess, app, emitterIsPaused]);
 
     const {
         assets: [
@@ -378,7 +396,9 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         }
     ], {
         onProgress: (progress: number) => {
+            console.log('progress:', progress);
             if (progress >= 1) {
+                console.log('progress complete:', progress);
                 setAssetLoadSuccess(true);
             }
         },
@@ -386,9 +406,12 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
     // initial load, start observing the div parent for sizing
     useEffect(() => {
+        console.log('resize observable effect called');
         if (ref) {
+            console.log('ref:', ref);
             ref = ref as MutableRefObject<HTMLDivElement>;
             const observer = new ResizeObserver((entries) => {
+                console.log('resize observer called');
                 for (const entry of entries) {
                     const { width, height } = entry.contentRect;
                     if (app && app.renderer) {
@@ -453,7 +476,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         isSuccess && app?.renderer && app?.screen && (
             // eslint-disable-next-line react/no-unknown-property
             <container sortableChildren={ true } ref={ treeWorldContainerRef }>
-                {/* tree container*/}
+                {/* tree container*/ }
                 <container isRenderGroup={ true } ref={ handleTreeObjectContainer }>
                     <graphics
                         ref={ handleTreeTrunkGraphics }
@@ -476,7 +499,13 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                     />
                 </container>
 
-                <TreeEnvironment ref={ treeRefObject } drawableTreeDimensions={drawableTreeDimensions}></TreeEnvironment>
+                <TreeEnvironment
+                    ref={ treeRefObject }
+                    drawableTreeDimensions={ drawableTreeDimensions }
+                    setEmitterIsPaused={ setEmitterIsPaused }
+                    setTreeContainerDidResize={ setTreeContainerDidResize }
+                    treeContainerDidResize={ treeContainerDidResize }
+                ></TreeEnvironment>
             </container>
         )
     );

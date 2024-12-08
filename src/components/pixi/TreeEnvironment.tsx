@@ -13,7 +13,10 @@ extend({
 });
 
 export interface TreeEnvironmentProps {
+    setEmitterIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
     drawableTreeDimensions: Dimension;
+    treeContainerDidResize: boolean;
+    setTreeContainerDidResize: React.Dispatch<React.SetStateAction<boolean>>;
     children?: React.ReactNode;
 }
 
@@ -158,21 +161,38 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     }, [emitter]);
 
     useEffect(() => {
+        // once resized, let's enable the emitter.
+        if (emitter && !props.treeContainerDidResize) {
+            console.log('re-enabling the emitter');
+            emitter.emit = false;
+            emitter.cleanup();
+            emitter.init(precipConfig);
+
+            props.setEmitterIsPaused(false);
+            props.setTreeContainerDidResize(false);
+        }
+    }, [props.treeContainerDidResize]);
+
+    useEffect(() => {
+        console.log('in the environment effect');
         if (environmentContainerRef.current && assetLoadSuccess && isSuccess && hardRain) {
-            environmentContainerRef.current.scale = 1;
-            if (props.drawableTreeDimensions.width && props.drawableTreeDimensions.height) {
+            // environmentContainerRef.current.scale = 1;
+            if (props.treeContainerDidResize || !emitter) {
                 console.log('setting emitter');
                 emitterMutex.isLocked();
                 emitterMutex.runExclusive(() => {
-                    if (emitter && environmentContainerRef.current) {
+                    if (emitter && treeObjectContainerRef.current) {
                         console.log('destroying emitter');
                         emitter.destroy();
-                        emitter.parent = environmentContainerRef.current;
+                        emitter.parent = treeObjectContainerRef.current;
                         emitter.ownerPos = new Point();
                         emitter.spawnPos = new Point();
+                        emitter.emit = false;
+                        emitter.cleanup();
                         emitter.init(precipConfig);
+                        console.log('setting emitter is paused: true');
+                        props.setEmitterIsPaused(true);
                     }
-                    console.log(`checking for conditions: ${Object.keys(ref?.current)}`);
                     if (!emitter && treeObjectContainerRef?.current) {
                         const newPrecipConfig = generateRainConfig();
                         setPrecipConfig(() => precipConfig);
@@ -182,16 +202,23 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                                 console.log('returning prevstate');
                                 return prevState;
                             }
+
                             return new Emitter(
                                 treeObjectContainerRef.current as Container<ContainerChild>,
                                 newPrecipConfig,
                             );
                         });
+                        console.log('setting emitter is paused: false');
+                        props.setEmitterIsPaused(false);
                     }
                 });
             }
         }
-    }, [props.drawableTreeDimensions, isEnvironmentContainerLoading, assetLoadSuccess, isSuccess]);
+    }, [props.drawableTreeDimensions, props.treeContainerDidResize, isEnvironmentContainerLoading, assetLoadSuccess, isSuccess]);
+
+    useEffect(() => {
+        console.log('triggered via resize');
+    }, [props.treeContainerDidResize]);
 
     useEffect(() => {
         // console.log(`outer update: updating ownerpos: (${ props?.drawableTreeDimensions })`);
@@ -199,7 +226,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
         emitterMutex.runExclusive(() => {
             if (emitter && emitter.ownerPos && props.drawableTreeDimensions) {
                 console.log('updating owner pos');
-                // emitter.updateOwnerPos(0, 0);
+                // emitter.updateOwnerPos(props.drawableTreeDimensions.x, props.drawableTreeDimensions.y);
                 //     emitter.resetPositionTracking();
             }
         });
