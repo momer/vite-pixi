@@ -123,7 +123,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                     )
                     .stroke({
                         color: 0xFFDAE6,
-                        width: 4,
+                        width: 1,
                         alpha: 0,
                     })
                     .fill({
@@ -132,6 +132,22 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                     });
                 environmentContainerRef.current.mask = treeMaskRef.current;
                 environmentContainerRef.current.addChild(treeMaskRef.current);
+                environmentContainerRef.current.addChild(new Graphics()
+                    .rect(
+                        0,
+                        0,
+                        treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
+                        treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
+                    )
+                    .stroke({
+                        color: 0xFFDAE6,
+                        width: 4,
+                        alpha: 1,
+                    })
+                    .fill({
+                        color: 0xffffff,
+                        alpha: 0.33,
+                    }));
             }
             setIsEnvironmentContainerLoading(() => false);
         }
@@ -237,6 +253,8 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     return (
         isSuccess && (
             <container
+                zIndex={10}
+                isRenderGroup={ true }
                 ref={ handleParticleContainer }
             >
                 { props.children }

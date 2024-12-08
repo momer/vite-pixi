@@ -497,7 +497,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                         ref={
                             treeRefObject
                         }
-                        isRenderGroup={ true }
                         sortableChildren={ true }
                     />
                 </container>
