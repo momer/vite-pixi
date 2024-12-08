@@ -116,7 +116,11 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                     .stroke({
                         color: 0xFFDAE6,
                         width: 4,
-                        alpha: 1,
+                        alpha: 0,
+                    })
+                    .fill({
+                        color: 0xFFDAE6,
+                        alpha: 0,
                     });
                 environmentContainerRef.current.mask = treeMaskRef.current;
                 environmentContainerRef.current.addChild(treeMaskRef.current);
