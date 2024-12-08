@@ -245,9 +245,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const trunkRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const canopyRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const blossomableAreaRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
-    // emitter state
-    const [emitterIsPaused, setEmitterIsPaused] = useState<boolean>(true);
-    const [treeContainerDidResize, setTreeContainerDidResize] = useState<boolean>(false);
 
     const treeRefObject: RefObject<Tree> = useRef<Tree>({
         trunkRef,
@@ -341,33 +338,24 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             treeObjectContainerRef.current
         ) {
             console.log('inside resizeTreeContainer callback');
-            if (emitterIsPaused) {
-                console.log(`resizing window because paused: ${ emitterIsPaused }`);
 
-                treeWorldContainerRef.current.scale = calculateTreeScale(app.screen);
-                treeWorldContainerRef.current.position = calculateTreePos(app.screen, treeWorldContainerRef.current);
-                treeWorldContainerRef.current.pivot = calculateCenterPivot(treeWorldContainerRef.current);
+            treeWorldContainerRef.current.scale = calculateTreeScale(app.screen);
+            treeWorldContainerRef.current.position = calculateTreePos(app.screen, treeWorldContainerRef.current);
+            treeWorldContainerRef.current.pivot = calculateCenterPivot(treeWorldContainerRef.current);
 
-                // set the shared state for child components to set their width/height if desired (no scaling)
-                setDrawableTreeDimensions({
-                    x: treeObjectContainerRef.current.getBounds().x,
-                    y: treeObjectContainerRef.current.getBounds().y,
-                    width: treeObjectContainerRef.current.getBounds().width,
-                    height: treeObjectContainerRef.current.getBounds().height,
-                });
+            // set the shared state for child components to set their width/height if desired (no scaling)
+            setDrawableTreeDimensions({
+                x: treeObjectContainerRef.current.getBounds().x,
+                y: treeObjectContainerRef.current.getBounds().y,
+                width: treeObjectContainerRef.current.getBounds().width,
+                height: treeObjectContainerRef.current.getBounds().height,
+            });
 
-                canopyRef.current.visible = true;
-                trunkRef.current.visible = true;
-                blossomableAreaRef.current.visible = true;
-
-                console.log('setting tree did resize to false');
-                setTreeContainerDidResize(() => false);
-            } else {
-                console.log('setting tree did resize to true');
-                setTreeContainerDidResize(() => true);
-            }
+            canopyRef.current.visible = true;
+            trunkRef.current.visible = true;
+            blossomableAreaRef.current.visible = true;
         }
-    }, [assetLoadSuccess, app, emitterIsPaused]);
+    }, [assetLoadSuccess, app]);
 
     const {
         assets: [
@@ -402,6 +390,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         },
     });
 
+    const resizeObserver = useRef<any>(null);
+
     // initial load, start observing the div parent for sizing
     useEffect(() => {
         console.log('resize observable effect called');
@@ -419,7 +409,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                 }
             });
             observer.observe(ref.current as Element, {});
-
+            resizeObserver.current = observer;
         }
     }, [ref, app, resizeTreeContainer]);
 
@@ -482,7 +472,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
                     <text
                         anchor={ { x: 0.5, y: 0.5 } }
-                        text={ `${assetLoadSuccess}` }/>
+                        text={ `${ assetLoadSuccess }` }/>
                 </container>
                 {/* tree container*/ }
                 <container isRenderGroup={ true } ref={ handleTreeObjectContainer }>
@@ -510,9 +500,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                 <TreeEnvironment
                     ref={ treeRefObject }
                     drawableTreeDimensions={ drawableTreeDimensions }
-                    setEmitterIsPaused={ setEmitterIsPaused }
-                    setTreeContainerDidResize={ setTreeContainerDidResize }
-                    treeContainerDidResize={ treeContainerDidResize }
                 ></TreeEnvironment>
             </container>
         )

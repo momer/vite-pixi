@@ -13,10 +13,7 @@ extend({
 });
 
 export interface TreeEnvironmentProps {
-    setEmitterIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
     drawableTreeDimensions: Dimension;
-    treeContainerDidResize: boolean;
-    setTreeContainerDidResize: React.Dispatch<React.SetStateAction<boolean>>;
     children?: React.ReactNode;
 }
 
@@ -137,7 +134,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
             try {
                 emitter.update((now - elapsedRef.current) * 0.001);
             } catch (error) {
-                console.log(`caught error: ${error}`);
+                console.log(`caught error: ${ error }`);
             }
         }
 
@@ -161,38 +158,20 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     }, [emitter]);
 
     useEffect(() => {
-        // once resized, let's enable the emitter.
-        if (emitter && !props.treeContainerDidResize) {
-            console.log('re-enabling the emitter');
-            emitter.emit = false;
-            emitter.cleanup();
-            emitter.init(precipConfig);
-
-            props.setEmitterIsPaused(false);
-            props.setTreeContainerDidResize(false);
-        }
-    }, [props.treeContainerDidResize]);
-
-    useEffect(() => {
         console.log('in the environment effect');
-        if (environmentContainerRef.current && assetLoadSuccess && isSuccess && hardRain) {
+        if (treeObjectContainerRef.current && assetLoadSuccess && isSuccess && hardRain) {
             // environmentContainerRef.current.scale = 1;
-            if (props.treeContainerDidResize || !emitter) {
+            if (emitter) {
+                console.log('destroying emitter');
+                emitter.destroy();
+                emitter.parent = treeObjectContainerRef.current;
+                emitter.ownerPos = new Point();
+                emitter.spawnPos = new Point();
+                emitter.init(precipConfig);
+            } else {
                 console.log('setting emitter');
                 emitterMutex.isLocked();
                 emitterMutex.runExclusive(() => {
-                    if (emitter && treeObjectContainerRef.current) {
-                        console.log('destroying emitter');
-                        emitter.destroy();
-                        emitter.parent = treeObjectContainerRef.current;
-                        emitter.ownerPos = new Point();
-                        emitter.spawnPos = new Point();
-                        emitter.emit = false;
-                        emitter.cleanup();
-                        emitter.init(precipConfig);
-                        console.log('setting emitter is paused: true');
-                        props.setEmitterIsPaused(true);
-                    }
                     if (!emitter && treeObjectContainerRef?.current) {
                         const newPrecipConfig = generateRainConfig();
                         setPrecipConfig(() => precipConfig);
@@ -208,17 +187,11 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                                 newPrecipConfig,
                             );
                         });
-                        console.log('setting emitter is paused: false');
-                        props.setEmitterIsPaused(false);
                     }
                 });
             }
         }
-    }, [props.drawableTreeDimensions, props.treeContainerDidResize, isEnvironmentContainerLoading, assetLoadSuccess, isSuccess]);
-
-    useEffect(() => {
-        console.log('triggered via resize');
-    }, [props.treeContainerDidResize]);
+    }, [props.drawableTreeDimensions, isEnvironmentContainerLoading, assetLoadSuccess, isSuccess]);
 
     useEffect(() => {
         // console.log(`outer update: updating ownerpos: (${ props?.drawableTreeDimensions })`);
