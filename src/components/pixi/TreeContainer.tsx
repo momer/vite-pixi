@@ -343,13 +343,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             treeWorldContainerRef.current &&
             treeObjectContainerRef.current
         ) {
-            console.log('inside resizeTreeContainer callback');
-            if (emitter) {
-                console.log('stopping emitter');
-                emitter.emit = false;
-                emitter.cleanup();
-            }
-
             treeWorldContainerRef.current.scale = calculateTreeScale(app.screen);
             treeWorldContainerRef.current.position = calculateTreePos(app.screen, treeWorldContainerRef.current);
             treeWorldContainerRef.current.pivot = calculateCenterPivot(treeWorldContainerRef.current);
@@ -365,11 +358,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             canopyRef.current.visible = true;
             trunkRef.current.visible = true;
             blossomableAreaRef.current.visible = true;
-
-            if (emitter) {
-                // restart the emitter
-                emitter.emit = true;
-            }
         }
     }, [assetLoadSuccess, app, emitter]);
 

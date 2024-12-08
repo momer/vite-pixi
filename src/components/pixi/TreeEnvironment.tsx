@@ -194,10 +194,10 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
             // environmentContainerRef.current.scale = 1;
             if (props.emitter) {
                 console.log('destroying emitter');
-                props.emitter.destroy();
-                props.emitter.parent = environmentContainerRef.current;
-                props.emitter.ownerPos = new Point();
-                props.emitter.spawnPos = new Point();
+                // props.emitter.destroy();
+                // props.emitter.parent = environmentContainerRef.current;
+                // props.emitter.ownerPos = new Point();
+                // props.emitter.spawnPos = new Point();
                 const newPrecipConfig = generateRainConfig();
                 setPrecipConfig(() => newPrecipConfig);
                 props.emitter.init(precipConfig);
@@ -225,18 +225,6 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
             }
         }
     }, [props.drawableTreeDimensions, isEnvironmentContainerLoading, assetLoadSuccess, isSuccess, generateRainConfig]);
-
-    useEffect(() => {
-        // console.log(`outer update: updating ownerpos: (${ props?.drawableTreeDimensions })`);
-        // console.log(`inner update: updating ownerpos: (${ props.drawableTreeDimensions.x }, ${ props.drawableTreeDimensions.y })`);
-        emitterMutex.runExclusive(() => {
-            if (props.emitter && props.emitter.ownerPos && props.drawableTreeDimensions) {
-                console.log('updating owner pos');
-                // emitter.updateOwnerPos(props.drawableTreeDimensions.x, props.drawableTreeDimensions.y);
-                //     emitter.resetPositionTracking();
-            }
-        });
-    }, [props.drawableTreeDimensions, props.emitter]);
 
     return (
         isSuccess && (
