@@ -1,7 +1,7 @@
 import { forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import hardRainImageUrl from '/static/images/pixi/sakura/environment/HardRain.png';
-import { Container, ContainerChild, Point } from 'pixi.js';
+import { Container, ContainerChild, Graphics, Point } from 'pixi.js';
 import { extend, useAssets } from '@pixi/react';
 import { Emitter } from '@momer/pixi-particle-emitter';
 import { Tree } from '@/components/pixi/TreeContainer';
@@ -16,15 +16,19 @@ export interface TreeEnvironmentProps {
     drawableTreeDimensions: Dimension;
     emitter: Emitter | undefined | null;
     setEmitter: React.Dispatch<React.SetStateAction<Emitter | null>>;
+    isTrunkGraphicsLoading: boolean;
+    isCanopyGraphicsLoading: boolean;
+    isBlossomableAreaGraphicsLoading: boolean;
     children?: React.ReactNode;
 }
 
 export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, ref) => {
     const emitterMutex = new Mutex();
+    const treeMaskRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const environmentContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
     const [precipitationParticleCount, setPrecipitationParticleCount] = useState(500);
-    const { treeObjectContainerRef } = ref?.current as unknown as Tree;
+    const { totalTreeAreaGraphicsRef, treeObjectContainerRef, treeWorldContainerRef } = ref?.current as unknown as Tree;
 
     const generateRainConfig = useCallback(() => {
         return {
@@ -95,9 +99,31 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     const [precipConfig, setPrecipConfig] = useState(generateRainConfig());
 
     const handleParticleContainer = useCallback((container: Container) => {
-        environmentContainerRef.current = container;
-        setIsEnvironmentContainerLoading(() => false);
-    }, []);
+        // update the mask for the environment container when resized
+        console.log(`handling particle container. Treeworldcontainerref: ${ treeWorldContainerRef.current }`);
+        if (treeWorldContainerRef?.current && container) {
+            console.log('handling particle container - with mask');
+            environmentContainerRef.current = container;
+
+            if (!treeMaskRef?.current) {
+                treeMaskRef.current = new Graphics()
+                    .rect(
+                        0,
+                        0,
+                        treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
+                        treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
+                    )
+                    .stroke({
+                        color: 0xFFDAE6,
+                        width: 4,
+                        alpha: 1,
+                    });
+                environmentContainerRef.current.mask = treeMaskRef.current;
+                environmentContainerRef.current.addChild(treeMaskRef.current);
+            }
+            setIsEnvironmentContainerLoading(() => false);
+        }
+    }, [props.drawableTreeDimensions, props.isBlossomableAreaGraphicsLoading, props.isCanopyGraphicsLoading, props.isTrunkGraphicsLoading]);
 
     const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(true);
 
@@ -160,12 +186,12 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
 
     useEffect(() => {
         console.log('in the environment effect');
-        if (treeObjectContainerRef.current && assetLoadSuccess && isSuccess && hardRain) {
+        if (environmentContainerRef.current && assetLoadSuccess && isSuccess && hardRain) {
             // environmentContainerRef.current.scale = 1;
             if (props.emitter) {
                 console.log('destroying emitter');
                 props.emitter.destroy();
-                props.emitter.parent = treeObjectContainerRef.current;
+                props.emitter.parent = environmentContainerRef.current;
                 props.emitter.ownerPos = new Point();
                 props.emitter.spawnPos = new Point();
                 props.emitter.init(precipConfig);

@@ -255,6 +255,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         trunkRef,
         canopyRef,
         blossomableAreaRef,
+        totalTreeAreaGraphicsRef,
         treeObjectContainerRef,
         treeWorldContainerRef,
     });
@@ -539,6 +540,9 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                     drawableTreeDimensions={ drawableTreeDimensions }
                     emitter={ emitter }
                     setEmitter={ setEmitter }
+                    isTrunkGraphicsLoading={isTrunkGraphicsLoading}
+                    isCanopyGraphicsLoading={isCanopyGraphicsLoading}
+                    isBlossomableAreaGraphicsLoading={isBlossomableAreaGraphicsLoading}
                 ></TreeEnvironment>
             </container>
         )
