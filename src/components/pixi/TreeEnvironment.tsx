@@ -33,12 +33,12 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     const generateRainConfig = useCallback(() => {
         return {
             'lifetime': {
-                'min': 0.81,
-                'max': 0.81
+                'min': 1,
+                'max': 1.5
             },
-            'frequency': 0.004,
+            'frequency': 0.01,
             'emitterLifetime': 0,
-            'maxParticles': 1000,
+            'maxParticles': 300,
             'addAtBack': false,
             'pos': {
                 'x': 0,
@@ -54,8 +54,8 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                 {
                     'type': 'moveSpeedStatic',
                     'config': {
-                        'min': 3000,
-                        'max': 3000
+                        'min': 1000,
+                        'max': 1000
                     }
                 },
                 {
@@ -68,8 +68,8 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                 {
                     'type': 'rotationStatic',
                     'config': {
-                        'min': 65,
-                        'max': 65
+                        'min': 83,
+                        'max': 97
                     }
                 },
                 {
@@ -85,10 +85,10 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                     'config': {
                         'type': 'rect',
                         'data': {
-                            'x': 100,
-                            'y': 100,
-                            'w': 100,
-                            'h': 100
+                            'x': 0,
+                            'y': 0,
+                            'w': props.drawableTreeDimensions?.width || 100,
+                            'h': 1
                         }
                     }
                 }
@@ -198,6 +198,8 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                 props.emitter.parent = environmentContainerRef.current;
                 props.emitter.ownerPos = new Point();
                 props.emitter.spawnPos = new Point();
+                const newPrecipConfig = generateRainConfig();
+                setPrecipConfig(() => newPrecipConfig);
                 props.emitter.init(precipConfig);
             } else {
                 console.log('setting emitter');
@@ -205,7 +207,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                 emitterMutex.runExclusive(() => {
                     if (!props.emitter && treeObjectContainerRef?.current) {
                         const newPrecipConfig = generateRainConfig();
-                        setPrecipConfig(() => precipConfig);
+                        setPrecipConfig(() => newPrecipConfig);
                         console.log('creating emitter');
                         props.setEmitter((prevState) => {
                             if (prevState !== null) {
@@ -222,7 +224,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                 });
             }
         }
-    }, [props.drawableTreeDimensions, isEnvironmentContainerLoading, assetLoadSuccess, isSuccess]);
+    }, [props.drawableTreeDimensions, isEnvironmentContainerLoading, assetLoadSuccess, isSuccess, generateRainConfig]);
 
     useEffect(() => {
         // console.log(`outer update: updating ownerpos: (${ props?.drawableTreeDimensions })`);

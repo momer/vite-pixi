@@ -356,10 +356,10 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
             // set the shared state for child components to set their width/height if desired (no scaling)
             setDrawableTreeDimensions({
-                x: treeObjectContainerRef.current.getBounds().x,
-                y: treeObjectContainerRef.current.getBounds().y,
-                width: treeObjectContainerRef.current.getBounds().width,
-                height: treeObjectContainerRef.current.getBounds().height,
+                x: treeWorldContainerRef.current.getLocalBounds().x,
+                y: treeWorldContainerRef.current.getLocalBounds().y,
+                width: treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
+                height: treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
             });
 
             canopyRef.current.visible = true;
