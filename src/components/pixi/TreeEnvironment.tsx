@@ -2,11 +2,12 @@ import { forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState 
 
 import hardRainImageUrl from '/static/images/pixi/sakura/environment/HardRain.png';
 import { Container, ContainerChild, Graphics, Point } from 'pixi.js';
-import { extend, useAssets } from '@pixi/react';
+import { extend, useApplication, useAssets } from '@momer/pixi-react';
 import { Emitter } from '@momer/pixi-particle-emitter';
 import { Tree } from '@/components/pixi/TreeContainer';
 import { Dimension } from '@/components/pixi/Dimension';
 import { Mutex } from 'async-mutex';
+import { ApplicationState } from '@momer/pixi-react/types/typedefs/ApplicationState';
 
 extend({
     Container
@@ -30,6 +31,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     const [precipitationParticleCount, setPrecipitationParticleCount] = useState(500);
     const { totalTreeAreaGraphicsRef, treeObjectContainerRef, treeWorldContainerRef } = ref?.current as unknown as Tree;
 
+    const { app }: ApplicationState = useApplication();
     const generateRainConfig = useCallback(() => {
         return {
             'lifetime': {
@@ -113,26 +115,8 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
             console.log('handling particle container - with mask');
             environmentContainerRef.current = container;
 
-            if (!treeMaskRef?.current) {
+            if (!treeMaskRef?.current && app?.stage) {
                 treeMaskRef.current = new Graphics()
-                    .rect(
-                        0,
-                        0,
-                        treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
-                        treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
-                    )
-                    .stroke({
-                        color: 0xFFDAE6,
-                        width: 1,
-                        alpha: 0,
-                    })
-                    .fill({
-                        color: 0xFFDAE6,
-                        alpha: 0,
-                    });
-                environmentContainerRef.current.mask = treeMaskRef.current;
-                environmentContainerRef.current.addChild(treeMaskRef.current);
-                environmentContainerRef.current.addChild(new Graphics()
                     .rect(
                         0,
                         0,
@@ -145,9 +129,27 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                         alpha: 1,
                     })
                     .fill({
-                        color: 0xffffff,
-                        alpha: 0.33,
-                    }));
+                        color: 0xFFDAE6,
+                        alpha: 1,
+                    });
+                // environmentContainerRef.current.mask = treeMaskRef.current;
+                environmentContainerRef.current.addChild(treeMaskRef.current);
+                // environmentContainerRef.current.addChild(new Graphics()
+                //     .rect(
+                //         0,
+                //         0,
+                //         treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
+                //         treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
+                //     )
+                //     .stroke({
+                //         color: 0xFFDAE6,
+                //         width: 4,
+                //         alpha: 1,
+                //     })
+                //     .fill({
+                //         color: 0xffffff,
+                //         alpha: 1,
+                //     }));
             }
             setIsEnvironmentContainerLoading(() => false);
         }
