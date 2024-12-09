@@ -7,6 +7,7 @@ import { TreeEnvironment } from '@/components/pixi/TreeEnvironment';
 export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
     return (
         <Application
+            hello={true}
             autoStart
             sharedTicker
             resizeTo={ ref as RefObject<HTMLElement> }

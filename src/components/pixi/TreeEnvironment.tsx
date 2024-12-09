@@ -120,7 +120,9 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     }, [props.drawableTreeDimensions, props.isBlossomableAreaGraphicsLoading, props.isCanopyGraphicsLoading, props.isTrunkGraphicsLoading]);
 
     const drawTreeMask = useCallback((graphics: Graphics) => {
-        if (isEnvironmentContainerLoading && environmentContainerRef?.current && graphics !== null && treeWorldContainerRef.current) {
+        console.log('draw tree mask');
+        if (!isEnvironmentContainerLoading && environmentContainerRef?.current && graphics !== null && treeWorldContainerRef.current) {
+            console.log('INSIDE draw tree mask');
             treeMaskRef.current = graphics;
             treeMaskRef.current.rect(
                 0,
@@ -131,8 +133,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                 color: 0xFFDAE6,
                 alpha: 1,
             });
-            environmentContainerRef.current.mask = treeMaskRef.current;
-            environmentContainerRef.current.addChild(treeMaskRef.current);
+            // environmentContainerRef.current.mask = treeMaskRef.current;
             setIsEnvironmentMaskLoading(() => false);
         }
     }, [props.drawableTreeDimensions, props.isBlossomableAreaGraphicsLoading, props.isCanopyGraphicsLoading, props.isTrunkGraphicsLoading, isEnvironmentContainerLoading]);
@@ -231,6 +232,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                 zIndex={ 10 }
                 isRenderGroup={ true }
                 ref={ handleParticleContainer }
+                mask={treeMaskRef.current}
             >
                 <graphics draw={ drawTreeMask }/>
                 { props.children }
