@@ -47,7 +47,6 @@ export type Tree = {
     trunkRef: MutableRefObject<Graphics | null>;
     canopyRef: MutableRefObject<Graphics | null>;
     blossomableAreaRef: MutableRefObject<Graphics | null>;
-    totalTreeAreaGraphicsRef: MutableRefObject<Graphics | null>;
     treeWorldContainerRef: MutableRefObject<Container | null>;
     treeObjectContainerRef: MutableRefObject<Container | null>;
 }
@@ -246,7 +245,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     const treeObjectContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const trunkRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const canopyRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
-    const totalTreeAreaGraphicsRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const blossomableAreaRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
 
     const [emitter, setEmitter] = useState<Emitter | null>(null);
@@ -255,7 +253,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         trunkRef,
         canopyRef,
         blossomableAreaRef,
-        totalTreeAreaGraphicsRef,
         treeObjectContainerRef,
         treeWorldContainerRef,
     });
@@ -427,12 +424,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         if (trunk) {
             trunkRef.current = trunk;
             setIsTrunkGraphicsLoading(false);
-        }
-    }, []);
-
-    const handleTotalTreeAreaGraphics = useCallback((totalTreeAreaGraphics: Graphics) => {
-        if (totalTreeAreaGraphics) {
-            totalTreeAreaGraphicsRef.current = totalTreeAreaGraphics;
         }
     }, []);
 

@@ -1,7 +1,7 @@
 import { forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import hardRainImageUrl from '/static/images/pixi/sakura/environment/HardRain.png';
-import { Container, ContainerChild, Graphics, Point } from 'pixi.js';
+import { Container, ContainerChild, Graphics } from 'pixi.js';
 import { extend, useApplication, useAssets } from '@momer/pixi-react';
 import { Emitter } from '@momer/pixi-particle-emitter';
 import { Tree } from '@/components/pixi/TreeContainer';
@@ -28,10 +28,10 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     const treeMaskRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const environmentContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
-    const [precipitationParticleCount, setPrecipitationParticleCount] = useState(500);
-    const { totalTreeAreaGraphicsRef, treeObjectContainerRef, treeWorldContainerRef } = ref?.current as unknown as Tree;
+    const { treeWorldContainerRef } = ref?.current as unknown as Tree;
 
     const { app }: ApplicationState = useApplication();
+
     const generateRainConfig = useCallback(() => {
         return {
             'lifetime': {
@@ -110,9 +110,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
 
     const handleParticleContainer = useCallback((container: Container) => {
         // update the mask for the environment container when resized
-        console.log(`handling particle container. Treeworldcontainerref: ${ treeWorldContainerRef.current }`);
         if (treeWorldContainerRef?.current && container) {
-            console.log('handling particle container - with mask');
             environmentContainerRef.current = container;
 
             if (!treeMaskRef?.current && app?.stage) {
@@ -123,33 +121,12 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                         treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
                         treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
                     )
-                    .stroke({
-                        color: 0xFFDAE6,
-                        width: 4,
-                        alpha: 1,
-                    })
                     .fill({
                         color: 0xFFDAE6,
                         alpha: 1,
                     });
-                // environmentContainerRef.current.mask = treeMaskRef.current;
+                environmentContainerRef.current.mask = treeMaskRef.current;
                 environmentContainerRef.current.addChild(treeMaskRef.current);
-                // environmentContainerRef.current.addChild(new Graphics()
-                //     .rect(
-                //         0,
-                //         0,
-                //         treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
-                //         treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
-                //     )
-                //     .stroke({
-                //         color: 0xFFDAE6,
-                //         width: 4,
-                //         alpha: 1,
-                //     })
-                //     .fill({
-                //         color: 0xffffff,
-                //         alpha: 1,
-                //     }));
             }
             setIsEnvironmentContainerLoading(() => false);
         }
@@ -204,40 +181,31 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     };
 
     useEffect(() => {
-        console.log('triggering update');
         emitterMutex.runExclusive(() => {
-            console.log('obtained update lock');
             if (props.emitter) {
-                console.log('setting emitter to update');
                 updateEmitter();
             }
         });
     }, [props.emitter]);
 
     useEffect(() => {
-        console.log('in the environment effect');
         if (environmentContainerRef.current && assetLoadSuccess && isSuccess && hardRain) {
-            // environmentContainerRef.current.scale = 1;
             if (props.emitter) {
-                console.log('destroying emitter');
-                // props.emitter.destroy();
                 props.emitter.parent = environmentContainerRef.current;
-                // props.emitter.ownerPos = new Point();
-                // props.emitter.spawnPos = new Point();
+                // Regenerate the config
                 const newPrecipConfig = generateRainConfig();
                 setPrecipConfig(() => newPrecipConfig);
+                // Load the new config
                 props.emitter.init(precipConfig);
             } else {
-                console.log('setting emitter');
-                emitterMutex.isLocked();
                 emitterMutex.runExclusive(() => {
                     if (!props.emitter && environmentContainerRef?.current) {
                         const newPrecipConfig = generateRainConfig();
                         setPrecipConfig(() => newPrecipConfig);
-                        console.log('creating emitter');
+
+                        // update the emitter
                         props.setEmitter((prevState) => {
                             if (prevState !== null) {
-                                console.log('returning prevstate');
                                 return prevState;
                             }
 
