@@ -10,7 +10,8 @@ import { Mutex } from 'async-mutex';
 import { ApplicationState } from '@momer/pixi-react/types/typedefs/ApplicationState';
 
 extend({
-    Container
+    Container,
+    Graphics
 });
 
 export interface TreeEnvironmentProps {
@@ -28,6 +29,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     const treeMaskRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const environmentContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
+    const [isEnvironmentMaskLoading, setIsEnvironmentMaskLoading] = useState(true);
     const { treeWorldContainerRef } = ref?.current as unknown as Tree;
 
     const { app }: ApplicationState = useApplication();
@@ -98,7 +100,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                     type: 'color',
                     config: {
                         color: {
-                            list: [{value: '#78b2f4', time: 0}, {value: '#4091ec', time: 1}]
+                            list: [{ value: '#78b2f4', time: 0 }, { value: '#4091ec', time: 1 }]
                         },
                     }
                 }
@@ -113,24 +115,27 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
         if (treeWorldContainerRef?.current && container) {
             environmentContainerRef.current = container;
 
-            if (!treeMaskRef?.current && app?.stage) {
-                treeMaskRef.current = new Graphics()
-                    .rect(
-                        0,
-                        0,
-                        treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
-                        treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
-                    )
-                    .fill({
-                        color: 0xFFDAE6,
-                        alpha: 1,
-                    });
-                environmentContainerRef.current.mask = treeMaskRef.current;
-                environmentContainerRef.current.addChild(treeMaskRef.current);
-            }
             setIsEnvironmentContainerLoading(() => false);
         }
     }, [props.drawableTreeDimensions, props.isBlossomableAreaGraphicsLoading, props.isCanopyGraphicsLoading, props.isTrunkGraphicsLoading]);
+
+    const drawTreeMask = useCallback((graphics: Graphics) => {
+        if (isEnvironmentContainerLoading && environmentContainerRef?.current && graphics !== null && treeWorldContainerRef.current) {
+            treeMaskRef.current = graphics;
+            treeMaskRef.current.rect(
+                0,
+                0,
+                treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
+                treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
+            ).fill({
+                color: 0xFFDAE6,
+                alpha: 1,
+            });
+            environmentContainerRef.current.mask = treeMaskRef.current;
+            environmentContainerRef.current.addChild(treeMaskRef.current);
+            setIsEnvironmentMaskLoading(() => false);
+        }
+    }, [props.drawableTreeDimensions, props.isBlossomableAreaGraphicsLoading, props.isCanopyGraphicsLoading, props.isTrunkGraphicsLoading, isEnvironmentContainerLoading]);
 
     const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(true);
 
@@ -223,10 +228,11 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     return (
         isSuccess && (
             <container
-                zIndex={10}
+                zIndex={ 10 }
                 isRenderGroup={ true }
                 ref={ handleParticleContainer }
             >
+                <graphics draw={ drawTreeMask }/>
                 { props.children }
             </container>
         )
