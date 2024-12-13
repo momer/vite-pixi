@@ -50,6 +50,10 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
             },
             'behaviors': [
                 {
+                    'type': 'blendMode',
+                    'config': 'normal'
+                },
+                {
                     'type': 'alphaStatic',
                     'config': {
                         'alpha': 0.5
