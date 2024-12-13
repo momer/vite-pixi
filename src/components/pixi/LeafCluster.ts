@@ -10,7 +10,7 @@ import {
     TextureSource
 } from 'pixi.js';
 
-import { AnimatedSprite } from '@/lib/pixi/scene/AnimatedSprite';
+import { AnimatedSprite } from '@momer/pixi-super-animated-sprite';
 
 import leafClusterFullOpenUrl from '/static/images/pixi/sakura/leaf-clusters/full-open.png';
 import { Mutex } from 'async-mutex';
