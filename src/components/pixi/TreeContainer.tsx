@@ -1,5 +1,6 @@
 import { extend, useApplication, useAssets } from '@momer/pixi-react';
 import {
+    Color,
     Container, ContainerChild,
     ConvertedStrokeStyle,
     FillInstruction,
