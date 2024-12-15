@@ -1,4 +1,4 @@
-import { forwardRef, MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { forwardRef, MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import hardRainImageUrl from '/static/images/pixi/sakura/environment/HardRain.png';
 import { Container, ContainerChild, Graphics } from 'pixi.js';
@@ -8,6 +8,7 @@ import { Tree } from '@/components/pixi/TreeContainer';
 import { Dimension } from '@/components/pixi/Dimension';
 import { Mutex } from 'async-mutex';
 import { ApplicationState } from '@momer/pixi-react/types/typedefs/ApplicationState';
+import { TreeContext } from '@/components/pixi/TreeProvider';
 
 extend({
     Container,
@@ -33,6 +34,9 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
     const { treeWorldContainerRef } = ref?.current as unknown as Tree;
 
     const { app }: ApplicationState = useApplication();
+
+    const { treeOptions } = useContext(TreeContext);
+
 
     const generateRainConfig = useCallback(() => {
         return {
@@ -104,7 +108,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                     type: 'color',
                     config: {
                         color: {
-                            list: [{ value: '#78b2f4', time: 0 }, { value: '#4091ec', time: 1 }]
+                            list: [{ value: treeOptions?.rain?.colorStart, time: 0 }, { value: treeOptions?.rain?.colorEnd, time: 1 }]
                         },
                     }
                 }

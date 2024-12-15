@@ -4,6 +4,7 @@ import React, { forwardRef, RefObject } from 'react';
 import { TreeContainer } from '@/components/pixi/TreeContainer';
 import { TreeEnvironment } from '@/components/pixi/TreeEnvironment';
 import { Color } from 'pixi.js';
+import { TreeProvider } from '@/components/pixi/TreeProvider';
 
 export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
     return (
@@ -16,7 +17,9 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
             backgroundAlpha={ 1 }
             antialias={ true }
         >
-            <TreeContainer ref={ ref }/>
+            <TreeProvider>
+                <TreeContainer ref={ ref }/>
+            </TreeProvider>
 
         </Application>
     );

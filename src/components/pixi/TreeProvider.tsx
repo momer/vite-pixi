@@ -1,14 +1,18 @@
 import React, { createContext, FC, ReactNode, useState } from 'react';
 
 export class RainOptions {
+    static defaultDensity: number = 0;
+    static defaultColorStart: string = '#78b2f4';
+    static defaultColorEnd: string = '#4091ec';
+
     density: number;
     colorStart: string;
     colorEnd: string;
 
     constructor(
-        density: number = 0,
-        colorStart: string = '#78b2f4',
-        colorEnd: string = '#4091ec'
+        density: number = RainOptions.defaultDensity,
+        colorStart: string = RainOptions.defaultColorStart,
+        colorEnd: string = RainOptions.defaultColorEnd
     ) {
         this.density = density;
         this.colorStart = colorStart;
@@ -21,11 +25,11 @@ export type TreeOptions = {
 }
 
 export type TreeContextT = {
-    treeOptions: TreeOptions;
-    setTreeOptions: React.Dispatch<React.SetStateAction<TreeOptions>>;
+    treeOptions?: TreeOptions;
+    setTreeOptions?: React.Dispatch<React.SetStateAction<TreeOptions>>;
 }
 
-export const TreeContext = createContext<TreeContextT | null>(null);
+export const TreeContext = createContext<TreeContextT>({});
 
 interface TreeProviderProps {
     children: ReactNode
@@ -36,9 +40,9 @@ export const TreeProvider: FC<TreeProviderProps> = ({ children }) => {
         rain: new RainOptions(),
     });
 
-   return (
-       <TreeContext.Provider value={{ treeOptions, setTreeOptions }}>
-           {children}
-       </TreeContext.Provider>
-   );
+    return (
+        <TreeContext.Provider value={ { treeOptions, setTreeOptions } }>
+            { children }
+        </TreeContext.Provider>
+    );
 };
