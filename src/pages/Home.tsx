@@ -21,6 +21,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { HomeDemo } from '@/components/pixi/HomeDemo';
+import { TreeConfigurator } from '@/components/pixi/TreeConfigurator';
 
 interface StringMap {
   [key: string]: string;
@@ -147,6 +148,12 @@ export function Home() {
                     className={ clsx('h-[calc(100vh-8rem)] relative') }
                     ref={ myRefCallback }
                 >
+                    <div
+                        className={ clsx('flex flex-col top-1/2 w-1/2 items-end absolute')} >
+                        <TreeConfigurator>
+
+                        </TreeConfigurator>
+                    </div>
 
                     <div
                         className={ clsx('flex flex-col items-end mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute') }
