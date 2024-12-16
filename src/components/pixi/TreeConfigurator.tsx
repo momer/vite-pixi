@@ -68,16 +68,16 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                 >
 
                     <motion.div
-                        animate={ Object.keys(gearVariants)[gearCurrentRotationIndex] }
-                        variants={ gearVariants }
+                        animate={ { rotate: 360 } }
 
-                        onAnimationComplete={ gearOnAnimationComplete }
+                        transition={ { repeat: Infinity, duration: 7, repeatDelay: 0, ease: 'linear'} }
+
                     >
                         <GearIcon
                             className={ clsx(
-                                'h-8 w-8 fill-none stroke-[2px] hover:fill-neutral-700',
+                                'h-8 w-8 fill-none stroke-[2px] drop-shadow-lg',
                                 !expanded && 'stroke-neutral-950',
-                                !expanded && 'fill-[#F29DBB]',
+                                // !expanded && 'fill-[#F29DBB]',
                             ) }
                         ></GearIcon>
                     </motion.div>
