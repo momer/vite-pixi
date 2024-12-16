@@ -24,7 +24,7 @@ import { HomeDemo } from '@/components/pixi/HomeDemo';
 import { TreeConfigurator } from '@/components/pixi/TreeConfigurator';
 
 interface StringMap {
-  [key: string]: string;
+    [key: string]: string;
 }
 
 const clients = [
@@ -149,7 +149,7 @@ export function Home() {
                     ref={ myRefCallback }
                 >
                     <div
-                        className={ clsx('flex flex-col top-1/2 w-1/2 items-end absolute')} >
+                        className={ clsx('flex flex-col top-1/2 w-1/2 items-end absolute z-10') }>
                         <TreeConfigurator>
 
                         </TreeConfigurator>
@@ -160,38 +160,20 @@ export function Home() {
                     >
                         <div
                             className="flex flex-col mt-auto flex-wrap w-full mx-auto sm:px-2 md:px-4 text-center lg:text-left ">
-                            <FadeIn className="mx-auto lg:mx-0 -mt-16 lg:mt-0 "
-                                    viewport={ { once: true, margin: '0px 0px 0px' } }
-                                    transition={ {
-                                        duration: 1,
-                                        delay: 0.5,
-                                        delayChildren: 0.5,
-                                        staggerChildren: 0.5
-                                    } }>
-                                {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/ }
-                                <h1 className="font-display mx-auto lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight text-neutral-950 [text-wrap:balance]">
-                                    Systems thinking, in bloom.
-                                </h1>
-                            </FadeIn>
-                            <motion.p
-                                className="inline mx-auto lg:mx-0 lg:mt-3 text-lg md:text-xl lg:text-lg text-neutral-500 rounded-full"
-                                variants={ {
-                                    hidden: { opacity: 0, },
-                                    visible: { opacity: 1, y: 0 },
-                                } }
-                                transition={ { duration: 1, delay: 1.5 } }
-                                initial="hidden"
-                                whileInView="visible"
-                            >
-                                <span className="sm:bg-white">
-                                    <span className="hidden md:inline">
-                                        We connect ideas, strategy, and technology; helping challenges blossom into solutions.
-                                    </span>
-                                    <span className="inline md:hidden">
-                                        We help challenges blossom into solutions.
-                                    </span>
+
+                            {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/ }
+                            <h1 className="font-display mx-auto lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight text-neutral-950 [text-wrap:balance]">
+                                Systems thinking, in bloom.
+                            </h1>
+
+                            <span className="sm:bg-white">
+                                <span className="hidden md:inline">
+                                    We connect ideas, strategy, and technology; helping challenges blossom into solutions.
                                 </span>
-                            </motion.p>
+                                <span className="inline md:hidden">
+                                    We help challenges blossom into solutions.
+                                </span>
+                            </span>
                         </div>
 
 

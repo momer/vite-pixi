@@ -2,6 +2,7 @@ import React, { FC, ReactNode, useContext, useState } from 'react';
 import { TreeContext } from '@/components/pixi/TreeProvider';
 import { FadeIn } from '@/components/FadeIn';
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 
 interface TreeConfiguratorProps {
     children?: ReactNode;
@@ -19,25 +20,72 @@ function GearIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 
 export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const { treeOptions, setTreeOptions } = useContext(TreeContext);
+    const [expanded, setExpanded] = useState(false);
+    const [gearRotationStart, setGearRotationStart] = useState(false);
+    const [gearCurrentRotationIndex, setGearCurrentRotationIndex] = useState(0);
+
+    const gearOnAnimationComplete = () => {
+        console.log(`hello from the transition func. Current: ${Object.keys(gearVariants)[gearCurrentRotationIndex]} - Next: ${Object.keys(gearVariants)[(gearCurrentRotationIndex + 1) % 3]}`);
+        setGearCurrentRotationIndex((current) => (current + 1) % 3);
+    };
+    const gearVariants = {
+        start: {
+            rotate: 0,
+            transition: {
+                duration: 1,
+                delay: 0,
+            },
+        },
+        end: {
+            rotate: 360,
+            transition: {
+                duration: 1,
+                delay: 0,
+            },
+        },
+        postComplete: {
+            rotate: 0,
+            transition: {
+                delay: 0.1,
+                duration: 0,
+            },
+        }
+    };
+
 
     return (
         <TreeContext.Provider value={ { treeOptions, setTreeOptions } }>
             <FadeIn className="mx-auto lg:mx-0 -mt-16 lg:mt-0 "
                     viewport={ { once: true, margin: '0px 0px 0px' } }
                     transition={ {
-                        duration: 1,
-                        delay: 0.5,
+                        duration: 0.33,
+                        delay: 0.66,
                         delayChildren: 0.5,
                         staggerChildren: 0.5
                     } }>
+                <motion.div
+                    className={ clsx('rounded-lg p-4', expanded && 'outline outline-2 outline-[#F29DBB]') }
+                    animate={ Object.keys(gearVariants)[gearCurrentRotationIndex] }
+                    variants={ gearVariants }
 
-                <div className={ clsx('rounded-lg outline outline-2 p-4') }>
+                    onAnimationComplete={ gearOnAnimationComplete }
+                >
+                    {/*<motion.div*/ }
+                    {/*    className={ clsx('rounded-lg p-4', expanded && 'outline outline-2 outline-[#F29DBB]') }*/ }
+                    {/*    animate={ {*/ }
+                    {/*        rotate: gearRotationStart ? 180 : 360,*/ }
+                    {/*    } }*/ }
+                    {/*    transition={ { duration: 3, delay: 0 } } // 8, 2*/ }
+                    {/*    onAnimationComplete={ () => setGearRotationStart((current) => !current) }*/ }
+                    {/*>*/ }
                     <GearIcon
                         className={ clsx(
-                            'h-6 w-6 fill-none stroke-neutral-950 group-hover:fill-neutral-700',
+                            'h-8 w-8 fill-none stroke-[2px] hover:fill-neutral-700',
+                            !expanded && 'stroke-neutral-950',
+                            !expanded && 'fill-[#F29DBB]',
                         ) }
                     ></GearIcon>
-                </div>
+                </motion.div>
             </FadeIn>
             {
                 children
