@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useContext, useState } from 'react';
+import React, { FC, ReactNode, useContext } from 'react';
 import { TreeContext } from '@/components/pixi/TreeProvider';
 import { FadeIn } from '@/components/FadeIn';
 import clsx from 'clsx';
@@ -20,37 +20,6 @@ function GearIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 
 export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const { treeOptions, setTreeOptions } = useContext(TreeContext);
-    const [gearRotationStart, setGearRotationStart] = useState(false);
-    const [gearCurrentRotationIndex, setGearCurrentRotationIndex] = useState(0);
-
-    const gearOnAnimationComplete = () => {
-        console.log(`hello from the transition func. Current: ${ Object.keys(gearVariants)[gearCurrentRotationIndex] } - Next: ${ Object.keys(gearVariants)[(gearCurrentRotationIndex + 1) % 3] }`);
-        setGearCurrentRotationIndex((current) => (current + 1) % 3);
-    };
-    const gearVariants = {
-        start: {
-            rotate: 0,
-            transition: {
-                duration: 1,
-                delay: 1,
-            },
-        },
-        end: {
-            rotate: 360,
-            transition: {
-                duration: 3,
-                delay: 0,
-            },
-        },
-        postComplete: {
-            rotate: 0,
-            transition: {
-                delay: 0.1,
-                duration: 0,
-            },
-        }
-    };
-
 
     return (
         <TreeContext.Provider value={ { treeOptions, setTreeOptions } }>
