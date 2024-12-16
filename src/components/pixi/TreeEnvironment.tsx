@@ -108,7 +108,7 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
                     type: 'color',
                     config: {
                         color: {
-                            list: [{ value: treeOptions?.rain?.colorStart, time: 0 }, { value: treeOptions?.rain?.colorEnd, time: 1 }]
+                            list: [{ value: treeOptions?.precipitation?.colorStart, time: 0 }, { value: treeOptions?.precipitation?.colorEnd, time: 1 }]
                         },
                     }
                 }

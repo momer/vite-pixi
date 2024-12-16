@@ -32,13 +32,13 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                         staggerChildren: 0.5
                     } }>
                 <div
-                    className={ clsx('group p-4') }
+                    className={ clsx('p-4') }
                 >
 
                     <div className={ clsx('flex flex-col items-end') }>
                         <div className={ clsx(
                             'flex flex-col',
-                            'group-hover:w-1/3 group-hover:p-4 group-hover:rounded-lg group-hover:outline group-hover:outline-2 group-hover:outline-[#F29DBB]') }>
+                            'group hover:w-1/3 hover:p-4 hover:rounded-lg hover:outline hover:outline-2 hover:outline-[#F29DBB]') }>
 
                             <div
                                 className={ clsx('flex justify-between w-full  group-hover:pb-2 group-hover:border-gray-900/10 group-hover:border-b') }>
@@ -96,6 +96,5 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                 children
             }
         </TreeContext.Provider>
-    )
-        ;
+    );
 };
