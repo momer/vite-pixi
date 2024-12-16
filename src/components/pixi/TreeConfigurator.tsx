@@ -25,7 +25,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const [gearCurrentRotationIndex, setGearCurrentRotationIndex] = useState(0);
 
     const gearOnAnimationComplete = () => {
-        console.log(`hello from the transition func. Current: ${Object.keys(gearVariants)[gearCurrentRotationIndex]} - Next: ${Object.keys(gearVariants)[(gearCurrentRotationIndex + 1) % 3]}`);
+        console.log(`hello from the transition func. Current: ${ Object.keys(gearVariants)[gearCurrentRotationIndex] } - Next: ${ Object.keys(gearVariants)[(gearCurrentRotationIndex + 1) % 3] }`);
         setGearCurrentRotationIndex((current) => (current + 1) % 3);
     };
     const gearVariants = {
@@ -33,13 +33,13 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
             rotate: 0,
             transition: {
                 duration: 1,
-                delay: 0,
+                delay: 1,
             },
         },
         end: {
             rotate: 360,
             transition: {
-                duration: 1,
+                duration: 3,
                 delay: 0,
             },
         },
@@ -63,29 +63,25 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                         delayChildren: 0.5,
                         staggerChildren: 0.5
                     } }>
-                <motion.div
+                <div
                     className={ clsx('rounded-lg p-4', expanded && 'outline outline-2 outline-[#F29DBB]') }
-                    animate={ Object.keys(gearVariants)[gearCurrentRotationIndex] }
-                    variants={ gearVariants }
-
-                    onAnimationComplete={ gearOnAnimationComplete }
                 >
-                    {/*<motion.div*/ }
-                    {/*    className={ clsx('rounded-lg p-4', expanded && 'outline outline-2 outline-[#F29DBB]') }*/ }
-                    {/*    animate={ {*/ }
-                    {/*        rotate: gearRotationStart ? 180 : 360,*/ }
-                    {/*    } }*/ }
-                    {/*    transition={ { duration: 3, delay: 0 } } // 8, 2*/ }
-                    {/*    onAnimationComplete={ () => setGearRotationStart((current) => !current) }*/ }
-                    {/*>*/ }
-                    <GearIcon
-                        className={ clsx(
-                            'h-8 w-8 fill-none stroke-[2px] hover:fill-neutral-700',
-                            !expanded && 'stroke-neutral-950',
-                            !expanded && 'fill-[#F29DBB]',
-                        ) }
-                    ></GearIcon>
-                </motion.div>
+
+                    <motion.div
+                        animate={ Object.keys(gearVariants)[gearCurrentRotationIndex] }
+                        variants={ gearVariants }
+
+                        onAnimationComplete={ gearOnAnimationComplete }
+                    >
+                        <GearIcon
+                            className={ clsx(
+                                'h-8 w-8 fill-none stroke-[2px] hover:fill-neutral-700',
+                                !expanded && 'stroke-neutral-950',
+                                !expanded && 'fill-[#F29DBB]',
+                            ) }
+                        ></GearIcon>
+                    </motion.div>
+                </div>
             </FadeIn>
             {
                 children
