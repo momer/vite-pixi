@@ -166,7 +166,7 @@ export function Home() {
                                 Systems thinking, in bloom.
                             </h1>
 
-                            <span className="sm:bg-white">
+                            <span className="sm:bg-white lg:bg-transparent">
                                 <span className="hidden md:inline">
                                     We connect ideas, strategy, and technology; helping challenges blossom into solutions.
                                 </span>

@@ -20,7 +20,6 @@ function GearIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 
 export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const { treeOptions, setTreeOptions } = useContext(TreeContext);
-    const [expanded, setExpanded] = useState(false);
     const [gearRotationStart, setGearRotationStart] = useState(false);
     const [gearCurrentRotationIndex, setGearCurrentRotationIndex] = useState(0);
 
@@ -55,7 +54,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
 
     return (
         <TreeContext.Provider value={ { treeOptions, setTreeOptions } }>
-            <FadeIn className="mx-auto lg:mx-0 -mt-16 lg:mt-0 "
+            <FadeIn className="mx-auto lg:mx-0 -mt-16 lg:mt-0 w-full"
                     viewport={ { once: true, margin: '0px 0px 0px' } }
                     transition={ {
                         duration: 0.33,
@@ -64,23 +63,64 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                         staggerChildren: 0.5
                     } }>
                 <div
-                    className={ clsx('rounded-lg p-4', expanded && 'outline outline-2 outline-[#F29DBB]') }
+                    className={ clsx('group p-4') }
                 >
 
-                    <motion.div
-                        animate={ { rotate: 360 } }
+                    <div className={ clsx('flex flex-col items-end') }>
+                        <div className={ clsx(
+                            'flex flex-col',
+                            'group-hover:w-1/3 group-hover:p-4 group-hover:rounded-lg group-hover:outline group-hover:outline-2 group-hover:outline-[#F29DBB]') }>
 
-                        transition={ { repeat: Infinity, duration: 7, repeatDelay: 0, ease: 'linear'} }
+                            <div
+                                className={ clsx('flex justify-between w-full  group-hover:pb-2 group-hover:border-gray-900/10 group-hover:border-b') }>
+                                <motion.div
+                                    animate={ { rotate: 360 } }
+                                    className={ clsx('') }
+                                    transition={ { repeat: Infinity, duration: 7, repeatDelay: 0, ease: 'linear' } }
 
-                    >
-                        <GearIcon
-                            className={ clsx(
-                                'h-8 w-8 fill-none stroke-[2px] drop-shadow-lg',
-                                !expanded && 'stroke-neutral-950',
-                                // !expanded && 'fill-[#F29DBB]',
-                            ) }
-                        ></GearIcon>
-                    </motion.div>
+                                >
+                                    <GearIcon
+                                        className={ clsx(
+                                            'h-8 w-8 fill-none stroke-[2px]',
+                                            'stroke-neutral-950',
+                                        ) }
+                                    ></GearIcon>
+                                </motion.div>
+
+                                <div className={ clsx('hidden group-hover:flex flex-col') }>
+                                    <h3>Sakura Configurator</h3>
+                                </div>
+                            </div>
+
+                            <div
+                                className={ clsx('hidden group-hover:flex group-hover:pt-2 group-hover:justify-between group-hover:w-full group-hover:border-gray-900/10') }>
+                                <div className={ clsx('flex flex-col w-full gap-4') }>
+                                    <label className={ clsx('font-medium text-gray-900') }>Precipitation</label>
+                                    <div className={ clsx('flex font-light items-end text-gray-900') }>
+                                        <div className={ clsx('min-w-16 text-sm') }>
+                                            <label className={ clsx() }>Type</label>
+                                        </div>
+
+                                        <div className={ clsx('flex gap-2 text-sm/6') }>
+                                            <div className={ clsx('rounded-lg bg-blue-950 h-8 w-8') }></div>
+                                            <div className={ clsx('rounded-lg bg-red-800 h-8 w-8') }></div>
+                                            <div className={ clsx('rounded-lg bg-gray-500 h-8 w-8') }></div>
+                                            <div className={ clsx('rounded-lg bg-white outline outline-1 outline-black h-8 w-8') }></div>
+                                        </div>
+                                    </div>
+
+                                    <div className={ clsx('flex font-light text-gray-900') }>
+                                        <div className={ clsx('min-w-16 text-sm') }>
+                                            <label className={ clsx() }>Density</label>
+                                        </div>
+                                        <div className={ clsx('text-sm/6') }>
+                                            asdflkajsdf
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </FadeIn>
             {
