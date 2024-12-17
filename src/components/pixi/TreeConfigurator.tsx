@@ -101,7 +101,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
 
                                                 </div>
                                                 <div className={
-                                                    clsx('absolute bg-cover bg-[url(\'/static/images/pixi/sakura/configurator/btn_icon_water.png\')] bg-no-repeat h-full w-full z-40')
+                                                    clsx(`absolute bg-cover bg-[url('/static/images/pixi/sakura/configurator/btn_icon_water.png')] ${''} bg-no-repeat h-full w-full z-40`)
                                                 }>
                                                 </div>
                                             </div>
