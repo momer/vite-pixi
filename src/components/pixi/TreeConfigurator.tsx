@@ -49,7 +49,8 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                             'flex flex-col',
                             'group hover:min-w-1/3 hover:p-4 hover:rounded-lg hover:outline hover:outline-2 hover:outline-[#F29DBB]') }>
 
-                            <div className={ clsx('flex group-hover:drop-shadow-sm items-start group-hover:items-end justify-between w-full group-hover:pb-2 group-hover:border-gray-100 group-hover:border-b') }>
+                            <div
+                                className={ clsx('flex group-hover:drop-shadow-sm items-start group-hover:items-end justify-between w-full group-hover:pb-2 group-hover:border-gray-100 group-hover:border-b') }>
 
                                 <div className={ clsx('hidden group-hover:flex flex-col') }>
                                     <h3>Sakura Configurator</h3>
@@ -101,14 +102,44 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
 
                                                 </div>
                                                 <div className={
-                                                    clsx(`absolute bg-cover bg-[url('/static/images/pixi/sakura/configurator/btn_icon_water.png')] ${''} bg-no-repeat h-full w-full z-40`)
+                                                    clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_water.png'),linear-gradient(0deg,theme('colors.cyan.500/3')_30%,theme('colors.blue.500')_65%)] ${ '' } bg-no-repeat h-full w-full z-40`)
                                                 }>
                                                 </div>
                                             </div>
-                                            <div className={ clsx('rounded-lg bg-red-800 h-8 w-8') }></div>
-                                            <div className={ clsx('rounded-lg bg-black h-8 w-8') }></div>
                                             <div
-                                                className={ clsx('rounded-lg bg-white outline outline-1 outline-black h-8 w-8') }></div>
+                                                className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+
+                                                <div className={ clsx('rounded-lg bg-black opacity-80 h-full w-full') }>
+
+                                                </div>
+                                                <div className={
+
+                                                    clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_snowflake.png'),linear-gradient(0deg,_#658DBD_15%,_#CEE7FB_90%)] ${ '' } bg-no-repeat h-full w-full z-40`)
+                                                }>
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+
+                                                <div className={ clsx('rounded-lg bg-black opacity-80 h-full w-full') }>
+
+                                                </div>
+                                                <div className={
+                                                    clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_sun.png'),linear-gradient(0deg,_#FFBF5C_25%,_#FF96A4_60%)] ${ '' } bg-no-repeat h-full w-full z-40`)
+                                                }>
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+
+                                                <div className={ clsx('rounded-lg bg-black opacity-80 h-full w-full') }>
+
+                                                </div>
+                                                <div className={
+                                                    clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_skull.png'),linear-gradient(0deg,_#C93A0E_30%,_#CB0707_70%)] ${ '' } bg-no-repeat h-full w-full z-40`)
+                                                }>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
