@@ -3,13 +3,7 @@ import { TreeContext } from '@/components/pixi/TreeProvider';
 import { FadeIn } from '@/components/FadeIn';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import { RgbColorPicker } from 'react-colorful';
 import { PopoverPicker } from '@/components/PopoverPicker';
-
-import iconWaterUrl from '/static/images/pixi/sakura/configurator/btn_icon_water.png';
-import iconSnowflakeUrl from '/static/images/pixi/sakura/configurator/btn_icon_water.png';
-import iconSunUrl from '/static/images/pixi/sakura/configurator/btn_icon_water.png';
-import iconSkullUrl from '/static/images/pixi/sakura/configurator/btn_icon_water.png';
 
 interface TreeConfiguratorProps {
     children?: ReactNode;
@@ -27,8 +21,9 @@ function GearIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 
 export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const { treeOptions, setTreeOptions } = useContext(TreeContext);
-    const [colorStart, setColorStart] = React.useState<string | undefined>(treeOptions?.precipitation?.colorStart || '000000');
-    const [colorEnd, setColorEnd] = React.useState<string | undefined>(treeOptions?.precipitation?.colorEnd || '000000');
+    const [precipColorStart, setPrecipColorStart] = React.useState<string | undefined>(treeOptions?.precipitation?.colorStart || '000000');
+    const [precipColorEnd, setPrecipColorEnd] = React.useState<string | undefined>(treeOptions?.precipitation?.colorEnd || '000000');
+    const [precipDensity, setPrecipDensity] = React.useState<number | undefined>(treeOptions?.precipitation?.density || 1000);
 
     return (
         <TreeContext.Provider value={ { treeOptions, setTreeOptions } }>
@@ -80,16 +75,31 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                 <div className={ clsx('flex flex-col w-full gap-4') }>
                                     <label className={ clsx('font-medium text-gray-900') }>Precipitation</label>
 
-                                    <div className={ clsx('flex font-light text-gray-900') }>
+                                    <div className={ clsx('flex min-h-8 font-light text-gray-900') }>
                                         <div className={ clsx('min-w-16 text-sm') }>
                                             <label className={ clsx() }>Density</label>
                                         </div>
-                                        <div className={ clsx('text-sm') }>
-                                            TODO: slider
+                                        <div className={ clsx('w-full text-sm') }>
+                                            <input
+                                                type="range"
+                                                min={ 0 }
+                                                max={ 5 }
+                                                value={ precipDensity }
+                                                onChange={e => setPrecipDensity(Number(e.target.value)) }
+                                                className={ clsx('w-full range') }
+                                                step={ 1 }/>
+                                            <div className="flex w-full justify-between px-2 text-xs">
+                                                <span>|</span>
+                                                <span>|</span>
+                                                <span>|</span>
+                                                <span>|</span>
+                                                <span>|</span>
+                                                <span>|</span>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className={ clsx('flex font-light text-gray-900') }>
+                                    <div className={ clsx('flex min-h-8 font-light text-gray-900') }>
                                         <div className={ clsx('min-w-16 text-sm') }>
                                             <label className={ clsx() }>Type</label>
                                         </div>
@@ -130,7 +140,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                         </div>
                                     </div>
 
-                                    <div className={ clsx('flex font-light text-gray-900') }>
+                                    <div className={ clsx('flex min-h-8 font-light text-gray-900') }>
                                         <div className={ clsx('min-w-16 text-sm') }>
                                             <label className={ clsx() }>Color</label>
                                         </div>
@@ -138,8 +148,8 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                             <div className={ clsx('flex text-sm items-end gap-2') }>
                                                 <PopoverPicker
                                                     className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
-                                                    color={ colorStart }
-                                                    onChange={ setColorStart }></PopoverPicker>
+                                                    color={ precipColorStart }
+                                                    onChange={ setPrecipColorStart }></PopoverPicker>
                                             </div>
                                             <div>
                                                 <p>to</p>
@@ -147,8 +157,8 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                             <div className={ clsx('flex text-sm items-end gap-2') }>
                                                 <PopoverPicker
                                                     className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
-                                                    color={ colorEnd }
-                                                    onChange={ setColorEnd }></PopoverPicker>
+                                                    color={ precipColorEnd }
+                                                    onChange={ setPrecipColorEnd }></PopoverPicker>
                                             </div>
                                         </div>
                                     </div>
