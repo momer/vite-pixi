@@ -14,7 +14,7 @@ export const PopoverPicker = ({ className, color, onChange } : Partial<PopoverPi
     const [isOpen, toggle] = useState(false);
 
     const close = useCallback(() => toggle(false), []);
-    const pickerRef = useClickOutside({ handler: close });
+    const pickerRef = useClickOutside<HTMLDivElement>({ handler: close });
 
     return (
         <div className={ clsx('relative') }>

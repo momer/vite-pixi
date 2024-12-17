@@ -81,11 +81,11 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
                 targets: [
                     {
                         src: normalizePath(path.resolve(__dirname, 'static', 'favicon.ico')),
-                        dest: '',
+                        dest: '/',
                     },
                     {
                         src: normalizePath(path.resolve(__dirname, 'static', 'images')),
-                        dest: '',
+                        dest: 'static/images',
                     }
                 ]
             }));
@@ -104,6 +104,6 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
         };
     }
 
-
+    console.log(`baseConfig plugins: ${JSON.stringify(baseConfig.plugins)}`);
     return baseConfig;
 });

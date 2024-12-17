@@ -6,6 +6,11 @@ import { motion } from 'framer-motion';
 import { RgbColorPicker } from 'react-colorful';
 import { PopoverPicker } from '@/components/PopoverPicker';
 
+import iconWaterUrl from '/static/images/pixi/sakura/configurator/btn_icon_water.png';
+import iconSnowflakeUrl from '/static/images/pixi/sakura/configurator/btn_icon_water.png';
+import iconSunUrl from '/static/images/pixi/sakura/configurator/btn_icon_water.png';
+import iconSkullUrl from '/static/images/pixi/sakura/configurator/btn_icon_water.png';
+
 interface TreeConfiguratorProps {
     children?: ReactNode;
 }
@@ -85,7 +90,17 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                         </div>
 
                                         <div className={ clsx('flex gap-2 justify-between text-sm w-full') }>
-                                            <div className={ clsx('rounded-lg bg-blue-950 h-8 w-8') }></div>
+                                            <div
+                                                className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+
+                                                <div className={ clsx('rounded-lg bg-black opacity-80 h-full w-full') }>
+
+                                                </div>
+                                                <div className={
+                                                    clsx('absolute bg-cover bg-[url(\'/static/images/pixi/sakura/configurator/btn_icon_water.png\')] bg-no-repeat h-full w-full z-40')
+                                                }>
+                                                </div>
+                                            </div>
                                             <div className={ clsx('rounded-lg bg-red-800 h-8 w-8') }></div>
                                             <div className={ clsx('rounded-lg bg-black h-8 w-8') }></div>
                                             <div
