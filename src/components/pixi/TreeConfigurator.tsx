@@ -49,7 +49,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                             'flex flex-col',
                             'group hover:min-w-1/3 hover:p-4 hover:rounded-lg hover:outline hover:outline-2 hover:outline-[#F29DBB]') }>
 
-                            <div className={ clsx('flex shadow-md items-start group-hover:items-end justify-between w-full group-hover:pb-2 group-hover:border-gray-100 group-hover:border-b') }>
+                            <div className={ clsx('flex group-hover:drop-shadow-sm items-start group-hover:items-end justify-between w-full group-hover:pb-2 group-hover:border-gray-100 group-hover:border-b') }>
 
                                 <div className={ clsx('hidden group-hover:flex flex-col') }>
                                     <h3>Sakura Configurator</h3>
