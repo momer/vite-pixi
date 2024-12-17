@@ -16,7 +16,6 @@ export const PopoverPicker = ({ color, onChange }) => {
                 className={ clsx('w-8 h-8 rounded-lg border-2 border-white shadow cursor-pointer') }
                 style={ { backgroundColor: color } }
                 onClick={ () => {
-                    console.log('clicked!');
                     toggle(true);
                 } }
             />

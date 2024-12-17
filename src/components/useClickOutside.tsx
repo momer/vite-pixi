@@ -14,7 +14,7 @@ export const useClickOutside = <T extends HTMLElement>({ handler }: UseClickOuts
             // Do nothing if `mousedown` or `touchstart` started inside ref element
             if (startedInside || !startedWhenMounted) return;
             // Do nothing if clicking ref's element or descendent elements
-            if (!ref?.current || ref?.current.contains(event.target)) return;
+            if (!ref?.current || ref?.current.contains(event.target as Node)) return;
 
             handler(event);
         };
