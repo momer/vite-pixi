@@ -3,17 +3,23 @@ import { HexColorPicker } from 'react-colorful';
 
 import { useClickOutside } from '@/components/useClickOutside';
 import clsx from 'clsx';
+import { AnyColor, ColorPickerBaseProps } from 'react-colorful/dist/types';
 
-export const PopoverPicker = ({ color, onChange }) => {
+// Reserve ability to extend this later
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface PopoverPickerProps<T extends AnyColor> extends ColorPickerBaseProps<T> {
+}
+
+export const PopoverPicker = ({ className, color, onChange } : Partial<PopoverPickerProps<string>>) => {
     const [isOpen, toggle] = useState(false);
 
     const close = useCallback(() => toggle(false), []);
-    const colorStartRef = useClickOutside({ handler: close });
+    const pickerRef = useClickOutside({ handler: close });
 
     return (
         <div className={ clsx('relative') }>
             <div
-                className={ clsx('w-8 h-8 rounded-lg border-2 border-white shadow cursor-pointer') }
+                className={ clsx(className) }
                 style={ { backgroundColor: color } }
                 onClick={ () => {
                     toggle(true);
@@ -21,7 +27,7 @@ export const PopoverPicker = ({ color, onChange }) => {
             />
 
             { isOpen && (
-                <div className={ clsx('absolute top-full') } ref={ colorStartRef }>
+                <div className={ clsx('absolute top-full') } ref={ pickerRef }>
                     <HexColorPicker color={ color } onChange={ onChange }/>
                 </div>
             ) }
