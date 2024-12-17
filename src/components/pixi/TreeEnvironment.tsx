@@ -1,4 +1,4 @@
-import { forwardRef, MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { forwardRef, MutableRefObject, RefObject, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import hardRainImageUrl from '/static/images/pixi/sakura/environment/HardRain.png';
 import { Container, ContainerChild, Graphics } from 'pixi.js';
@@ -16,6 +16,7 @@ extend({
 });
 
 export interface TreeEnvironmentProps {
+    treeRef: RefObject<Tree>;
     drawableTreeDimensions: Dimension;
     emitter: Emitter | undefined | null;
     setEmitter: React.Dispatch<React.SetStateAction<Emitter | null>>;
@@ -25,13 +26,13 @@ export interface TreeEnvironmentProps {
     children?: React.ReactNode;
 }
 
-export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, ref) => {
+export const TreeEnvironment = (props: TreeEnvironmentProps) => {
     const emitterMutex = new Mutex();
     const treeMaskRef: MutableRefObject<Graphics | null> = useRef<Graphics>(null);
     const environmentContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
     const [isEnvironmentMaskLoading, setIsEnvironmentMaskLoading] = useState(true);
-    const { treeWorldContainerRef } = ref?.current as unknown as Tree;
+    const { treeWorldContainerRef } = props.treeRef.current as unknown as Tree;
 
     const { app }: ApplicationState = useApplication();
 
@@ -247,5 +248,5 @@ export const TreeEnvironment = forwardRef<Tree, TreeEnvironmentProps>((props, re
             </container>
         )
     );
-});
+};
 TreeEnvironment.displayName = 'TreeEnvironment';

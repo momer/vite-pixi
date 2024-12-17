@@ -493,8 +493,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                 </container>
 
                 <TreeEnvironment
-                    ref={ treeRefObject }
-                    drawableTreeDimensions={ drawableTreeDimensions }
+                    treeRef={ treeRefObject }
+                    drawableTreeDimensions={ drawableTreeDimensions! }
                     emitter={ emitter }
                     setEmitter={ setEmitter }
                     isTrunkGraphicsLoading={isTrunkGraphicsLoading}
