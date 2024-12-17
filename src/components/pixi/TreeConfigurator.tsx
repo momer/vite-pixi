@@ -3,6 +3,8 @@ import { TreeContext } from '@/components/pixi/TreeProvider';
 import { FadeIn } from '@/components/FadeIn';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
+import { RgbColorPicker } from 'react-colorful';
+import { PopoverPicker } from '@/components/PopoverPicker';
 
 interface TreeConfiguratorProps {
     children?: ReactNode;
@@ -20,6 +22,8 @@ function GearIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 
 export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const { treeOptions, setTreeOptions } = useContext(TreeContext);
+    const [colorStart, setColorStart] = React.useState<string | undefined>(treeOptions?.precipitation?.colorStart || '000000');
+    const [colorEnd, setColorEnd] = React.useState<string | undefined>(treeOptions?.precipitation?.colorEnd || '000000');
 
     return (
         <TreeContext.Provider value={ { treeOptions, setTreeOptions } }>
@@ -70,11 +74,12 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                             <label className={ clsx() }>Type</label>
                                         </div>
 
-                                        <div className={ clsx('flex gap-2 text-sm/6') }>
+                                        <div className={ clsx('flex gap-2 text-sm') }>
                                             <div className={ clsx('rounded-lg bg-blue-950 h-8 w-8') }></div>
                                             <div className={ clsx('rounded-lg bg-red-800 h-8 w-8') }></div>
                                             <div className={ clsx('rounded-lg bg-gray-500 h-8 w-8') }></div>
-                                            <div className={ clsx('rounded-lg bg-white outline outline-1 outline-black h-8 w-8') }></div>
+                                            <div
+                                                className={ clsx('rounded-lg bg-white outline outline-1 outline-black h-8 w-8') }></div>
                                         </div>
                                     </div>
 
@@ -82,8 +87,18 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                         <div className={ clsx('min-w-16 text-sm') }>
                                             <label className={ clsx() }>Density</label>
                                         </div>
-                                        <div className={ clsx('text-sm/6') }>
+                                        <div className={ clsx('text-sm') }>
                                             asdflkajsdf
+                                        </div>
+                                    </div>
+
+                                    <div className={ clsx('flex font-light text-gray-900') }>
+                                        <div className={ clsx('min-w-16 text-sm') }>
+                                            <label className={ clsx() }>Color</label>
+                                        </div>
+                                        <div className={ clsx('flex text-sm') }>
+                                            <label>Start</label>
+                                            <PopoverPicker color={colorStart} onChange={setColorStart}></PopoverPicker>
                                         </div>
                                     </div>
                                 </div>
