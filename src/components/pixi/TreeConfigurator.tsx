@@ -49,27 +49,31 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                             'flex flex-col',
                             'group hover:min-w-1/3 hover:p-4 hover:rounded-lg hover:outline hover:outline-2 hover:outline-[#F29DBB]') }>
 
-                            <div
-                                className={ clsx('flex justify-between w-full  group-hover:pb-2 group-hover:border-gray-900/10 group-hover:border-b') }>
-                                <motion.div
-                                    animate={ { rotate: 360 } }
-                                    className={ clsx('') }
-                                    transition={ { repeat: Infinity, duration: 7, repeatDelay: 0, ease: 'linear' } }
-
-                                >
-                                    <GearIcon
-                                        className={ clsx(
-                                            'h-8 w-8 fill-none stroke-[2px]',
-                                            'stroke-neutral-950',
-                                        ) }
-                                    ></GearIcon>
-                                </motion.div>
+                            <div className={ clsx('flex shadow-md items-start group-hover:items-end justify-between w-full group-hover:pb-2 group-hover:border-gray-100 group-hover:border-b') }>
 
                                 <div className={ clsx('hidden group-hover:flex flex-col') }>
                                     <h3>Sakura Configurator</h3>
                                 </div>
-                            </div>
 
+                                <div
+                                    className={ clsx('') }>
+                                    <motion.div
+                                        animate={ { rotate: 360 } }
+                                        className={ clsx('') }
+                                        transition={ { repeat: Infinity, duration: 7, repeatDelay: 0, ease: 'linear' } }
+
+                                    >
+                                        <GearIcon
+                                            className={ clsx(
+                                                'h-8 w-8 group-hover:h-6 group-hover:w-6 fill-none stroke-[2px]',
+                                                'stroke-neutral-950',
+                                            ) }
+                                        ></GearIcon>
+                                    </motion.div>
+
+                                </div>
+
+                            </div>
                             <div
                                 className={ clsx('hidden group-hover:flex group-hover:pt-2 group-hover:justify-between group-hover:w-full group-hover:border-gray-900/10') }>
                                 <div className={ clsx('flex flex-col w-full gap-4') }>
