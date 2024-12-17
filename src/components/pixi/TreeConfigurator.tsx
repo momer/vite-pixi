@@ -74,10 +74,11 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                             <label className={ clsx() }>Type</label>
                                         </div>
 
-                                        <div className={ clsx('flex gap-2 text-sm') }>
+                                        <div className={ clsx('flex gap-2 justify-between text-sm w-full') }>
                                             <div className={ clsx('rounded-lg bg-blue-950 h-8 w-8') }></div>
                                             <div className={ clsx('rounded-lg bg-red-800 h-8 w-8') }></div>
-                                            <div className={ clsx('rounded-lg bg-gray-500 h-8 w-8') }></div>
+                                            <div className={ clsx('rounded-lg bg-black h-8 w-8') }></div>
+                                            <div className={ clsx('rounded-lg bg-black h-8 w-8') }></div>
                                             <div
                                                 className={ clsx('rounded-lg bg-white outline outline-1 outline-black h-8 w-8') }></div>
                                         </div>
@@ -96,18 +97,21 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                         <div className={ clsx('min-w-16 text-sm') }>
                                             <label className={ clsx() }>Color</label>
                                         </div>
-                                        <div className={ clsx('flex items-end gap-3') }>
-                                            <div className={ clsx('flex text-sm items-end gap-3') }>
-                                                <label>Start</label>
+                                        <div className={ clsx('flex items-end gap-2 w-full justify-between') }>
+                                            <div className={ clsx('flex text-sm items-end gap-2') }>
                                                 <PopoverPicker
-                                                    className={'w-8 h-8 rounded-lg border-2 border-gray-600 shadow cursor-pointer'}
+                                                    className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
                                                     color={ colorStart }
-                                                               onChange={ setColorStart }></PopoverPicker>
+                                                    onChange={ setColorStart }></PopoverPicker>
                                             </div>
-                                            <div className={ clsx('flex text-sm items-end gap-3') }>
-                                                <label>End</label>
-                                                <PopoverPicker color={ colorStart }
-                                                               onChange={ setColorStart }></PopoverPicker>
+                                            <div>
+                                                <p>to</p>
+                                            </div>
+                                            <div className={ clsx('flex text-sm items-end gap-2') }>
+                                                <PopoverPicker
+                                                    className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
+                                                    color={ colorEnd }
+                                                    onChange={ setColorEnd }></PopoverPicker>
                                             </div>
                                         </div>
                                     </div>

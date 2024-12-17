@@ -27,7 +27,7 @@ export const PopoverPicker = ({ className, color, onChange } : Partial<PopoverPi
             />
 
             { isOpen && (
-                <div className={ clsx('absolute top-full') } ref={ pickerRef }>
+                <div className={ clsx('absolute bottom-full left-full') } ref={ pickerRef }>
                     <HexColorPicker color={ color } onChange={ onChange }/>
                 </div>
             ) }
