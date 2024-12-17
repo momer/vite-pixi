@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite serve --force --host=127.0.0.1",
-    "build": "tsc -b && vite build",
+    "build": "npm run build:types && npm run build:src",
+    "build:force": "npm run build:types || true && npm run build:src",
+    "build:types": "tsc -b",
+    "build:src": "vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview"

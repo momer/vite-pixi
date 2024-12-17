@@ -1,6 +1,5 @@
 import { extend, useApplication, useAssets } from '@momer/pixi-react';
 import {
-    Color,
     Container, ContainerChild,
     ConvertedStrokeStyle,
     FillInstruction,
@@ -53,12 +52,13 @@ export type Tree = {
 }
 
 export interface LeafCollectionProps {
-    isCanopyGraphicsLoading: boolean;
-    isTrunkGraphicsLoading: boolean;
-    isBlossomableAreaGraphicsLoading: boolean;
+    treeRef: RefObject<Tree>;
+    isCanopyGraphicsLoading?: boolean;
+    isTrunkGraphicsLoading?: boolean;
+    isBlossomableAreaGraphicsLoading?: boolean;
 }
 
-export const LeafCollection = forwardRef<RefObject<Tree>, LeafCollectionProps>((props, ref) => {
+export const LeafCollection = (props: LeafCollectionProps) => {
     const collectionContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isInitializing, setIsInitializing] = useState(true);
     const [error, setError] = useState<unknown>(null);
@@ -66,7 +66,7 @@ export const LeafCollection = forwardRef<RefObject<Tree>, LeafCollectionProps>((
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [numLeafClusters, setNumLeafClusters] = useState<number>(500);
     const leafClusters = useRef<Array<LeafCluster>>([]);
-    const { trunkRef, canopyRef, blossomableAreaRef } = ref?.current as unknown as Tree;
+    const { trunkRef, canopyRef, blossomableAreaRef } = props.treeRef?.current as unknown as Tree;
 
     // initialize the LeafCluster assets
     useEffect(() => {
@@ -221,7 +221,7 @@ export const LeafCollection = forwardRef<RefObject<Tree>, LeafCollectionProps>((
         <container isRenderGroup={ true } ref={ collectionContainerRef } sortableChildren={ true }>
         </container>
     );
-});
+};
 LeafCollection.displayName = 'LeafCollection';
 
 export interface TreeContainerOptions {
@@ -392,7 +392,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         },
     });
 
-    const resizeObserver = useRef<any>(null);
+    const resizeObserver = useRef<ResizeObserver | null>(null);
 
     // initial load, start observing the div parent for sizing
     useEffect(() => {
@@ -466,16 +466,19 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         }
     }, [app]);
 
+    //
     return (
         isSuccess && app?.renderer && app?.screen && (
             // eslint-disable-next-line react/no-unknown-property
             <container sortableChildren={ true } ref={ treeWorldContainerRef }>
                 {/* tree container*/ }
                 <container isRenderGroup={ true } ref={ handleTreeObjectContainer }>
+                    {/* @ts-expect-error graphics requires draw */}
                     <graphics
                         ref={ handleTreeTrunkGraphics }
                         context={ treeTrunk }
                     />
+                    {/* @ts-expect-error graphics requires draw */}
                     <graphics
                         ref={ handleTreeCanopyGraphics }
                         context={ treeCanopy }
@@ -486,7 +489,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                     />
 
                     <LeafCollection
-                        ref={
+                        treeRef={
                             treeRefObject
                         }
                     />
