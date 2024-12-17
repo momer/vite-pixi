@@ -75,7 +75,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                             <label className={ clsx() }>Density</label>
                                         </div>
                                         <div className={ clsx('text-sm') }>
-                                            asdflkajsdf
+                                            TODO: slider
                                         </div>
                                     </div>
 
@@ -87,7 +87,6 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                         <div className={ clsx('flex gap-2 justify-between text-sm w-full') }>
                                             <div className={ clsx('rounded-lg bg-blue-950 h-8 w-8') }></div>
                                             <div className={ clsx('rounded-lg bg-red-800 h-8 w-8') }></div>
-                                            <div className={ clsx('rounded-lg bg-black h-8 w-8') }></div>
                                             <div className={ clsx('rounded-lg bg-black h-8 w-8') }></div>
                                             <div
                                                 className={ clsx('rounded-lg bg-white outline outline-1 outline-black h-8 w-8') }></div>
