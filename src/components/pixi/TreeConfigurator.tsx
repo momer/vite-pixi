@@ -69,7 +69,17 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                 className={ clsx('hidden group-hover:flex group-hover:pt-2 group-hover:justify-between group-hover:w-full group-hover:border-gray-900/10') }>
                                 <div className={ clsx('flex flex-col w-full gap-4') }>
                                     <label className={ clsx('font-medium text-gray-900') }>Precipitation</label>
-                                    <div className={ clsx('flex font-light items-end text-gray-900') }>
+
+                                    <div className={ clsx('flex font-light text-gray-900') }>
+                                        <div className={ clsx('min-w-16 text-sm') }>
+                                            <label className={ clsx() }>Density</label>
+                                        </div>
+                                        <div className={ clsx('text-sm') }>
+                                            asdflkajsdf
+                                        </div>
+                                    </div>
+
+                                    <div className={ clsx('flex font-light text-gray-900') }>
                                         <div className={ clsx('min-w-16 text-sm') }>
                                             <label className={ clsx() }>Type</label>
                                         </div>
@@ -81,15 +91,6 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                             <div className={ clsx('rounded-lg bg-black h-8 w-8') }></div>
                                             <div
                                                 className={ clsx('rounded-lg bg-white outline outline-1 outline-black h-8 w-8') }></div>
-                                        </div>
-                                    </div>
-
-                                    <div className={ clsx('flex font-light text-gray-900') }>
-                                        <div className={ clsx('min-w-16 text-sm') }>
-                                            <label className={ clsx() }>Density</label>
-                                        </div>
-                                        <div className={ clsx('text-sm') }>
-                                            asdflkajsdf
                                         </div>
                                     </div>
 
