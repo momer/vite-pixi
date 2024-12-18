@@ -38,7 +38,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({children}) => {
     };
 
     return (
-        <div>
+        <div className={'w-full'}>
             {treeContext ? (
                 <FadeIn className="mx-auto lg:mx-0 -mt-16 lg:mt-0 w-full"
                         viewport={{once: true, margin: '0px 0px 0px'}}
@@ -49,13 +49,13 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({children}) => {
                             staggerChildren: 0.5
                         }}>
                     <div
-                        className={clsx('p-4')}
+                        className={clsx('lg:p-4')}
                     >
 
                         <div className={clsx('flex flex-col items-end')}>
                             <div className={clsx(
-                                'flex flex-col',
-                                'group hover:min-w-1/3 hover:p-4 hover:rounded-lg hover:outline hover:outline-2 hover:outline-[#F29DBB]')}>
+                                'flex flex-col mx-auto',
+                                'group hover:min-w-1/3 hover:p-4 hover:rounded-lg hover:outline hover:outline-2 hover:outline-[#F29DBB] hover:bg-white bg-opacity-65')}>
 
                                 <div
                                     className={clsx('flex group-hover:drop-shadow-sm items-start group-hover:items-end justify-between w-full group-hover:pb-2 group-hover:border-gray-100 group-hover:border-b')}>
@@ -79,7 +79,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({children}) => {
                                         >
                                             <GearIcon
                                                 className={clsx(
-                                                    'h-8 w-8 group-hover:h-6 group-hover:w-6 fill-none stroke-[2px]',
+                                                    'h-8 w-8 group-hover:h-6 group-hover:w-6 fill-white stroke-[2px]',
                                                     'stroke-neutral-950',
                                                 )}
                                             ></GearIcon>

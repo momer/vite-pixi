@@ -150,15 +150,16 @@ export function Home() {
                         className={ clsx('h-[calc(100vh-8rem)] relative') }
                         ref={ myRefCallback }
                     >
+
                         <div
-                            className={ clsx('flex flex-col top-1/2 w-1/2 items-end absolute z-10') }>
+                            className={clsx('flex flex-col bottom-28 sm:bottom-28 md:bottom-20 lg:top-1/2 w-full lg:items-end absolute z-10 ')}>
                             <TreeConfigurator>
 
                             </TreeConfigurator>
                         </div>
 
                         <div
-                            className={ clsx('flex flex-col items-end mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute') }
+                            className={clsx('flex flex-col items-end mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute') }
                         >
                             <div
                                 className="flex flex-col mt-auto flex-wrap w-full mx-auto sm:px-2 md:px-4 text-center lg:text-left ">
