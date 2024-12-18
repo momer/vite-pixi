@@ -1,4 +1,4 @@
-import { MutableRefObject, RefObject, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { MutableRefObject, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import hardRainImageUrl from '/static/images/pixi/sakura/environment/HardRain.png';
 import { Container, ContainerChild, Graphics } from 'pixi.js';
@@ -45,9 +45,9 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
             particleCount = PrecipitationDensityMapping[treeContext?.treeOptions?.precipitation?.type][treeContext?.treeOptions?.precipitation?.density];
         }
         setMaxParticles(() => (particleCount));
-    }, [treeContext?.treeOptions?.precipitation?.density]);
+    }, [treeContext?.treeOptions?.precipitation?.type, treeContext?.treeOptions?.precipitation?.density]);
 
-    const generateRainConfig = useCallback(() => {
+    const generateRainConfig = useMemo(() => {
         return {
             'lifetime': {
                 'min': 1,
@@ -124,8 +124,6 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
             ]
         };
     }, [maxParticles, props.drawableTreeDimensions, treeContext?.treeOptions?.precipitation?.colorEnd, treeContext?.treeOptions?.precipitation?.colorStart]);
-
-    const [precipConfig, setPrecipConfig] = useState(generateRainConfig());
 
     const handleParticleContainer = useCallback((container: Container) => {
         // update the mask for the environment container when resized
@@ -215,16 +213,11 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
         if (environmentContainerRef.current && assetLoadSuccess && isSuccess && hardRain) {
             if (props.emitter) {
                 props.emitter.parent = environmentContainerRef.current;
-                // Regenerate the config
-                const newPrecipConfig = generateRainConfig();
-                setPrecipConfig(() => newPrecipConfig);
                 // Load the new config
-                props.emitter.init(precipConfig);
+                props.emitter.init(generateRainConfig);
             } else {
                 emitterMutex.runExclusive(() => {
                     if (!props.emitter && environmentContainerRef?.current) {
-                        const newPrecipConfig = generateRainConfig();
-                        setPrecipConfig(() => newPrecipConfig);
 
                         // update the emitter
                         props.setEmitter((prevState) => {
@@ -234,7 +227,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
 
                             return new Emitter(
                                 environmentContainerRef.current as Container<ContainerChild>,
-                                newPrecipConfig,
+                                generateRainConfig,
                             );
                         });
                     }
