@@ -1,9 +1,10 @@
-import React, { FC, ReactNode, useContext } from 'react';
-import { TreeContext } from '@/components/pixi/TreeProvider';
+import React, { FC, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
+import { TreeContext, TreeOptions } from '@/components/pixi/TreeProvider';
 import { FadeIn } from '@/components/FadeIn';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { PopoverPicker } from '@/components/PopoverPicker';
+import { PrecipitationDensityMapping } from '@/components/pixi/Precipitation';
 
 interface TreeConfiguratorProps {
     children?: ReactNode;
@@ -20,145 +21,173 @@ function GearIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 }
 
 export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
-    const { treeOptions, setTreeOptions } = useContext(TreeContext);
-    const [precipColorStart, setPrecipColorStart] = React.useState<string | undefined>(treeOptions?.precipitation?.colorStart || '000000');
-    const [precipColorEnd, setPrecipColorEnd] = React.useState<string | undefined>(treeOptions?.precipitation?.colorEnd || '000000');
-    const [precipDensity, setPrecipDensity] = React.useState<number | undefined>(treeOptions?.precipitation?.density || 1000);
+    const treeContext = useContext(TreeContext);
+    const [precipColorStart, setPrecipColorStart] = React.useState<string | undefined>(treeContext?.treeOptions?.precipitation?.colorStart || '000000');
+    const [precipColorEnd, setPrecipColorEnd] = React.useState<string | undefined>(treeContext?.treeOptions?.precipitation?.colorEnd || '000000');
+
+    useEffect(() => {
+
+    }, []);
+
+    const setPrecipDensity = (value: number) => {
+        if (treeContext?.setTreeOptions) {
+            treeContext?.setTreeOptions((current: TreeOptions) => {
+                current.precipitation.density = value;
+                return current;
+            });
+        }
+    };
+
+    const mappedPrecipDensity = useMemo(() => {
+        if (treeContext?.treeOptions?.precipitation?.type && treeContext?.treeOptions?.precipitation?.density) {
+            return PrecipitationDensityMapping[treeContext?.treeOptions?.precipitation?.type][treeContext?.treeOptions?.precipitation?.density];
+        }
+
+        // some default density for now
+        return 500;
+    }, [treeContext?.treeOptions?.precipitation?.density, treeContext?.treeOptions?.precipitation?.type]);
 
     return (
-        <TreeContext.Provider value={ { treeOptions, setTreeOptions } }>
-            <FadeIn className="mx-auto lg:mx-0 -mt-16 lg:mt-0 w-full"
-                    viewport={ { once: true, margin: '0px 0px 0px' } }
-                    transition={ {
-                        duration: 0.33,
-                        delay: 0.66,
-                        delayChildren: 0.5,
-                        staggerChildren: 0.5
-                    } }>
-                <div
-                    className={ clsx('p-4') }
-                >
+        <div>
+            { treeContext ? (
+                <FadeIn className="mx-auto lg:mx-0 -mt-16 lg:mt-0 w-full"
+                        viewport={ { once: true, margin: '0px 0px 0px' } }
+                        transition={ {
+                            duration: 0.33,
+                            delay: 0.66,
+                            delayChildren: 0.5,
+                            staggerChildren: 0.5
+                        } }>
+                    <div
+                        className={ clsx('p-4') }
+                    >
 
-                    <div className={ clsx('flex flex-col items-end') }>
-                        <div className={ clsx(
-                            'flex flex-col',
-                            'group hover:min-w-1/3 hover:p-4 hover:rounded-lg hover:outline hover:outline-2 hover:outline-[#F29DBB]') }>
-
-                            <div
-                                className={ clsx('flex group-hover:drop-shadow-sm items-start group-hover:items-end justify-between w-full group-hover:pb-2 group-hover:border-gray-100 group-hover:border-b') }>
-
-                                <div className={ clsx('hidden group-hover:flex flex-col') }>
-                                    <h3>Sakura Configurator</h3>
-                                </div>
+                        <div className={ clsx('flex flex-col items-end') }>
+                            <div className={ clsx(
+                                'flex flex-col',
+                                'group hover:min-w-1/3 hover:p-4 hover:rounded-lg hover:outline hover:outline-2 hover:outline-[#F29DBB]') }>
 
                                 <div
-                                    className={ clsx('') }>
-                                    <motion.div
-                                        animate={ { rotate: 360 } }
-                                        className={ clsx('') }
-                                        transition={ { repeat: Infinity, duration: 7, repeatDelay: 0, ease: 'linear' } }
+                                    className={ clsx('flex group-hover:drop-shadow-sm items-start group-hover:items-end justify-between w-full group-hover:pb-2 group-hover:border-gray-100 group-hover:border-b') }>
 
-                                    >
-                                        <GearIcon
-                                            className={ clsx(
-                                                'h-8 w-8 group-hover:h-6 group-hover:w-6 fill-none stroke-[2px]',
-                                                'stroke-neutral-950',
-                                            ) }
-                                        ></GearIcon>
-                                    </motion.div>
+                                    <div className={ clsx('hidden group-hover:flex flex-col') }>
+                                        <h3>Sakura Configurator</h3>
+                                    </div>
+
+                                    <div
+                                        className={ clsx('') }>
+                                        <motion.div
+                                            animate={ { rotate: 360 } }
+                                            className={ clsx('') }
+                                            transition={ {
+                                                repeat: Infinity,
+                                                duration: 7,
+                                                repeatDelay: 0,
+                                                ease: 'linear'
+                                            } }
+
+                                        >
+                                            <GearIcon
+                                                className={ clsx(
+                                                    'h-8 w-8 group-hover:h-6 group-hover:w-6 fill-none stroke-[2px]',
+                                                    'stroke-neutral-950',
+                                                ) }
+                                            ></GearIcon>
+                                        </motion.div>
+
+                                    </div>
 
                                 </div>
+                                <div
+                                    className={ clsx('hidden group-hover:flex group-hover:pt-2 group-hover:justify-between group-hover:w-full group-hover:border-gray-900/10') }>
+                                    <div className={ clsx('flex flex-col w-full gap-4') }>
+                                        <label className={ clsx('font-medium text-gray-900') }>Precipitation</label>
 
-                            </div>
-                            <div
-                                className={ clsx('hidden group-hover:flex group-hover:pt-2 group-hover:justify-between group-hover:w-full group-hover:border-gray-900/10') }>
-                                <div className={ clsx('flex flex-col w-full gap-4') }>
-                                    <label className={ clsx('font-medium text-gray-900') }>Precipitation</label>
-
-                                    <div className={ clsx('flex min-h-8 font-light text-gray-900') }>
-                                        <div className={ clsx('min-w-16 text-sm') }>
-                                            <label className={ clsx() }>Density</label>
-                                        </div>
-                                        <div className={ clsx('w-full text-sm') }>
-                                            <input
-                                                type="range"
-                                                min={ 0 }
-                                                max={ 5 }
-                                                value={ precipDensity }
-                                                onChange={e => setPrecipDensity(Number(e.target.value)) }
-                                                className={ clsx('w-full range') }
-                                                step={ 1 }/>
-                                            <div className="flex w-full justify-between px-2 text-xs">
-                                                <span>|</span>
-                                                <span>|</span>
-                                                <span>|</span>
-                                                <span>|</span>
-                                                <span>|</span>
-                                                <span>|</span>
+                                        <div className={ clsx('flex min-h-8 font-light text-gray-900') }>
+                                            <div className={ clsx('min-w-16 text-sm') }>
+                                                <label className={ clsx() }>Density</label>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <div className={ clsx('flex min-h-8 font-light text-gray-900') }>
-                                        <div className={ clsx('min-w-16 text-sm') }>
-                                            <label className={ clsx() }>Type</label>
-                                        </div>
-
-                                        <div className={ clsx('flex gap-2 justify-between text-sm w-full') }>
-                                            <div
-                                                className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
-
-                                                <div className={
-                                                    clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_water.png'),linear-gradient(0deg,theme('colors.cyan.500/3')_30%,theme('colors.blue.500')_65%)] ${ '' } bg-no-repeat h-full w-full z-40`)
-                                                }>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
-
-                                                <div className={
-
-                                                    clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_snowflake.png'),linear-gradient(0deg,_#658DBD_15%,_#CEE7FB_90%)] ${ '' } bg-no-repeat h-full w-full z-40`)
-                                                }>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
-
-                                                <div className={
-                                                    clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_sun.png'),linear-gradient(0deg,_#FFBF5C_25%,_#FF96A4_60%)] ${ '' } bg-no-repeat h-full w-full z-40`)
-                                                }>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
-                                                <div className={
-                                                    clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_skull.png'),linear-gradient(0deg,_#C93A0E_30%,_#CB0707_70%)] ${ '' } bg-no-repeat h-full w-full z-40`)
-                                                }>
+                                            <div className={ clsx('w-full text-sm') }>
+                                                <input
+                                                    type="range"
+                                                    min={ 0 }
+                                                    max={ 5 }
+                                                    value={ mappedPrecipDensity }
+                                                    onChange={ e => setPrecipDensity(Number(e.target.value)) }
+                                                    className={ clsx('w-full range') }
+                                                    step={ 1 }/>
+                                                <div className="flex w-full justify-between px-2 text-xs">
+                                                    <span>|</span>
+                                                    <span>|</span>
+                                                    <span>|</span>
+                                                    <span>|</span>
+                                                    <span>|</span>
+                                                    <span>|</span>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div className={ clsx('flex min-h-8 font-light text-gray-900') }>
-                                        <div className={ clsx('min-w-16 text-sm') }>
-                                            <label className={ clsx() }>Color</label>
+                                        <div className={ clsx('flex min-h-8 font-light text-gray-900') }>
+                                            <div className={ clsx('min-w-16 text-sm') }>
+                                                <label className={ clsx() }>Type</label>
+                                            </div>
+
+                                            <div className={ clsx('flex gap-2 justify-between text-sm w-full') }>
+                                                <div
+                                                    className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+
+                                                    <div className={
+                                                        clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_water.png'),linear-gradient(0deg,theme('colors.cyan.500/3')_30%,theme('colors.blue.500')_65%)] ${ '' } bg-no-repeat h-full w-full z-40`)
+                                                    }>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+
+                                                    <div className={
+
+                                                        clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_snowflake.png'),linear-gradient(0deg,_#658DBD_15%,_#CEE7FB_90%)] ${ '' } bg-no-repeat h-full w-full z-40`)
+                                                    }>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+
+                                                    <div className={
+                                                        clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_sun.png'),linear-gradient(0deg,_#FFBF5C_25%,_#FF96A4_60%)] ${ '' } bg-no-repeat h-full w-full z-40`)
+                                                    }>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+                                                    <div className={
+                                                        clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_skull.png'),linear-gradient(0deg,_#C93A0E_30%,_#CB0707_70%)] ${ '' } bg-no-repeat h-full w-full z-40`)
+                                                    }>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className={ clsx('flex items-end gap-2 w-full justify-between') }>
-                                            <div className={ clsx('flex text-sm items-end gap-2') }>
-                                                <PopoverPicker
-                                                    className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
-                                                    color={ precipColorStart }
-                                                    onChange={ setPrecipColorStart }></PopoverPicker>
+
+                                        <div className={ clsx('flex min-h-8 font-light text-gray-900') }>
+                                            <div className={ clsx('min-w-16 text-sm') }>
+                                                <label className={ clsx() }>Color</label>
                                             </div>
-                                            <div>
-                                                <p>to</p>
-                                            </div>
-                                            <div className={ clsx('flex text-sm items-end gap-2') }>
-                                                <PopoverPicker
-                                                    className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
-                                                    color={ precipColorEnd }
-                                                    onChange={ setPrecipColorEnd }></PopoverPicker>
+                                            <div className={ clsx('flex items-end gap-2 w-full justify-between') }>
+                                                <div className={ clsx('flex text-sm items-end gap-2') }>
+                                                    <PopoverPicker
+                                                        className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
+                                                        color={ precipColorStart }
+                                                        onChange={ setPrecipColorStart }></PopoverPicker>
+                                                </div>
+                                                <div>
+                                                    <p>to</p>
+                                                </div>
+                                                <div className={ clsx('flex text-sm items-end gap-2') }>
+                                                    <PopoverPicker
+                                                        className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
+                                                        color={ precipColorEnd }
+                                                        onChange={ setPrecipColorEnd }></PopoverPicker>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -166,11 +195,9 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </FadeIn>
-            {
-                children
+                </FadeIn>
+            ) : (<div></div>)
             }
-        </TreeContext.Provider>
+        </div>
     );
 };

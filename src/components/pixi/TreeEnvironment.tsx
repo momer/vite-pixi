@@ -9,6 +9,7 @@ import { Dimension } from '@/components/pixi/Dimension';
 import { Mutex } from 'async-mutex';
 import { ApplicationState } from '@momer/pixi-react/types/typedefs/ApplicationState';
 import { TreeContext } from '@/components/pixi/TreeProvider';
+import { PrecipitationDensityMapping } from '@/components/pixi/Precipitation';
 
 extend({
     Container,
@@ -33,11 +34,18 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
     const [isEnvironmentMaskLoading, setIsEnvironmentMaskLoading] = useState(true);
     const { treeWorldContainerRef } = props.treeRef.current as unknown as Tree;
-
+    const [maxParticles, setMaxParticles] = useState<number>(500);
     const { app }: ApplicationState = useApplication();
-
     const { treeOptions } = useContext(TreeContext);
 
+    useEffect(() => {
+        // default to 500
+        let particleCount = maxParticles;
+        if (treeOptions?.precipitation?.type && treeOptions?.precipitation?.density) {
+            particleCount = PrecipitationDensityMapping[treeOptions?.precipitation?.type][treeOptions?.precipitation?.density];
+        }
+        setMaxParticles(() => (particleCount || 500));
+    }, [treeOptions]);
 
     const generateRainConfig = useCallback(() => {
         return {
@@ -47,7 +55,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
             },
             'frequency': 0.01,
             'emitterLifetime': 0,
-            'maxParticles': 300,
+            'maxParticles': maxParticles,
             'addAtBack': false,
             'pos': {
                 'x': 0,

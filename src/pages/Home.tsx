@@ -22,6 +22,7 @@ import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { HomeDemo } from '@/components/pixi/HomeDemo';
 import { TreeConfigurator } from '@/components/pixi/TreeConfigurator';
+import { TreeContext, TreeProvider } from '@/components/pixi/TreeProvider';
 
 interface StringMap {
     [key: string]: string;
@@ -150,9 +151,11 @@ export function Home() {
                 >
                     <div
                         className={ clsx('flex flex-col top-1/2 w-1/2 items-end absolute z-10') }>
-                        <TreeConfigurator>
+                        <TreeProvider>
+                            <TreeConfigurator>
 
-                        </TreeConfigurator>
+                            </TreeConfigurator>
+                        </TreeProvider>
                     </div>
 
                     <div

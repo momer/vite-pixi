@@ -20,48 +20,65 @@ export class PrecipitationOptions {
     }
 }
 
-export const PrecipitationDensityMapping: Record<PrecipitationType, Record<number, number>> = {
-    [PrecipitationType.RAIN]: {
-        0: 0,
-        1: 500,
-        2: 1000,
-        3: 2500,
-        4: 4000,
-        5: 5000,
-    },
-    [PrecipitationType.SNOW]: {
-        0: 0,
-        1: 500,
-        2: 1000,
-        3: 2500,
-        4: 4000,
-        5: 5000,
-    },
-    [PrecipitationType.SUN]: {
-        0: 0,
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-    },
-    [PrecipitationType.DEATH]: {
-        0: 0,
-        1: 500,
-        2: 1000,
-        3: 2500,
-        4: 4000,
-        5: 5000,
-    },
-
+export const PrecipitationDensityMapping: Record<PrecipitationType, Array<number>> = {
+    [PrecipitationType.RAIN]: [
+        0,
+        500,
+        1000,
+        2500,
+        4000,
+        5000,
+    ],
+    [PrecipitationType.SNOW]: [
+        0,
+        500,
+        1000,
+        2500,
+        4000,
+        5000,
+    ],
+    [PrecipitationType.SUN]: [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    ],
+    [PrecipitationType.DEATH]: [
+        0,
+        500,
+        1000,
+        2500,
+        4000,
+        5000,
+    ],
 };
 
 export const PrecipitationDefaults: Record<PrecipitationType, PrecipitationOptions> = {
     [PrecipitationType.RAIN]: new PrecipitationOptions(
-        0.75,
+        1,
         '#78b2f4',
         '#4091ec',
         PrecipitationType.RAIN,
+    ),
+    [PrecipitationType.SNOW]: new PrecipitationOptions(
+        1,
+        '#78b2f4',
+        '#4091ec',
+        PrecipitationType.SNOW,
+    ),
+    [PrecipitationType.SUN]: new PrecipitationOptions(
+        1,
+        '#78b2f4',
+        '#4091ec',
+        PrecipitationType.SUN,
+    ),
+    [PrecipitationType.DEATH]: new PrecipitationOptions(
+        1,
+        '#78b2f4',
+        '#4091ec',
+        PrecipitationType.DEATH,
     ),
 };
 

@@ -6,11 +6,11 @@ export type TreeOptions = {
 }
 
 export type TreeContextT = {
-    treeOptions?: TreeOptions;
-    setTreeOptions?: React.Dispatch<React.SetStateAction<TreeOptions>>;
+    treeOptions: TreeOptions;
+    setTreeOptions: React.Dispatch<React.SetStateAction<TreeOptions>>;
 }
 
-export const TreeContext = createContext<TreeContextT>({});
+export const TreeContext = createContext<TreeContextT | undefined>(undefined);
 
 interface TreeProviderProps {
     children: ReactNode
@@ -22,7 +22,7 @@ export const TreeProvider: FC<TreeProviderProps> = ({ children }) => {
     });
 
     return (
-        <TreeContext.Provider value={ { treeOptions, setTreeOptions } }>
+        <TreeContext.Provider value={ { treeOptions, setTreeOptions } as TreeContextT }>
             { children }
         </TreeContext.Provider>
     );
