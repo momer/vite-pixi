@@ -33,16 +33,16 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
     const environmentContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
     const [isEnvironmentMaskLoading, setIsEnvironmentMaskLoading] = useState(true);
-    const { treeWorldContainerRef } = props.treeRef.current as unknown as Tree;
+    const {treeWorldContainerRef} = props.treeRef.current as unknown as Tree;
     const [maxParticles, setMaxParticles] = useState<number>(500);
-    const { app }: ApplicationState = useApplication();
+    const {app}: ApplicationState = useApplication();
     const treeContext = useContext(TreeContext);
 
     useEffect(() => {
         // default to 500
         let particleCount = maxParticles;
-        if (treeContext?.treeOptions?.precipitation?.type && treeContext?.treeOptions?.precipitation?.density) {
-            particleCount = PrecipitationDensityMapping[treeContext?.treeOptions?.precipitation?.type][treeContext?.treeOptions?.precipitation?.density];
+        if (treeContext?.treeOptions?.precipitation) {
+            particleCount = PrecipitationDensityMapping[treeContext.treeOptions.precipitation.type][treeContext.treeOptions.precipitation.density];
         }
         setMaxParticles(() => (particleCount));
     }, [treeContext?.treeOptions?.precipitation?.type, treeContext?.treeOptions?.precipitation?.density]);
@@ -117,7 +117,10 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                     type: 'color',
                     config: {
                         color: {
-                            list: [{ value: treeContext?.treeOptions?.precipitation?.colorStart, time: 0 }, { value: treeContext?.treeOptions?.precipitation?.colorEnd, time: 1 }]
+                            list: [{
+                                value: treeContext?.treeOptions?.precipitation?.colorStart,
+                                time: 0
+                            }, {value: treeContext?.treeOptions?.precipitation?.colorEnd, time: 1}]
                         },
                     }
                 }
@@ -168,7 +171,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
         {
             alias: 'hardRain',
             src: hardRainImageUrl,
-            data: { parseAsGraphicsContext: true }
+            data: {parseAsGraphicsContext: true}
         },
     ], {
         onProgress: (progress: number) => {
@@ -189,7 +192,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
             try {
                 props.emitter.update((now - elapsedRef.current) * 0.001);
             } catch (error) {
-                console.log(`caught error: ${ error }`);
+                console.log(`caught error: ${error}`);
             }
         }
 
@@ -213,6 +216,14 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
         if (environmentContainerRef.current && assetLoadSuccess && isSuccess && hardRain) {
             if (props.emitter) {
                 props.emitter.parent = environmentContainerRef.current;
+
+                if (maxParticles === 0) {
+                    props.emitter.emit = false;
+                    return;
+                } else if (!props.emitter.emit) {
+                    props.emitter.emit = true;
+                }
+
                 // Load the new config
                 props.emitter.init(generateRainConfig);
             } else {
@@ -225,10 +236,17 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                                 return prevState;
                             }
 
-                            return new Emitter(
+                            const emitter = new Emitter(
                                 environmentContainerRef.current as Container<ContainerChild>,
                                 generateRainConfig,
                             );
+
+                            // duplicated here for now
+                            if (maxParticles === 0) {
+                                emitter.emit = false;
+                            }
+
+                            return emitter;
                         });
                     }
                 });
@@ -239,13 +257,13 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
     return (
         treeContext && isSuccess && (
             <container
-                zIndex={ 10 }
-                isRenderGroup={ true }
-                ref={ handleParticleContainer }
+                zIndex={10}
+                isRenderGroup={true}
+                ref={handleParticleContainer}
                 mask={treeMaskRef.current}
             >
-                <graphics draw={ drawTreeMask }/>
-                { props.children }
+                <graphics draw={drawTreeMask}/>
+                {props.children}
             </container>
         )
     );
