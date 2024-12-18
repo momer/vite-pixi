@@ -15,14 +15,13 @@ import logoPhobiaDark from '/static/images/clients/phobia/logo-dark.svg';
 import logoPhobiaLight from '/static/images/clients/phobia/logo-light.svg';
 import logoUnseal from '/static/images/clients/unseal/logo-light.svg';
 import imageLaptop from '/static/images/laptop.jpg';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 // import { StringMap } from '@/lib/stringMap';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 import { HomeDemo } from '@/components/pixi/HomeDemo';
 import { TreeConfigurator } from '@/components/pixi/TreeConfigurator';
-import { TreeContext, TreeProvider } from '@/components/pixi/TreeProvider';
+import { TreeProvider } from '@/components/pixi/TreeProvider';
 
 interface StringMap {
     [key: string]: string;
@@ -54,13 +53,13 @@ function Clients() {
                         role="list"
                         className="mt-10 grid grid-cols-2 gap-x-8 gap-y-10 lg:grid-cols-4"
                     >
-                        { clients.map(([client, logo]) => (
-                            <li key={ client }>
+                        {clients.map(([client, logo]) => (
+                            <li key={client}>
                                 <FadeIn>
-                                    <img src={ logo } alt={ client }/>
+                                    <img src={logo} alt={client}/>
                                 </FadeIn>
                             </li>
-                        )) }
+                        ))}
                     </ul>
                 </FadeInStagger>
             </Container>
@@ -86,7 +85,7 @@ function Services() {
                     <div className="flex justify-center lg:w-1/2 lg:justify-end lg:pr-12">
                         <FadeIn className="w-[33.75rem] flex-none lg:w-[45rem]">
                             <StylizedImage
-                                src={ imageLaptop }
+                                src={imageLaptop}
                                 sizes="(min-width: 1024px) 41rem, 31rem"
                                 className="justify-center lg:justify-end"
                             />
@@ -146,52 +145,56 @@ export function Home() {
                         <link rel="stylesheet" href="https://use.typekit.net/wiw0xgp.css"/>
                     </Helmet>
 
-                    <div
-                        className={ clsx('h-[calc(100vh-8rem)] relative') }
-                        ref={ myRefCallback }
-                    >
+
+                    <div className={clsx('h-screen w-full relative')}>
 
                         <div
-                            className={clsx('flex flex-col bottom-28 sm:bottom-28 md:bottom-20 lg:top-1/2 w-full lg:items-end absolute z-10 ')}>
-                            <TreeConfigurator>
-
-                            </TreeConfigurator>
-                        </div>
-
-                        <div
-                            className={clsx('flex flex-col items-end lg:items-start mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute') }
+                            className={clsx('h-[calc(100vh-8rem)] inset-0 w-full absolute z-10')}
+                            ref={myRefCallback}
                         >
+                        </div>
+                        <div className={'w-full h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] inset-0 absolute z-20'}>
                             <div
-                                className="flex flex-col mt-auto flex-wrap mx-auto lg:mx-0 sm:px-2 md:px-4 lg:mb-4 text-center lg:text-left bg-white">
+                                className={clsx('flex flex-col bottom-28 sm:bottom-28 md:bottom-20 lg:top-1/2 w-full lg:items-end absolute z-10 ')}>
+                                <TreeConfigurator>
 
-                                {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/ }
-                                <h1 className="font-display mx-auto lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight text-neutral-950 [text-wrap:balance]">
-                                    Systems thinking, in bloom.
-                                </h1>
-
-                                <span className="sm:bg-white lg:bg-transparent">
-                                    <span className="hidden md:inline">
-                                        We connect ideas, strategy, and technology; helping challenges blossom into solutions.
-                                    </span>
-                                    <span className="inline md:hidden">
-                                        We help challenges blossom into solutions.
-                                    </span>
-                                </span>
+                                </TreeConfigurator>
                             </div>
 
+                            <div
+                                className={clsx('flex flex-col items-end lg:items-start mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute')}
+                            >
+                                <div
+                                    className="flex flex-col mt-auto flex-wrap mx-auto lg:mx-0 sm:px-2 md:px-4 lg:mb-4 text-center lg:text-left bg-white">
 
+                                    {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/}
+                                    <h1 className="font-display mx-auto lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight text-neutral-950 [text-wrap:balance]">
+                                        Systems thinking, in bloom.
+                                    </h1>
+
+                                    <span className="sm:bg-white lg:bg-transparent">
+                                        <span className="hidden md:inline">
+                                            We connect ideas, strategy, and technology; helping challenges blossom into solutions.
+                                        </span>
+                                        <span className="inline md:hidden">
+                                            We help challenges blossom into solutions.
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
 
-                    <div id="pixi-app" className={ clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none') }>
-                        { <HomeDemo ref={ myRef }/> }
+                    <div id="pixi-app" className={clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none')}>
+                        {<HomeDemo ref={myRef}/>}
                     </div>
 
                     <Clients/>
 
                     <Testimonial
                         className="mt-24 sm:mt-32 lg:mt-40"
-                        client={ { name: 'Phobia', logo: logoPhobiaDark } }
+                        client={{name: 'Phobia', logo: logoPhobiaDark}}
                     >
                         The team at Studio went above and beyond with our onboarding, even
                         finding a way to access the user’s microphone without triggering one of
