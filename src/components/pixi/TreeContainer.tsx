@@ -1,6 +1,7 @@
 import { extend, useApplication, useAssets } from '@pixi/react';
 import {
-    Container, ContainerChild,
+    Container,
+    ContainerChild,
     ConvertedStrokeStyle,
     FillInstruction,
     Graphics,
@@ -66,7 +67,7 @@ export const LeafCollection = (props: LeafCollectionProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [numLeafClusters, setNumLeafClusters] = useState<number>(500);
     const leafClusters = useRef<Array<LeafCluster>>([]);
-    const { trunkRef, canopyRef, blossomableAreaRef } = props.treeRef?.current as unknown as Tree;
+    const {trunkRef, canopyRef, blossomableAreaRef} = props.treeRef?.current as unknown as Tree;
 
     // initialize the LeafCluster assets
     useEffect(() => {
@@ -75,7 +76,7 @@ export const LeafCollection = (props: LeafCollectionProps) => {
             try {
                 await LeafCluster.init();
             } catch (err: unknown) {
-                console.log(`caught an error: ${ err }`);
+                console.log(`caught an error: ${err}`);
                 setError(() => err);
             } finally {
                 setIsInitializing(false);
@@ -83,7 +84,7 @@ export const LeafCollection = (props: LeafCollectionProps) => {
         };
 
         if (error) {
-            console.log(`fatal error while loading assets: ${ error }`);
+            console.log(`fatal error while loading assets: ${error}`);
         }
 
         initAssets();
@@ -218,7 +219,7 @@ export const LeafCollection = (props: LeafCollectionProps) => {
 
     return (
         // eslint-disable-next-line react/no-unknown-property
-        <container isRenderGroup={ true } ref={ collectionContainerRef } sortableChildren={ true }>
+        <container isRenderGroup={true} ref={collectionContainerRef} sortableChildren={true}>
         </container>
     );
 };
@@ -232,7 +233,7 @@ export interface TreeContainerOptions {
 export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     // alternate way of tracking measurement in pixi
     // const [measureRef, bounds] = useMeasure();
-    const { app }: ApplicationState = useApplication();
+    const {app}: ApplicationState = useApplication();
 
     // Both should be the same for trunk and canopy
 
@@ -370,17 +371,17 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         {
             alias: 'treeTrunk',
             src: trunkSvgUrl,
-            data: { parseAsGraphicsContext: true }
+            data: {parseAsGraphicsContext: true}
         },
         {
             alias: 'treeCanopy',
             src: canopySvgUrl,
-            data: { parseAsGraphicsContext: true }
+            data: {parseAsGraphicsContext: true}
         },
         {
             alias: 'blossomableArea',
             src: blossomableSvgUrl,
-            data: { parseAsGraphicsContext: true }
+            data: {parseAsGraphicsContext: true}
         }
     ], {
         onProgress: (progress: number) => {
@@ -403,7 +404,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             const observer = new ResizeObserver((entries) => {
                 console.log('resize observer called');
                 for (const entry of entries) {
-                    const { width, height } = entry.contentRect;
+                    const {width, height} = entry.contentRect;
                     if (app && app.renderer) {
                         app.renderer.resize(width, height);
                         resizeTreeContainer();
@@ -452,7 +453,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     }, []);
 
     useEffect(() => {
-        console.log(`asset load success is now: ${ assetLoadSuccess }`);
+        console.log(`asset load success is now: ${assetLoadSuccess}`);
     }, [assetLoadSuccess]);
 
     useEffect(() => {
@@ -469,42 +470,46 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     //
     return (
         isSuccess && app?.renderer && app?.screen && (
-            // eslint-disable-next-line react/no-unknown-property
-            <container sortableChildren={ true } ref={ treeWorldContainerRef }>
-                {/* tree container*/ }
-                <container isRenderGroup={ true } ref={ handleTreeObjectContainer }>
-                    {/* @ts-expect-error graphics requires draw */}
-                    <graphics
-                        ref={ handleTreeTrunkGraphics }
-                        context={ treeTrunk }
-                    />
-                    {/* @ts-expect-error graphics requires draw */}
-                    <graphics
-                        ref={ handleTreeCanopyGraphics }
-                        context={ treeCanopy }
-                    />
-                    <graphics
-                        ref={ handleBlossomableAreaGraphics }
-                        context={ blossomableArea }
-                    />
+            <>
 
-                    <LeafCollection
-                        treeRef={
-                            treeRefObject
-                        }
-                    />
+                <container sortableChildren={true}>
+
+                    <container sortableChildren={true} ref={treeWorldContainerRef}>
+                        {/* tree container*/}
+                        <container isRenderGroup={true} ref={handleTreeObjectContainer}>
+                            {/* @ts-expect-error graphics requires draw */}
+                            <graphics
+                                ref={handleTreeTrunkGraphics}
+                                context={treeTrunk}
+                            />
+                            {/* @ts-expect-error graphics requires draw */}
+                            <graphics
+                                ref={handleTreeCanopyGraphics}
+                                context={treeCanopy}
+                            />
+                            <graphics
+                                ref={handleBlossomableAreaGraphics}
+                                context={blossomableArea}
+                            />
+
+                            <LeafCollection
+                                treeRef={
+                                    treeRefObject
+                                }
+                            />
+                        </container>
+                    </container>
+                                        <TreeEnvironment
+                        treeRef={treeRefObject}
+                        drawableTreeDimensions={drawableTreeDimensions!}
+                        emitter={emitter}
+                        setEmitter={setEmitter}
+                        isTrunkGraphicsLoading={isTrunkGraphicsLoading}
+                        isCanopyGraphicsLoading={isCanopyGraphicsLoading}
+                        isBlossomableAreaGraphicsLoading={isBlossomableAreaGraphicsLoading}
+                    ></TreeEnvironment>
                 </container>
-
-                <TreeEnvironment
-                    treeRef={ treeRefObject }
-                    drawableTreeDimensions={ drawableTreeDimensions! }
-                    emitter={ emitter }
-                    setEmitter={ setEmitter }
-                    isTrunkGraphicsLoading={isTrunkGraphicsLoading}
-                    isCanopyGraphicsLoading={isCanopyGraphicsLoading}
-                    isBlossomableAreaGraphicsLoading={isBlossomableAreaGraphicsLoading}
-                ></TreeEnvironment>
-            </container>
+            </>
         )
     );
 });

@@ -1,10 +1,8 @@
-import { Application } from '@pixi/react';
 import React, { forwardRef, RefObject, useContext } from 'react';
 
 import { TreeContainer } from '@/components/pixi/TreeContainer';
-import { TreeEnvironment } from '@/components/pixi/TreeEnvironment';
 import { Color } from 'pixi.js';
-import { TreeContext, TreeProvider } from '@/components/pixi/TreeProvider';
+import { TreeContext } from '@/components/pixi/TreeProvider';
 import { ContextApplication } from '@/components/pixi/ContextBridge';
 
 export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
@@ -17,7 +15,6 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
                     hello={ true }
                     autoStart
                     sharedTicker
-                    resizeTo={ ref as RefObject<HTMLElement> }
                     background={ new Color('white') }
                     backgroundAlpha={ 1 }
                     antialias={ true }

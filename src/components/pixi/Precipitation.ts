@@ -37,6 +37,15 @@ export const PrecipitationDensityMapping: Record<PrecipitationType, Record<numbe
             maxParticles: 0,
         },
         1: {
+            frequency: 0.1,
+            maxParticles: 100,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+            spawnChance: 0.35,
+        },
+        2: {
             frequency: 0.01,
             maxParticles: 500,
             moveSpeedStatic: {
@@ -45,7 +54,7 @@ export const PrecipitationDensityMapping: Record<PrecipitationType, Record<numbe
             },
             spawnChance: 0.55,
         },
-        2: {
+        3: {
             frequency: 0.01,
             maxParticles: 1000,
             moveSpeedStatic: {
@@ -55,7 +64,7 @@ export const PrecipitationDensityMapping: Record<PrecipitationType, Record<numbe
             particlesPerWave: 10,
             spawnChance: 0.65,
         },
-        3: {
+        4: {
             frequency: 0.005,
             maxParticles: 2500,
             moveSpeedStatic: {
@@ -64,16 +73,6 @@ export const PrecipitationDensityMapping: Record<PrecipitationType, Record<numbe
             },
             particlesPerWave: 15,
             spawnChance: 0.65,
-        },
-        4: {
-            frequency: 0.005,
-            maxParticles: 4000,
-            moveSpeedStatic: {
-                minSpeed: 1000,
-                maxSpeed: 1000,
-            },
-            particlesPerWave: 20,
-            spawnChance: 0.75,
         },
         5: {
             frequency: 0.001,
@@ -117,14 +116,6 @@ export const PrecipitationDensityMapping: Record<PrecipitationType, Record<numbe
         },
         4: {
             frequency: 0.001,
-            maxParticles: 4000,
-            moveSpeedStatic: {
-                minSpeed: 1000,
-                maxSpeed: 1000,
-            },
-        },
-        5: {
-            frequency: 0.001,
             maxParticles: 5000,
             moveSpeedStatic: {
                 minSpeed: 1000,
@@ -161,15 +152,8 @@ export const PrecipitationDensityMapping: Record<PrecipitationType, Record<numbe
                 maxSpeed: 1000,
             },
         },
+
         4: {
-            frequency: 0.001,
-            maxParticles: 4000,
-            moveSpeedStatic: {
-                minSpeed: 1000,
-                maxSpeed: 1000,
-            },
-        },
-        5: {
             frequency: 0.001,
             maxParticles: 5000,
             moveSpeedStatic: {
@@ -207,15 +191,8 @@ export const PrecipitationDensityMapping: Record<PrecipitationType, Record<numbe
                 maxSpeed: 1000,
             },
         },
+
         4: {
-            frequency: 0.001,
-            maxParticles: 4000,
-            moveSpeedStatic: {
-                minSpeed: 1000,
-                maxSpeed: 1000,
-            },
-        },
-        5: {
             frequency: 0.001,
             maxParticles: 5000,
             moveSpeedStatic: {

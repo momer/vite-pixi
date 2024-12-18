@@ -35,8 +35,8 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
     const [isEnvironmentMaskLoading, setIsEnvironmentMaskLoading] = useState(true);
     const {treeWorldContainerRef} = props.treeRef.current as unknown as Tree;
-    const {app}: ApplicationState = useApplication();
     const treeContext = useContext(TreeContext);
+    const { app }: ApplicationState = useApplication();
 
     const mappedPrecipDensity: EmitterPrecipitationDensityOptions = useMemo(() => {
         if (treeContext?.treeOptions?.precipitation) {
@@ -113,7 +113,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                         'data': {
                             'x': 0,
                             'y': 0,
-                            'w': props.drawableTreeDimensions?.width || 100,
+                            'w': app?.screen.width || 100,
                             'h': 1
                         }
                     }
@@ -152,7 +152,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                 treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
             ).fill({
                 color: 0xFFDAE6,
-                alpha: 1,
+                alpha: 0,
             });
             // environmentContainerRef.current.mask = treeMaskRef.current;
             setIsEnvironmentMaskLoading(() => false);
@@ -263,7 +263,6 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                 zIndex={10}
                 isRenderGroup={true}
                 ref={handleParticleContainer}
-                mask={treeMaskRef.current}
             >
                 <graphics draw={drawTreeMask}/>
                 {props.children}
