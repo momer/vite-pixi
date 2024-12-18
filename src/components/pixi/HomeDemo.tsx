@@ -1,4 +1,4 @@
-import { Application } from '@momer/pixi-react';
+import { Application } from '@pixi/react';
 import React, { forwardRef, RefObject, useContext } from 'react';
 
 import { TreeContainer } from '@/components/pixi/TreeContainer';

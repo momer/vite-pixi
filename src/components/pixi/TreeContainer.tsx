@@ -1,4 +1,4 @@
-import { extend, useApplication, useAssets } from '@momer/pixi-react';
+import { extend, useApplication, useAssets } from '@pixi/react';
 import {
     Container, ContainerChild,
     ConvertedStrokeStyle,
@@ -24,7 +24,7 @@ import React, {
 import trunkSvgUrl from '/static/images/pixi/sakura/trunk.svg';
 import canopySvgUrl from '/static/images/pixi/sakura/canopy.svg';
 import blossomableSvgUrl from '/static/images/pixi/sakura/blossomable.svg';
-import { ApplicationState } from '@momer/pixi-react/types/typedefs/ApplicationState';
+import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
 import { AnimationTitle as LeafClusterAnimationTitle, LeafCluster } from '@/components/pixi/LeafCluster';
 import { randomFloatFromInterval, randomIntFromInterval } from '@/utils/math/rand';
 import { quickRound } from '@/utils/math/floats';

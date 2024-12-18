@@ -2,12 +2,12 @@ import { forwardRef, MutableRefObject, RefObject, useCallback, useContext, useEf
 
 import hardRainImageUrl from '/static/images/pixi/sakura/environment/HardRain.png';
 import { Container, ContainerChild, Graphics } from 'pixi.js';
-import { extend, useApplication, useAssets } from '@momer/pixi-react';
+import { extend, useApplication, useAssets } from '@pixi/react';
 import { Emitter } from '@momer/pixi-particle-emitter';
 import { Tree } from '@/components/pixi/TreeContainer';
 import { Dimension } from '@/components/pixi/Dimension';
 import { Mutex } from 'async-mutex';
-import { ApplicationState } from '@momer/pixi-react/types/typedefs/ApplicationState';
+import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
 import { TreeContext } from '@/components/pixi/TreeProvider';
 import { PrecipitationDensityMapping } from '@/components/pixi/Precipitation';
 

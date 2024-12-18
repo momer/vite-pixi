@@ -1,4 +1,4 @@
-import { Application, ApplicationProps } from '@momer/pixi-react';
+import { Application } from '@pixi/react';
 import { ReactNode } from 'react';
 import { TreeContext, TreeContextT } from '@/components/pixi/TreeProvider';
 
@@ -16,7 +16,7 @@ export const ContextApplication = ({
                                        context,
                                        children,
                                        ...props
-                                   }: ApplicationProps & { children: ReactNode, context: TreeContextT }) => {
+                                   }: any & { children: ReactNode, context: TreeContextT }) => {
 
     return (
         <ContextBridge
@@ -25,7 +25,7 @@ export const ContextApplication = ({
             render={
                 (children) => {
                     return (
-                        <Application { ...(props as ApplicationProps) }>{ children }</Application>
+                        <Application { ...(props) }>{ children }</Application>
                     );
                 } }
         />
