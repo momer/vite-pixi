@@ -4,7 +4,7 @@ import { FadeIn } from '@/components/FadeIn';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { PopoverPicker } from '@/components/PopoverPicker';
-import { PrecipitationDensityMapping } from '@/components/pixi/Precipitation';
+import { PrecipitationDensityMapping, PrecipitationOptions } from '@/components/pixi/Precipitation';
 
 interface TreeConfiguratorProps {
     children?: ReactNode;
@@ -29,11 +29,11 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
 
     }, []);
 
-    const setPrecipDensity = (value: number) => {
+    const setPrecipitationOption = <K extends keyof PrecipitationOptions, T extends PrecipitationOptions[K]>(key: K, value: T): void => {
         if (treeContext?.setTreeOptions) {
             treeContext?.setTreeOptions((current: TreeOptions) => {
                 const updatedOpt = { ...current };
-                updatedOpt.precipitation.density = value;
+                updatedOpt.precipitation[key] = value;
                 return updatedOpt;
             });
         }
@@ -114,7 +114,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                     min={ 0 }
                                                     max={ 5 }
                                                     value={ treeContext?.treeOptions?.precipitation?.density }
-                                                    onChange={ e => setPrecipDensity(Number(e.target.value)) }
+                                                    onChange={ e => setPrecipitationOption('density', Number(e.target.value)) }
                                                     className={ clsx('w-full range') }
                                                     step={ 1 }/>
                                                 <div className="flex w-full justify-between px-2 text-xs">
@@ -178,7 +178,8 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                     <PopoverPicker
                                                         className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
                                                         color={ precipColorStart }
-                                                        onChange={ setPrecipColorStart }></PopoverPicker>
+
+                                                        onChange={ value => setPrecipitationOption('colorStart', value) }></PopoverPicker>
                                                 </div>
                                                 <div>
                                                     <p>to</p>
@@ -187,7 +188,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                     <PopoverPicker
                                                         className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
                                                         color={ precipColorEnd }
-                                                        onChange={ setPrecipColorEnd }></PopoverPicker>
+                                                        onChange={ value => setPrecipitationOption('colorEnd', value) }></PopoverPicker>
                                                 </div>
                                             </div>
                                         </div>
