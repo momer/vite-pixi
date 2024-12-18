@@ -32,8 +32,9 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const setPrecipDensity = (value: number) => {
         if (treeContext?.setTreeOptions) {
             treeContext?.setTreeOptions((current: TreeOptions) => {
-                current.precipitation.density = value;
-                return current;
+                const updatedOpt = { ...current };
+                updatedOpt.precipitation.density = value;
+                return updatedOpt;
             });
         }
     };
@@ -112,7 +113,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                     type="range"
                                                     min={ 0 }
                                                     max={ 5 }
-                                                    value={ mappedPrecipDensity }
+                                                    value={ treeContext?.treeOptions?.precipitation?.density }
                                                     onChange={ e => setPrecipDensity(Number(e.target.value)) }
                                                     className={ clsx('w-full range') }
                                                     step={ 1 }/>
