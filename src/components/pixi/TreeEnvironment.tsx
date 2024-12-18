@@ -122,9 +122,9 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                     config: {
                         color: {
                             list: [{
-                                value: treeContext?.treeOptions?.precipitation?.colorStart,
+                                value: treeContext?.treeOptions?.precipitation.colorStart,
                                 time: 0
-                            }, {value: treeContext?.treeOptions?.precipitation?.colorEnd, time: 1}]
+                            }, {value: treeContext?.treeOptions?.precipitation.colorEnd, time: 1}]
                         },
                     }
                 }

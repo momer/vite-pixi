@@ -27,8 +27,6 @@ function GearIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 
 export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const treeContext = useContext(TreeContext);
-    const [precipColorStart, setPrecipColorStart] = React.useState<string | undefined>(treeContext?.treeOptions?.precipitation?.colorStart || '000000');
-    const [precipColorEnd, setPrecipColorEnd] = React.useState<string | undefined>(treeContext?.treeOptions?.precipitation?.colorEnd || '000000');
 
     useEffect(() => {
 
@@ -139,7 +137,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                     <div
                                                         className={
                                                             clsx(
-                                                                `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_water.png'),linear-gradient(0deg,theme('colors.cyan.500/3')_30%,theme('colors.blue.500')_65%)] ${ '' } bg-no-repeat h-full w-full z-40`,
+                                                                `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_water.png'),linear-gradient(0deg,theme('colors.cyan.500/3')_30%,theme('colors.blue.500')_65%)] ${ '' } bg-no-repeat h-full w-full`,
                                                                 treeContext.treeOptions.precipitation.type == PrecipitationType.RAIN ? 'opacity-100 border-2 border-black rounded-md' : 'opacity-45',
                                                             ) }>
                                                     </div>
@@ -152,7 +150,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
 
                                                     <div className={
                                                         clsx(
-                                                            `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_snowflake.png'),linear-gradient(0deg,_#658DBD_15%,_#CEE7FB_90%)] ${ '' } bg-no-repeat h-full w-full z-40`,
+                                                            `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_snowflake.png'),linear-gradient(0deg,_#658DBD_15%,_#CEE7FB_90%)] ${ '' } bg-no-repeat h-full w-full`,
                                                             treeContext.treeOptions.precipitation.type == PrecipitationType.SNOW ? 'opacity-100 border-2 border-black rounded-md' : 'opacity-45',
                                                         ) }>
                                                     </div>
@@ -165,7 +163,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
 
                                                     <div className={
                                                         clsx(
-                                                            `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_sun.png'),linear-gradient(0deg,_#FDCD13_45%,_#ED4C3C_60%)] ${ '' } bg-no-repeat h-full w-full z-40`,
+                                                            `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_sun.png'),linear-gradient(0deg,_#FDCD13_45%,_#ED4C3C_60%)] ${ '' } bg-no-repeat h-full w-full`,
                                                             treeContext.treeOptions.precipitation.type == PrecipitationType.SUN ? 'opacity-100 border-2 border-black rounded-md' : 'opacity-45',
                                                         ) }>
                                                     </div>
@@ -177,7 +175,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                     ) }>
                                                     <div className={
                                                         clsx(
-                                                            `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_skull.png'),linear-gradient(0deg,_#000000_35%,_#CB0707_70%)] ${ '' } bg-no-repeat h-full w-full z-40`,
+                                                            `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_skull.png'),linear-gradient(0deg,_#000000_35%,_#CB0707_70%)] ${ '' } bg-no-repeat h-full w-full`,
                                                             treeContext.treeOptions.precipitation.type == PrecipitationType.DEATH ? 'opacity-100 border-2 border-black rounded-md' : 'opacity-45',
                                                         ) }>
                                                     </div>
@@ -193,7 +191,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                 <div className={ clsx('flex text-sm items-end gap-2') }>
                                                     <PopoverPicker
                                                         className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
-                                                        color={ precipColorStart }
+                                                        color={ treeContext.treeOptions.precipitation.colorStart }
 
                                                         onChange={ value => setPrecipitationOption('colorStart', value) }></PopoverPicker>
                                                 </div>
@@ -203,7 +201,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                 <div className={ clsx('flex text-sm items-end gap-2') }>
                                                     <PopoverPicker
                                                         className={ 'w-8 h-8 rounded-lg border-2 border-black shadow cursor-pointer' }
-                                                        color={ precipColorEnd }
+                                                        color={ treeContext.treeOptions.precipitation.colorEnd }
                                                         onChange={ value => setPrecipitationOption('colorEnd', value) }></PopoverPicker>
                                                 </div>
                                             </div>
