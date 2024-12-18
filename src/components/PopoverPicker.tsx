@@ -10,7 +10,7 @@ import { AnyColor, ColorPickerBaseProps } from 'react-colorful/dist/types';
 export interface PopoverPickerProps<T extends AnyColor> extends ColorPickerBaseProps<T> {
 }
 
-export const PopoverPicker = ({ className, color, onChange } : Partial<PopoverPickerProps<string>>) => {
+export const PopoverPicker = ({ wrapperClassName, className, color, onChange } : Partial<PopoverPickerProps<string>> & { wrapperClassName: string }) => {
     const [isOpen, toggle] = useState(false);
 
     const close = useCallback(() => toggle(false), []);
@@ -19,7 +19,7 @@ export const PopoverPicker = ({ className, color, onChange } : Partial<PopoverPi
     return (
         <div className={ clsx('relative') }>
             <div
-                className={ clsx(className) }
+                className={ clsx(wrapperClassName) }
                 style={ { backgroundColor: color } }
                 onClick={ () => {
                     toggle(true);
@@ -27,7 +27,7 @@ export const PopoverPicker = ({ className, color, onChange } : Partial<PopoverPi
             />
 
             { isOpen && (
-                <div className={ clsx('absolute bottom-full left-full') } ref={ pickerRef }>
+                <div className={ clsx(className) } ref={ pickerRef }>
                     <HexColorPicker color={ color } onChange={ onChange }/>
                 </div>
             ) }
