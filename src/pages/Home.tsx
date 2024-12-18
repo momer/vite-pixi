@@ -138,70 +138,70 @@ export function Home() {
     return (
         <>
             <HelmetProvider>
-                <Helmet>
-                    <title>DCEK: Systems Thinking in Bloom</title>
-                    <meta name="description"
-                          content="We're an engineering and systems design agency, bringing technology products to our clients customers."/>
-                    <link rel="stylesheet" href="https://use.typekit.net/wiw0xgp.css"/>
-                </Helmet>
+                <TreeProvider>
+                    <Helmet>
+                        <title>DCEK: Systems Thinking in Bloom</title>
+                        <meta name="description"
+                              content="We're an engineering and systems design agency, bringing technology products to our clients customers."/>
+                        <link rel="stylesheet" href="https://use.typekit.net/wiw0xgp.css"/>
+                    </Helmet>
 
-                <div
-                    className={ clsx('h-[calc(100vh-8rem)] relative') }
-                    ref={ myRefCallback }
-                >
                     <div
-                        className={ clsx('flex flex-col top-1/2 w-1/2 items-end absolute z-10') }>
-                        <TreeProvider>
+                        className={ clsx('h-[calc(100vh-8rem)] relative') }
+                        ref={ myRefCallback }
+                    >
+                        <div
+                            className={ clsx('flex flex-col top-1/2 w-1/2 items-end absolute z-10') }>
                             <TreeConfigurator>
 
                             </TreeConfigurator>
-                        </TreeProvider>
-                    </div>
-
-                    <div
-                        className={ clsx('flex flex-col items-end mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute') }
-                    >
-                        <div
-                            className="flex flex-col mt-auto flex-wrap w-full mx-auto sm:px-2 md:px-4 text-center lg:text-left ">
-
-                            {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/ }
-                            <h1 className="font-display mx-auto lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight text-neutral-950 [text-wrap:balance]">
-                                Systems thinking, in bloom.
-                            </h1>
-
-                            <span className="sm:bg-white lg:bg-transparent">
-                                <span className="hidden md:inline">
-                                    We connect ideas, strategy, and technology; helping challenges blossom into solutions.
-                                </span>
-                                <span className="inline md:hidden">
-                                    We help challenges blossom into solutions.
-                                </span>
-                            </span>
                         </div>
 
+                        <div
+                            className={ clsx('flex flex-col items-end mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute') }
+                        >
+                            <div
+                                className="flex flex-col mt-auto flex-wrap w-full mx-auto sm:px-2 md:px-4 text-center lg:text-left ">
 
+                                {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/ }
+                                <h1 className="font-display mx-auto lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight text-neutral-950 [text-wrap:balance]">
+                                    Systems thinking, in bloom.
+                                </h1>
+
+                                <span className="sm:bg-white lg:bg-transparent">
+                                    <span className="hidden md:inline">
+                                        We connect ideas, strategy, and technology; helping challenges blossom into solutions.
+                                    </span>
+                                    <span className="inline md:hidden">
+                                        We help challenges blossom into solutions.
+                                    </span>
+                                </span>
+                            </div>
+
+
+                        </div>
                     </div>
-                </div>
 
-                <div id="pixi-app" className={ clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none') }>
-                    { <HomeDemo ref={ myRef }/> }
-                </div>
+                    <div id="pixi-app" className={ clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none') }>
+                        { <HomeDemo ref={ myRef }/> }
+                    </div>
 
-                <Clients/>
+                    <Clients/>
 
-                <Testimonial
-                    className="mt-24 sm:mt-32 lg:mt-40"
-                    client={ { name: 'Phobia', logo: logoPhobiaDark } }
-                >
-                    The team at Studio went above and beyond with our onboarding, even
-                    finding a way to access the user’s microphone without triggering one of
-                    those annoying permission dialogs.
-                </Testimonial>
+                    <Testimonial
+                        className="mt-24 sm:mt-32 lg:mt-40"
+                        client={ { name: 'Phobia', logo: logoPhobiaDark } }
+                    >
+                        The team at Studio went above and beyond with our onboarding, even
+                        finding a way to access the user’s microphone without triggering one of
+                        those annoying permission dialogs.
+                    </Testimonial>
 
-                <Services/>
+                    <Services/>
 
-                <ContactSection/>
+                    <ContactSection/>
 
+                </TreeProvider>
             </HelmetProvider>
         </>
     );

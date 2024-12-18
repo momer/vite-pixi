@@ -36,16 +36,16 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
     const { treeWorldContainerRef } = props.treeRef.current as unknown as Tree;
     const [maxParticles, setMaxParticles] = useState<number>(500);
     const { app }: ApplicationState = useApplication();
-    const { treeOptions } = useContext(TreeContext);
+    const treeContext = useContext(TreeContext);
 
     useEffect(() => {
         // default to 500
         let particleCount = maxParticles;
-        if (treeOptions?.precipitation?.type && treeOptions?.precipitation?.density) {
-            particleCount = PrecipitationDensityMapping[treeOptions?.precipitation?.type][treeOptions?.precipitation?.density];
+        if (treeContext?.treeOptions?.precipitation?.type && treeContext?.treeOptions?.precipitation?.density) {
+            particleCount = PrecipitationDensityMapping[treeContext?.treeOptions?.precipitation?.type][treeContext?.treeOptions?.precipitation?.density];
         }
         setMaxParticles(() => (particleCount || 500));
-    }, [treeOptions]);
+    }, []);
 
     const generateRainConfig = useCallback(() => {
         return {
@@ -117,13 +117,13 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                     type: 'color',
                     config: {
                         color: {
-                            list: [{ value: treeOptions?.precipitation?.colorStart, time: 0 }, { value: treeOptions?.precipitation?.colorEnd, time: 1 }]
+                            list: [{ value: treeContext?.treeOptions?.precipitation?.colorStart, time: 0 }, { value: treeContext?.treeOptions?.precipitation?.colorEnd, time: 1 }]
                         },
                     }
                 }
             ]
         };
-    }, [props.drawableTreeDimensions]);
+    }, [maxParticles, props.drawableTreeDimensions, treeContext?.treeOptions?.precipitation?.colorEnd, treeContext?.treeOptions?.precipitation?.colorStart]);
 
     const [precipConfig, setPrecipConfig] = useState(generateRainConfig());
 
@@ -244,7 +244,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
     }, [props.drawableTreeDimensions, isEnvironmentContainerLoading, assetLoadSuccess, isSuccess, generateRainConfig]);
 
     return (
-        isSuccess && (
+        treeContext && isSuccess && (
             <container
                 zIndex={ 10 }
                 isRenderGroup={ true }
