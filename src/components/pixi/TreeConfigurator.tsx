@@ -1,10 +1,10 @@
-import React, { FC, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
+import React, { FC, ReactNode, useContext, useEffect, useMemo } from 'react';
 import { TreeContext, TreeOptions } from '@/components/pixi/TreeProvider';
 import { FadeIn } from '@/components/FadeIn';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { PopoverPicker } from '@/components/PopoverPicker';
-import { PrecipitationDensityMapping, PrecipitationOptions } from '@/components/pixi/Precipitation';
+import { PrecipitationDensityMapping, PrecipitationOptions, PrecipitationType } from '@/components/pixi/Precipitation';
 
 interface TreeConfiguratorProps {
     children?: ReactNode;
@@ -135,35 +135,55 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
 
                                             <div className={ clsx('flex gap-2 justify-between text-sm w-full') }>
                                                 <div
-                                                    className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+                                                    onClick={ () => setPrecipitationOption('type', PrecipitationType.RAIN) }
+                                                    className={ clsx(
+                                                        'flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ',
+                                                    ) }>
 
-                                                    <div className={
-                                                        clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_water.png'),linear-gradient(0deg,theme('colors.cyan.500/3')_30%,theme('colors.blue.500')_65%)] ${ '' } bg-no-repeat h-full w-full z-40`)
-                                                    }>
+                                                    <div
+                                                        className={
+                                                            clsx(
+                                                                `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_water.png'),linear-gradient(0deg,theme('colors.cyan.500/3')_30%,theme('colors.blue.500')_65%)] ${ '' } bg-no-repeat h-full w-full z-40`,
+                                                                treeContext.treeOptions.precipitation.type == PrecipitationType.RAIN ? 'opacity-100 border-2 border-black rounded-md' : 'opacity-45',
+                                                            ) }>
                                                     </div>
                                                 </div>
                                                 <div
-                                                    className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+                                                    onClick={ () => setPrecipitationOption('type', PrecipitationType.SNOW) }
+                                                    className={ clsx(
+                                                        'flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ',
+                                                    ) }>
 
                                                     <div className={
-
-                                                        clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_snowflake.png'),linear-gradient(0deg,_#658DBD_15%,_#CEE7FB_90%)] ${ '' } bg-no-repeat h-full w-full z-40`)
-                                                    }>
+                                                        clsx(
+                                                            `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_snowflake.png'),linear-gradient(0deg,_#658DBD_15%,_#CEE7FB_90%)] ${ '' } bg-no-repeat h-full w-full z-40`,
+                                                            treeContext.treeOptions.precipitation.type == PrecipitationType.SNOW ? 'opacity-100 border-2 border-black rounded-md' : 'opacity-45',
+                                                        ) }>
                                                     </div>
                                                 </div>
                                                 <div
-                                                    className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+                                                    onClick={ () => setPrecipitationOption('type', PrecipitationType.SUN) }
+                                                    className={ clsx(
+                                                        'flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ',
+                                                    ) }>
 
                                                     <div className={
-                                                        clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_sun.png'),linear-gradient(0deg,_#FFBF5C_25%,_#FF96A4_60%)] ${ '' } bg-no-repeat h-full w-full z-40`)
-                                                    }>
+                                                        clsx(
+                                                            `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_sun.png'),linear-gradient(0deg,_#FDCD13_45%,_#ED4C3C_60%)] ${ '' } bg-no-repeat h-full w-full z-40`,
+                                                            treeContext.treeOptions.precipitation.type == PrecipitationType.SUN ? 'opacity-100 border-2 border-black rounded-md' : 'opacity-45',
+                                                        ) }>
                                                     </div>
                                                 </div>
                                                 <div
-                                                    className={ clsx('flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ') }>
+                                                    onClick={ () => setPrecipitationOption('type', PrecipitationType.DEATH) }
+                                                    className={ clsx(
+                                                        'flex flex-col relative items-center justify-center overflow-hidden h-8 w-8 ',
+                                                    ) }>
                                                     <div className={
-                                                        clsx(`absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_skull.png'),linear-gradient(0deg,_#C93A0E_30%,_#CB0707_70%)] ${ '' } bg-no-repeat h-full w-full z-40`)
-                                                    }>
+                                                        clsx(
+                                                            `absolute bg-cover rounded-lg bg-[url('/static/images/pixi/sakura/configurator/btn_icon_skull.png'),linear-gradient(0deg,_#000000_35%,_#CB0707_70%)] ${ '' } bg-no-repeat h-full w-full z-40`,
+                                                            treeContext.treeOptions.precipitation.type == PrecipitationType.DEATH ? 'opacity-100 border-2 border-black rounded-md' : 'opacity-45',
+                                                        ) }>
                                                     </div>
                                                 </div>
                                             </div>
