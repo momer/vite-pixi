@@ -1,4 +1,4 @@
-import { forwardRef, MutableRefObject, RefObject, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { MutableRefObject, RefObject, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import hardRainImageUrl from '/static/images/pixi/sakura/environment/HardRain.png';
 import { Container, ContainerChild, Graphics } from 'pixi.js';
@@ -44,8 +44,8 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
         if (treeContext?.treeOptions?.precipitation?.type && treeContext?.treeOptions?.precipitation?.density) {
             particleCount = PrecipitationDensityMapping[treeContext?.treeOptions?.precipitation?.type][treeContext?.treeOptions?.precipitation?.density];
         }
-        setMaxParticles(() => (particleCount || 500));
-    }, []);
+        setMaxParticles(() => (particleCount));
+    }, [treeContext?.treeOptions?.precipitation?.density]);
 
     const generateRainConfig = useCallback(() => {
         return {
@@ -53,7 +53,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                 'min': 1,
                 'max': 1.5
             },
-            'frequency': 0.01,
+            'frequency': 0.001,
             'emitterLifetime': 0,
             'maxParticles': maxParticles,
             'addAtBack': false,
