@@ -5,13 +5,15 @@ import { TreeContainer } from '@/components/pixi/TreeContainer';
 import { TreeEnvironment } from '@/components/pixi/TreeEnvironment';
 import { Color } from 'pixi.js';
 import { TreeContext, TreeProvider } from '@/components/pixi/TreeProvider';
+import { ContextApplication } from '@/components/pixi/ContextBridge';
 
 export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
     const treeContext = useContext(TreeContext);
     return (
         <div>
             { treeContext ? (
-                <Application
+                <ContextApplication
+                    context={treeContext}
                     hello={ true }
                     autoStart
                     sharedTicker
@@ -21,7 +23,7 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
                     antialias={ true }
                 >
                     <TreeContainer ref={ ref }/>
-                </Application>
+                </ContextApplication>
             ) : <div></div> }
         </div>
     );
