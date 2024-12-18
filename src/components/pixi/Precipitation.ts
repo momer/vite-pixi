@@ -27,6 +27,7 @@ export type EmitterPrecipitationDensityOptions = {
         maxSpeed?: number;
     };
     particlesPerWave?: number;
+    spawnChance?: number;
 };
 
 export const PrecipitationDensityMapping: Record<PrecipitationType, Record<number, EmitterPrecipitationDensityOptions>> = {
@@ -42,6 +43,7 @@ export const PrecipitationDensityMapping: Record<PrecipitationType, Record<numbe
                 minSpeed: 1000,
                 maxSpeed: 1000,
             },
+            spawnChance: 0.55,
         },
         2: {
             frequency: 0.01,
@@ -50,30 +52,38 @@ export const PrecipitationDensityMapping: Record<PrecipitationType, Record<numbe
                 minSpeed: 1000,
                 maxSpeed: 1000,
             },
+            particlesPerWave: 10,
+            spawnChance: 0.65,
         },
         3: {
-            frequency: 0.01,
+            frequency: 0.005,
             maxParticles: 2500,
             moveSpeedStatic: {
                 minSpeed: 1000,
                 maxSpeed: 1000,
             },
+            particlesPerWave: 15,
+            spawnChance: 0.65,
         },
         4: {
-            frequency: 0.001,
+            frequency: 0.005,
             maxParticles: 4000,
             moveSpeedStatic: {
                 minSpeed: 1000,
                 maxSpeed: 1000,
             },
+            particlesPerWave: 20,
+            spawnChance: 0.75,
         },
         5: {
             frequency: 0.001,
-            maxParticles: 5000,
+            maxParticles: 8000,
             moveSpeedStatic: {
                 minSpeed: 1000,
                 maxSpeed: 1000,
             },
+            particlesPerWave: 6,
+            spawnChance: 0.95,
         },
     },
     [PrecipitationType.SNOW]: {

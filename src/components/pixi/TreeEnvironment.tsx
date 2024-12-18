@@ -64,6 +64,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                 'x': 0,
                 'y': 0
             },
+            'spawnChance': mappedPrecipDensity.spawnChance || 1,
             'behaviors': [
                 {
                     'type': 'blendMode',
