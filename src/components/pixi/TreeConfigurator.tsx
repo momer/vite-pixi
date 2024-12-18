@@ -4,7 +4,12 @@ import { FadeIn } from '@/components/FadeIn';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { PopoverPicker } from '@/components/PopoverPicker';
-import { PrecipitationDensityMapping, PrecipitationOptions, PrecipitationType } from '@/components/pixi/Precipitation';
+import {
+    EmitterPrecipitationDensityOptions,
+    PrecipitationDensityMapping,
+    PrecipitationOptions,
+    PrecipitationType
+} from '@/components/pixi/Precipitation';
 
 interface TreeConfiguratorProps {
     children?: ReactNode;
@@ -38,15 +43,6 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
             });
         }
     };
-
-    const mappedPrecipDensity = useMemo(() => {
-        if (treeContext?.treeOptions?.precipitation?.type && treeContext?.treeOptions?.precipitation?.density) {
-            return PrecipitationDensityMapping[treeContext?.treeOptions?.precipitation?.type][treeContext?.treeOptions?.precipitation?.density];
-        }
-
-        // some default density for now
-        return 500;
-    }, [treeContext?.treeOptions?.precipitation?.density, treeContext?.treeOptions?.precipitation?.type]);
 
     return (
         <div>

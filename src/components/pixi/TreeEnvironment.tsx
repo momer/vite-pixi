@@ -9,7 +9,7 @@ import { Dimension } from '@/components/pixi/Dimension';
 import { Mutex } from 'async-mutex';
 import { ApplicationState } from '@pixi/react/types/typedefs/ApplicationState';
 import { TreeContext } from '@/components/pixi/TreeProvider';
-import { PrecipitationDensityMapping } from '@/components/pixi/Precipitation';
+import { EmitterPrecipitationDensityOptions, PrecipitationDensityMapping } from '@/components/pixi/Precipitation';
 
 extend({
     Container,
@@ -34,18 +34,20 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
     const [isEnvironmentMaskLoading, setIsEnvironmentMaskLoading] = useState(true);
     const {treeWorldContainerRef} = props.treeRef.current as unknown as Tree;
-    const [maxParticles, setMaxParticles] = useState<number>(500);
     const {app}: ApplicationState = useApplication();
     const treeContext = useContext(TreeContext);
 
-    useEffect(() => {
-        // default to 500
-        let particleCount = maxParticles;
+    const mappedPrecipDensity: EmitterPrecipitationDensityOptions = useMemo(() => {
         if (treeContext?.treeOptions?.precipitation) {
-            particleCount = PrecipitationDensityMapping[treeContext.treeOptions.precipitation.type][treeContext.treeOptions.precipitation.density];
+            return PrecipitationDensityMapping[treeContext.treeOptions.precipitation.type][treeContext.treeOptions.precipitation.density];
         }
-        setMaxParticles(() => (particleCount));
-    }, [treeContext?.treeOptions?.precipitation?.type, treeContext?.treeOptions?.precipitation?.density]);
+
+        // some default density for now
+        return {
+            frequency: 0.01,
+            maxParticles: 500
+        };
+    }, [treeContext?.treeOptions?.precipitation.density]);
 
     const generateRainConfig = useMemo(() => {
         return {
@@ -53,9 +55,10 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                 'min': 1,
                 'max': 1.5
             },
-            'frequency': 0.001,
+            'frequency': mappedPrecipDensity.frequency,
             'emitterLifetime': 0,
-            'maxParticles': maxParticles,
+            'particlesPerWave': mappedPrecipDensity.particlesPerWave || 4,
+            'maxParticles': mappedPrecipDensity.maxParticles,
             'addAtBack': false,
             'pos': {
                 'x': 0,
@@ -126,7 +129,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                 }
             ]
         };
-    }, [maxParticles, props.drawableTreeDimensions, treeContext?.treeOptions?.precipitation?.colorEnd, treeContext?.treeOptions?.precipitation?.colorStart]);
+    }, [mappedPrecipDensity, props.drawableTreeDimensions, treeContext?.treeOptions?.precipitation?.colorEnd, treeContext?.treeOptions?.precipitation?.colorStart]);
 
     const handleParticleContainer = useCallback((container: Container) => {
         // update the mask for the environment container when resized
@@ -138,9 +141,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
     }, [props.drawableTreeDimensions, props.isBlossomableAreaGraphicsLoading, props.isCanopyGraphicsLoading, props.isTrunkGraphicsLoading]);
 
     const drawTreeMask = useCallback((graphics: Graphics) => {
-        console.log('draw tree mask');
         if (!isEnvironmentContainerLoading && environmentContainerRef?.current && graphics !== null && treeWorldContainerRef.current) {
-            console.log('INSIDE draw tree mask');
             treeMaskRef.current = graphics;
             treeMaskRef.current.rect(
                 0,
@@ -217,7 +218,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
             if (props.emitter) {
                 props.emitter.parent = environmentContainerRef.current;
 
-                if (maxParticles === 0) {
+                if (mappedPrecipDensity.maxParticles === 0) {
                     props.emitter.emit = false;
                     return;
                 } else if (!props.emitter.emit) {
@@ -242,7 +243,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                             );
 
                             // duplicated here for now
-                            if (maxParticles === 0) {
+                            if (mappedPrecipDensity.maxParticles === 0) {
                                 emitter.emit = false;
                             }
 

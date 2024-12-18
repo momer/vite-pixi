@@ -1,4 +1,3 @@
-
 export enum PrecipitationType {
     RAIN = 'RAIN',
     SNOW = 'SNOW',
@@ -7,7 +6,7 @@ export enum PrecipitationType {
 }
 
 export class PrecipitationOptions {
-   constructor(
+    constructor(
         public density: number,
         public colorStart: string,
         public colorEnd: string,
@@ -20,39 +19,201 @@ export class PrecipitationOptions {
     }
 }
 
-export const PrecipitationDensityMapping: Record<PrecipitationType, Array<number>> = {
-    [PrecipitationType.RAIN]: [
-        0,
-        500,
-        1000,
-        2500,
-        4000,
-        5000,
-    ],
-    [PrecipitationType.SNOW]: [
-        0,
-        500,
-        1000,
-        2500,
-        4000,
-        5000,
-    ],
-    [PrecipitationType.SUN]: [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-    ],
-    [PrecipitationType.DEATH]: [
-        0,
-        500,
-        1000,
-        2500,
-        4000,
-        5000,
-    ],
+export type EmitterPrecipitationDensityOptions = {
+    frequency: number;
+    maxParticles: number;
+    moveSpeedStatic?: {
+        minSpeed?: number;
+        maxSpeed?: number;
+    };
+    particlesPerWave?: number;
+};
+
+export const PrecipitationDensityMapping: Record<PrecipitationType, Record<number, EmitterPrecipitationDensityOptions>> = {
+    [PrecipitationType.RAIN]: {
+        0: {
+            frequency: 0,
+            maxParticles: 0,
+        },
+        1: {
+            frequency: 0.01,
+            maxParticles: 500,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        2: {
+            frequency: 0.01,
+            maxParticles: 1000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        3: {
+            frequency: 0.01,
+            maxParticles: 2500,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        4: {
+            frequency: 0.001,
+            maxParticles: 4000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        5: {
+            frequency: 0.001,
+            maxParticles: 5000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+    },
+    [PrecipitationType.SNOW]: {
+        0: {
+            frequency: 0,
+            maxParticles: 0,
+        },
+        1: {
+            frequency: 0.01,
+            maxParticles: 500,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        2: {
+            frequency: 0.01,
+            maxParticles: 1000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        3: {
+            frequency: 0.01,
+            maxParticles: 2500,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        4: {
+            frequency: 0.001,
+            maxParticles: 4000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        5: {
+            frequency: 0.001,
+            maxParticles: 5000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+    },
+    [PrecipitationType.SUN]: {
+        0: {
+            frequency: 0,
+            maxParticles: 0,
+        },
+        1: {
+            frequency: 0.01,
+            maxParticles: 500,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        2: {
+            frequency: 0.01,
+            maxParticles: 1000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        3: {
+            frequency: 0.01,
+            maxParticles: 2500,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        4: {
+            frequency: 0.001,
+            maxParticles: 4000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        5: {
+            frequency: 0.001,
+            maxParticles: 5000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+    },
+    [PrecipitationType.DEATH]: {
+        0: {
+            frequency: 0,
+            maxParticles: 0,
+        },
+        1: {
+            frequency: 0.01,
+            maxParticles: 500,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        2: {
+            frequency: 0.01,
+            maxParticles: 1000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        3: {
+            frequency: 0.01,
+            maxParticles: 2500,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        4: {
+            frequency: 0.001,
+            maxParticles: 4000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+        5: {
+            frequency: 0.001,
+            maxParticles: 5000,
+            moveSpeedStatic: {
+                minSpeed: 1000,
+                maxSpeed: 1000,
+            },
+        },
+    },
 };
 
 export const PrecipitationDefaults: Record<PrecipitationType, PrecipitationOptions> = {
