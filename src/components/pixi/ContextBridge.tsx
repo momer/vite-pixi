@@ -20,7 +20,7 @@ export const ContextApplication = ({
 
     return (
         <ContextBridge
-            Context={ context } // Assuming 'context' is a property in ApplicationOptions
+            Context={ context }
             children={ children }
             render={
                 (children) => {
