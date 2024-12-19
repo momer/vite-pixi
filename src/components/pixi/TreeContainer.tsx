@@ -97,7 +97,7 @@ export const LeafCollection = (props: LeafCollectionProps) => {
                 let cluster: LeafCluster;
                 for (let i = 0; i < leafClusters.current.length; i++) {
                     cluster = leafClusters.current[i];
-                    cluster.sprite.alpha = 1;
+                    cluster.sprite.alpha = 0.6;
 
                     if (leafClusters.current.length % 50 === 0) {
                         await new Promise((resolve) => {
@@ -218,7 +218,7 @@ export const LeafCollection = (props: LeafCollectionProps) => {
                         leafCluster.sprite.alpha = 0;
                         // I'm not a huge fan of digging into it like this, but there we are
                         // I also don't want to extend sprite.
-                        leafCluster.sprite.scale.set(1 - (randomFloatFromInterval(75, 80) / 100));
+                        leafCluster.sprite.scale.set(1 - (randomFloatFromInterval(75, 85) / 100));
                         leafClusters.current.push(leafCluster);
 
                         if (leafClusters.current.length % 50 === 0) {
