@@ -53,13 +53,13 @@ function Clients() {
                         role="list"
                         className="mt-10 grid grid-cols-2 gap-x-8 gap-y-10 lg:grid-cols-4"
                     >
-                        {clients.map(([client, logo]) => (
-                            <li key={client}>
+                        { clients.map(([client, logo]) => (
+                            <li key={ client }>
                                 <FadeIn>
-                                    <img src={logo} alt={client}/>
+                                    <img src={ logo } alt={ client }/>
                                 </FadeIn>
                             </li>
-                        ))}
+                        )) }
                     </ul>
                 </FadeInStagger>
             </Container>
@@ -85,7 +85,7 @@ function Services() {
                     <div className="flex justify-center lg:w-1/2 lg:justify-end lg:pr-12">
                         <FadeIn className="w-[33.75rem] flex-none lg:w-[45rem]">
                             <StylizedImage
-                                src={imageLaptop}
+                                src={ imageLaptop }
                                 sizes="(min-width: 1024px) 41rem, 31rem"
                                 className="justify-center lg:justify-end"
                             />
@@ -142,35 +142,40 @@ export function Home() {
                     </Helmet>
 
 
-                    <div className={clsx('h-screen w-full relative')}>
+                    <div className={ clsx('h-screen w-full relative') }>
 
                         <div
-                            className={clsx('h-[calc(100vh-8rem)] inset-0 w-full absolute z-10')}
-                            ref={fullsizeDivRefCallback}
+                            className={ clsx('h-[calc(100vh-8rem)] inset-0 w-full absolute z-10') }
+                            ref={ fullsizeDivRefCallback }
                         >
                         </div>
-                        <div className={'w-full h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] inset-0 absolute z-20'}>
+                        <div className={ 'w-full h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] inset-0 absolute z-20' }>
                             <div
-                                className={clsx('flex flex-col bottom-28 sm:bottom-28 md:bottom-20 lg:top-1/2 w-full lg:items-end absolute z-10 ')}>
-                                <TreeConfigurator>
+                                className={ clsx('flex flex-col bottom-28 sm:bottom-28 md:bottom-20 lg:top-1/2 w-full lg:items-end absolute z-10 ') }>
 
-                                </TreeConfigurator>
                             </div>
 
                             <div
-                                className={clsx('flex flex-col items-end lg:items-start mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute')}
+                                className={ clsx('flex flex-col items-end lg:items-start mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute') }
                             >
-                                {/*bg-white/60*/}
-                                {/*[text-shadow:_0_1px_0_rgba(0,0,0,.4)]*/}
+                                {/*bg-white/60*/ }
+                                {/*[text-shadow:_0_1px_0_rgba(0,0,0,.4)]*/ }
                                 <div
                                     className="flex flex-col mt-auto flex-wrap mx-auto lg:mx-0 sm:px-2 md:px-4 lg:mb-4 text-center lg:text-left bg-[linear-gradient(90deg,rgba(255,255,255,0.6)_0%,rgba(255,255,255,0.6)_60%,rgba(255,255,255,0.5)_95%,rgba(255,255,255,0)_100%)] text-neutral-950 ">
 
-                                    {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/}
-                                    <h1 className="font-display mx-auto lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight  [text-wrap:balance]">
-                                        Systems thinking, in bloom.
-                                    </h1>
+                                    {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/ }
+                                    <div className={ 'flex gap-3 items-end' }>
 
-                                    <span className="sm:bg-white lg:bg-transparent">
+                                        <h1 className="font-display mx-auto lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight  [text-wrap:balance]">
+                                            Systems thinking, in bloom.
+
+                                        </h1>
+                                        <div className={ 'z-10 absolute left-1/2 lg:left-[29rem] lg:bottom-[2.5rem] bottom-[6rem]' }>
+                                            <TreeConfigurator/>
+                                        </div>
+                                    </div>
+
+                                    <span className="">
                                         <span className="hidden md:inline">
                                             We connect ideas, strategy, and technology; helping challenges blossom into solutions.
                                         </span>
@@ -184,15 +189,15 @@ export function Home() {
 
                     </div>
 
-                    <div id="pixi-app" className={clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none')}>
-                        {<HomeDemo ref={fullsizeDivRef}/>}
+                    <div id="pixi-app" className={ clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none') }>
+                        { <HomeDemo ref={ fullsizeDivRef }/> }
                     </div>
 
                     <Clients/>
 
                     <Testimonial
                         className="mt-24 sm:mt-32 lg:mt-40"
-                        client={{name: 'Phobia', logo: logoPhobiaDark}}
+                        client={ { name: 'Phobia', logo: logoPhobiaDark } }
                     >
                         The team at Studio went above and beyond with our onboarding, even
                         finding a way to access the user’s microphone without triggering one of
