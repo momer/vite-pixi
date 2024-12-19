@@ -34,7 +34,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
     const environmentContainerRef: MutableRefObject<Container | null> = useRef<Container>(null);
     const [isEnvironmentContainerLoading, setIsEnvironmentContainerLoading] = useState(true);
     const [isEnvironmentMaskLoading, setIsEnvironmentMaskLoading] = useState(true);
-    const {treeWorldContainerRef} = props.treeRef.current as unknown as Tree;
+    const { treeWorldContainerRef } = props.treeRef.current as unknown as Tree;
     const treeContext = useContext(TreeContext);
     const { app }: ApplicationState = useApplication();
 
@@ -122,10 +122,19 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
                     type: 'color',
                     config: {
                         color: {
-                            list: [{
-                                value: treeContext?.treeOptions?.precipitation.colorStart,
-                                time: 0
-                            }, {value: treeContext?.treeOptions?.precipitation.colorEnd, time: 1}]
+                            list: [
+                                {
+                                    value: treeContext?.treeOptions?.precipitation.colorStart, time: 0
+                                },
+
+                                {
+                                    value: treeContext?.treeOptions?.precipitation.colorEnd, time: 0.7
+                                },
+                                {
+                                    value: treeContext?.treeOptions?.precipitation.colorEnd,
+                                    time: 1
+                                },
+                            ]
                         },
                     }
                 }
@@ -174,7 +183,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
         {
             alias: 'hardRain',
             src: hardRainImageUrl,
-            data: {parseAsGraphicsContext: true}
+            data: { parseAsGraphicsContext: true }
         },
     ], {
         onProgress: (progress: number) => {
@@ -195,7 +204,7 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
             try {
                 props.emitter.update((now - elapsedRef.current) * 0.001);
             } catch (error) {
-                console.log(`caught error: ${error}`);
+                console.log(`caught error: ${ error }`);
             }
         }
 
@@ -260,12 +269,12 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
     return (
         treeContext && isSuccess && (
             <container
-                zIndex={10}
-                isRenderGroup={true}
-                ref={handleParticleContainer}
+                zIndex={ 10 }
+                isRenderGroup={ true }
+                ref={ handleParticleContainer }
             >
-                <graphics draw={drawTreeMask}/>
-                {props.children}
+                <graphics draw={ drawTreeMask }/>
+                { props.children }
             </container>
         )
     );
