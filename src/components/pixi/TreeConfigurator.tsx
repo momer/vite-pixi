@@ -23,8 +23,7 @@ function GearIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 export const TreeConfigurator: FC<TreeConfiguratorProps> = ({children}) => {
     const treeContext = useContext(TreeContext);
 
-    const [isHoverVisible, setIsHoverVisible] = useState<boolean>(false);
-    const [isClickVisible, setIsClickVisible] = useState<boolean>(false);
+    const [isHoverOrTouchVisible, setIsHoverOrTouchVisible] = useState<boolean>(false);
 
     const setPrecipitationOption = <K extends keyof PrecipitationOptions, T extends PrecipitationOptions[K]>(key: K, value: T): void => {
         if (treeContext?.setTreeOptions) {
@@ -54,26 +53,26 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({children}) => {
                         <div className={clsx('flex flex-col items-end')}>
                             <div
                                 onMouseEnter={() => {
-                                    console.log(`in mouse enter: is click visible? ${isClickVisible} | is hover visible? ${isHoverVisible}`);
-                                    return !isClickVisible && setIsHoverVisible(true);
+                                    console.log(`in mouse enter: is hover visible? ${isHoverOrTouchVisible}`);
+                                    return setIsHoverOrTouchVisible(true);
                                 }}
                                 onMouseLeave={() => {
-                                    console.log(`in mouse leave: is click visible? ${isClickVisible} | is hover visible? ${isHoverVisible}`);
-                                    return !isClickVisible && setIsHoverVisible(false);
+                                    console.log(`in mouse leave: is hover visible? ${isHoverOrTouchVisible}`);
+                                    return setIsHoverOrTouchVisible(false);
                                 }}
                                 className={clsx(
                                 'flex flex-col mx-auto',
                                 'group bg-opacity-65',
-                                (isClickVisible || isHoverVisible) && 'min-w-1/3 p-4 rounded-lg outline outline-2 outline-[#F29DBB] bg-white')}>
+                                (isHoverOrTouchVisible) && 'min-w-1/3 p-4 rounded-lg outline outline-2 outline-[#F29DBB] bg-white')}>
 
                                 <div
                                     className={clsx(
                                         'flex items-start justify-between w-full ',
-                                        (isClickVisible || isHoverVisible) && 'drop-shadow-sm items-end pb-2 border-gray-100 border-b')}>
+                                        (isHoverOrTouchVisible) && 'drop-shadow-sm items-end pb-2 border-gray-100 border-b')}>
 
                                     <div className={clsx(
-                                        (!isClickVisible && !isHoverVisible) && 'hidden',
-                                        (isClickVisible || isHoverVisible) && 'flex flex-col',
+                                        (!isHoverOrTouchVisible) && 'hidden',
+                                        (isHoverOrTouchVisible) && 'flex flex-col',
                                     )}>
                                         <h3>Sakura Configurator</h3>
                                     </div>
@@ -94,21 +93,21 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({children}) => {
                                             <GearIcon
                                                 className={clsx(
                                                     'fill-white stroke-[2px] stroke-neutral-950',
-                                                    (!isClickVisible && !isHoverVisible) && 'h-8 w-8 ',
-                                                    (isClickVisible || isHoverVisible) && 'h-6 w-6',
+                                                    (!isHoverOrTouchVisible) && 'h-8 w-8 ',
+                                                    (isHoverOrTouchVisible) && 'h-6 w-6',
                                                 )}
 
                                                 onTouchStart={() => {
-                                                    console.log(`in onclick. current: ${isClickVisible}`);
+                                                    console.log(`in onclick. current: ${isHoverOrTouchVisible}`);
                                                     // could be visible via hover as well
-                                                    if (isClickVisible || isHoverVisible) {
-                                                        setIsClickVisible((current) => {
-                                                            console.log(`in onclick callback 1. current: ${isClickVisible}`);
+                                                    if (isHoverOrTouchVisible) {
+                                                        setIsHoverOrTouchVisible((current) => {
+                                                            console.log(`in onclick callback 1. current: ${isHoverOrTouchVisible}`);
                                                             return !current;
                                                         });
                                                     } else {
-                                                        setIsClickVisible((current) => {
-                                                            console.log(`in onclick callback 2. current: ${isClickVisible}`);
+                                                        setIsHoverOrTouchVisible((current) => {
+                                                            console.log(`in onclick callback 2. current: ${isHoverOrTouchVisible}`);
                                                             return !current;
                                                         });
                                                     }
@@ -121,8 +120,8 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({children}) => {
                                 </div>
                                 <div
                                     className={clsx(
-                                        (!isClickVisible && !isHoverVisible) && 'hidden',
-                                        (isClickVisible || isHoverVisible) && 'flex pt-2 justify-between w-full border-gray-900/10',
+                                        (!isHoverOrTouchVisible) && 'hidden',
+                                        (isHoverOrTouchVisible) && 'flex pt-2 justify-between w-full border-gray-900/10',
                                     )}>
                                     <div className={clsx('flex flex-col w-full gap-4')}>
                                         <label className={clsx('font-medium text-gray-900')}>Precipitation</label>
