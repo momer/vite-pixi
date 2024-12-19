@@ -53,6 +53,7 @@ export type Tree = {
 }
 
 export interface LeafCollectionProps {
+    hasResized: boolean;
     treeRef: RefObject<Tree>;
     isCanopyGraphicsLoading?: boolean;
     isTrunkGraphicsLoading?: boolean;
@@ -67,7 +68,7 @@ export const LeafCollection = (props: LeafCollectionProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [numLeafClusters, setNumLeafClusters] = useState<number>(500);
     const leafClusters = useRef<Array<LeafCluster>>([]);
-    const {trunkRef, canopyRef, blossomableAreaRef} = props.treeRef?.current as unknown as Tree;
+    const { trunkRef, canopyRef, blossomableAreaRef } = props.treeRef?.current as unknown as Tree;
 
     // initialize the LeafCluster assets
     useEffect(() => {
@@ -76,7 +77,7 @@ export const LeafCollection = (props: LeafCollectionProps) => {
             try {
                 await LeafCluster.init();
             } catch (err: unknown) {
-                console.log(`caught an error: ${err}`);
+                console.log(`caught an error: ${ err }`);
                 setError(() => err);
             } finally {
                 setIsInitializing(false);
@@ -84,11 +85,31 @@ export const LeafCollection = (props: LeafCollectionProps) => {
         };
 
         if (error) {
-            console.log(`fatal error while loading assets: ${error}`);
+            console.log(`fatal error while loading assets: ${ error }`);
         }
 
         initAssets();
     }, []);
+
+    useEffect(() => {
+        (async () => {
+            if (!isInitializing && props.hasResized) {
+                let cluster: LeafCluster;
+                for (let i = 0; i < leafClusters.current.length; i++) {
+                    cluster = leafClusters.current[i];
+                    cluster.sprite.alpha = 1;
+
+                    if (leafClusters.current.length % 50 === 0) {
+                        await new Promise((resolve) => {
+                            setTimeout(() => {
+                                requestAnimationFrame(resolve);
+                            }, 0);
+                        });
+                    }
+                }
+            }
+        })();
+    }, [isInitializing, props.hasResized]);
 
     useEffect(() => {
         (async () => {
@@ -194,6 +215,7 @@ export const LeafCollection = (props: LeafCollectionProps) => {
                             true,
                         );
 
+                        leafCluster.sprite.alpha = 0;
                         // I'm not a huge fan of digging into it like this, but there we are
                         // I also don't want to extend sprite.
                         leafCluster.sprite.scale.set(1 - (randomFloatFromInterval(75, 80) / 100));
@@ -219,7 +241,7 @@ export const LeafCollection = (props: LeafCollectionProps) => {
 
     return (
         // eslint-disable-next-line react/no-unknown-property
-        <container isRenderGroup={true} ref={collectionContainerRef} sortableChildren={true}>
+        <container isRenderGroup={ true } ref={ collectionContainerRef } sortableChildren={ true }>
         </container>
     );
 };
@@ -233,10 +255,11 @@ export interface TreeContainerOptions {
 export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     // alternate way of tracking measurement in pixi
     // const [measureRef, bounds] = useMeasure();
-    const {app}: ApplicationState = useApplication();
+    const { app }: ApplicationState = useApplication();
 
+    // resize state - for initial render
+    const [hasResized, setHasResized] = useState<boolean>(false);
     // Both should be the same for trunk and canopy
-
     const [assetLoadSuccess, setAssetLoadSuccess] = useState<boolean>(false);
     const [isCanopyGraphicsLoading, setIsCanopyGraphicsLoading] = useState(true);
     const [isTrunkGraphicsLoading, setIsTrunkGraphicsLoading] = useState(true);
@@ -330,34 +353,41 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     };
 
     const resizeTreeContainer = useCallback(() => {
-        if (assetLoadSuccess &&
-            trunkRef &&
-            canopyRef &&
-            app?.renderer &&
-            app?.ticker &&
-            app?.screen &&
-            trunkRef.current &&
-            canopyRef.current &&
-            blossomableAreaRef.current &&
-            treeWorldContainerRef.current &&
-            treeObjectContainerRef.current
-        ) {
-            treeWorldContainerRef.current.scale = calculateTreeScale(app.screen);
-            treeWorldContainerRef.current.position = calculateTreePos(app.screen, treeWorldContainerRef.current);
-            treeWorldContainerRef.current.pivot = calculateCenterPivot(treeWorldContainerRef.current);
+        return (async () => {
+            if (assetLoadSuccess &&
+                trunkRef &&
+                canopyRef &&
+                app?.renderer &&
+                app?.ticker &&
+                app?.screen &&
+                trunkRef.current &&
+                canopyRef.current &&
+                blossomableAreaRef.current &&
+                treeWorldContainerRef.current &&
+                treeObjectContainerRef.current
+            ) {
+                treeWorldContainerRef.current.scale = calculateTreeScale(app.screen);
+                treeWorldContainerRef.current.position = calculateTreePos(app.screen, treeWorldContainerRef.current);
+                treeWorldContainerRef.current.pivot = calculateCenterPivot(treeWorldContainerRef.current);
 
-            // set the shared state for child components to set their width/height if desired (no scaling)
-            setDrawableTreeDimensions({
-                x: treeWorldContainerRef.current.getLocalBounds().x,
-                y: treeWorldContainerRef.current.getLocalBounds().y,
-                width: treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
-                height: treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
-            });
+                // set the shared state for child components to set their width/height if desired (no scaling)
+                setDrawableTreeDimensions({
+                    x: treeWorldContainerRef.current.getLocalBounds().x,
+                    y: treeWorldContainerRef.current.getLocalBounds().y,
+                    width: treeWorldContainerRef.current.getLocalBounds().maxX - treeWorldContainerRef.current.getLocalBounds().minX,
+                    height: treeWorldContainerRef.current.getLocalBounds().maxY - treeWorldContainerRef.current.getLocalBounds().minY,
+                });
 
-            canopyRef.current.visible = true;
-            trunkRef.current.visible = true;
-            blossomableAreaRef.current.visible = true;
-        }
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        if (!hasResized) {
+                            requestAnimationFrame(resolve);
+                            setHasResized(true);
+                        }
+                    }, 500);
+                });
+            }
+        })();
     }, [assetLoadSuccess, app, emitter]);
 
     const {
@@ -371,17 +401,17 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         {
             alias: 'treeTrunk',
             src: trunkSvgUrl,
-            data: {parseAsGraphicsContext: true}
+            data: { parseAsGraphicsContext: true }
         },
         {
             alias: 'treeCanopy',
             src: canopySvgUrl,
-            data: {parseAsGraphicsContext: true}
+            data: { parseAsGraphicsContext: true }
         },
         {
             alias: 'blossomableArea',
             src: blossomableSvgUrl,
-            data: {parseAsGraphicsContext: true}
+            data: { parseAsGraphicsContext: true }
         }
     ], {
         onProgress: (progress: number) => {
@@ -398,22 +428,24 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     // initial load, start observing the div parent for sizing
     useEffect(() => {
         console.log('resize observable effect called');
-        if (ref) {
-            console.log('ref:', ref);
-            ref = ref as MutableRefObject<HTMLDivElement>;
-            const observer = new ResizeObserver((entries) => {
-                console.log('resize observer called');
-                for (const entry of entries) {
-                    const {width, height} = entry.contentRect;
-                    if (app && app.renderer) {
-                        app.renderer.resize(width, height);
-                        resizeTreeContainer();
+        (async () => {
+            if (ref) {
+                console.log('ref:', ref);
+                ref = ref as MutableRefObject<HTMLDivElement>;
+                const observer = new ResizeObserver((entries) => {
+                    console.log('resize observer called');
+                    for (const entry of entries) {
+                        const { width, height } = entry.contentRect;
+                        if (app && app.renderer) {
+                            app.renderer.resize(width, height);
+                            resizeTreeContainer();
+                        }
                     }
-                }
-            });
-            observer.observe(ref.current as Element, {});
-            resizeObserver.current = observer;
-        }
+                });
+                observer.observe(ref.current as Element, {});
+                resizeObserver.current = observer;
+            }
+        })();
     }, [ref, app, resizeTreeContainer]);
 
     const handleTreeObjectContainer = useCallback((container: Container) => {
@@ -453,7 +485,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     }, []);
 
     useEffect(() => {
-        console.log(`asset load success is now: ${assetLoadSuccess}`);
+        console.log(`asset load success is now: ${ assetLoadSuccess }`);
     }, [assetLoadSuccess]);
 
     useEffect(() => {
@@ -472,41 +504,43 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         isSuccess && app?.renderer && app?.screen && (
             <>
 
-                <container sortableChildren={true}>
+                <container sortableChildren={ true }>
 
-                    <container sortableChildren={true} ref={treeWorldContainerRef}>
-                        {/* tree container*/}
-                        <container isRenderGroup={true} ref={handleTreeObjectContainer}>
-                            {/* @ts-expect-error graphics requires draw */}
+                    <container sortableChildren={ true } ref={ treeWorldContainerRef }>
+                        {/* tree container*/ }
+                        <container isRenderGroup={ true } ref={ handleTreeObjectContainer }>
+                            {/* @ts-expect-error graphics requires draw */ }
                             <graphics
-                                ref={handleTreeTrunkGraphics}
-                                context={treeTrunk}
+                                ref={ handleTreeTrunkGraphics }
+                                visible={ hasResized }
+                                context={ treeTrunk }
                             />
-                            {/* @ts-expect-error graphics requires draw */}
+                            {/* @ts-expect-error graphics requires draw */ }
                             <graphics
-                                ref={handleTreeCanopyGraphics}
-                                context={treeCanopy}
+                                ref={ handleTreeCanopyGraphics }
+                                visible={ hasResized }
+                                context={ treeCanopy }
                             />
                             <graphics
-                                ref={handleBlossomableAreaGraphics}
-                                context={blossomableArea}
+                                ref={ handleBlossomableAreaGraphics }
+                                visible={ hasResized }
+                                context={ blossomableArea }
                             />
 
                             <LeafCollection
-                                treeRef={
-                                    treeRefObject
-                                }
+                                treeRef={ treeRefObject }
+                                hasResized={ hasResized }
                             />
                         </container>
                     </container>
-                                        <TreeEnvironment
-                        treeRef={treeRefObject}
-                        drawableTreeDimensions={drawableTreeDimensions!}
-                        emitter={emitter}
-                        setEmitter={setEmitter}
-                        isTrunkGraphicsLoading={isTrunkGraphicsLoading}
-                        isCanopyGraphicsLoading={isCanopyGraphicsLoading}
-                        isBlossomableAreaGraphicsLoading={isBlossomableAreaGraphicsLoading}
+                    <TreeEnvironment
+                        treeRef={ treeRefObject }
+                        drawableTreeDimensions={ drawableTreeDimensions! }
+                        emitter={ emitter }
+                        setEmitter={ setEmitter }
+                        isTrunkGraphicsLoading={ isTrunkGraphicsLoading }
+                        isCanopyGraphicsLoading={ isCanopyGraphicsLoading }
+                        isBlossomableAreaGraphicsLoading={ isBlossomableAreaGraphicsLoading }
                     ></TreeEnvironment>
                 </container>
             </>
