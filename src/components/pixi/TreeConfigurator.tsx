@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useContext, useEffect } from 'react';
+import React, { FC, ReactNode, useContext, useEffect, useState } from 'react';
 import { TreeContext, TreeOptions } from '@/components/pixi/TreeProvider';
 import { FadeIn } from '@/components/FadeIn';
 import clsx from 'clsx';
@@ -23,9 +23,8 @@ function GearIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 export const TreeConfigurator: FC<TreeConfiguratorProps> = ({children}) => {
     const treeContext = useContext(TreeContext);
 
-    useEffect(() => {
-
-    }, []);
+    const [isHoverVisible, setIsHoverVisible] = useState<boolean>(false);
+    const [isClickVisible, setIsClickVisible] = useState<boolean>(false);
 
     const setPrecipitationOption = <K extends keyof PrecipitationOptions, T extends PrecipitationOptions[K]>(key: K, value: T): void => {
         if (treeContext?.setTreeOptions) {
@@ -53,14 +52,29 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({children}) => {
                     >
 
                         <div className={clsx('flex flex-col items-end')}>
-                            <div className={clsx(
+                            <div
+                                onMouseEnter={() => {
+                                    console.log(`in mouse enter: is click visible? ${isClickVisible} | is hover visible? ${isHoverVisible}`);
+                                    return !isClickVisible && setIsHoverVisible(true);
+                                }}
+                                onMouseLeave={() => {
+                                    console.log(`in mouse leave: is click visible? ${isClickVisible} | is hover visible? ${isHoverVisible}`);
+                                    return !isClickVisible && setIsHoverVisible(false);
+                                }}
+                                className={clsx(
                                 'flex flex-col mx-auto',
-                                'group hover:min-w-1/3 hover:p-4 hover:rounded-lg hover:outline hover:outline-2 hover:outline-[#F29DBB] hover:bg-white bg-opacity-65')}>
+                                'group bg-opacity-65',
+                                (isClickVisible || isHoverVisible) && 'min-w-1/3 p-4 rounded-lg outline outline-2 outline-[#F29DBB] bg-white')}>
 
                                 <div
-                                    className={clsx('flex group-hover:drop-shadow-sm items-start group-hover:items-end justify-between w-full group-hover:pb-2 group-hover:border-gray-100 group-hover:border-b')}>
+                                    className={clsx(
+                                        'flex items-start justify-between w-full ',
+                                        (isClickVisible || isHoverVisible) && 'drop-shadow-sm items-end pb-2 border-gray-100 border-b')}>
 
-                                    <div className={clsx('hidden group-hover:flex flex-col')}>
+                                    <div className={clsx(
+                                        (!isClickVisible && !isHoverVisible) && 'hidden',
+                                        (isClickVisible || isHoverVisible) && 'flex flex-col',
+                                    )}>
                                         <h3>Sakura Configurator</h3>
                                     </div>
 
@@ -79,9 +93,26 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({children}) => {
                                         >
                                             <GearIcon
                                                 className={clsx(
-                                                    'h-8 w-8 group-hover:h-6 group-hover:w-6 fill-white stroke-[2px]',
-                                                    'stroke-neutral-950',
+                                                    'fill-white stroke-[2px] stroke-neutral-950',
+                                                    (!isClickVisible && !isHoverVisible) && 'h-8 w-8 ',
+                                                    (isClickVisible || isHoverVisible) && 'h-6 w-6',
                                                 )}
+
+                                                onTouchStart={() => {
+                                                    console.log(`in onclick. current: ${isClickVisible}`);
+                                                    // could be visible via hover as well
+                                                    if (isClickVisible || isHoverVisible) {
+                                                        setIsClickVisible((current) => {
+                                                            console.log(`in onclick callback 1. current: ${isClickVisible}`);
+                                                            return !current;
+                                                        });
+                                                    } else {
+                                                        setIsClickVisible((current) => {
+                                                            console.log(`in onclick callback 2. current: ${isClickVisible}`);
+                                                            return !current;
+                                                        });
+                                                    }
+                                                }}
                                             ></GearIcon>
                                         </motion.div>
 
@@ -89,7 +120,10 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({children}) => {
 
                                 </div>
                                 <div
-                                    className={clsx('hidden group-hover:flex group-hover:pt-2 group-hover:justify-between group-hover:w-full group-hover:border-gray-900/10')}>
+                                    className={clsx(
+                                        (!isClickVisible && !isHoverVisible) && 'hidden',
+                                        (isClickVisible || isHoverVisible) && 'flex pt-2 justify-between w-full border-gray-900/10',
+                                    )}>
                                     <div className={clsx('flex flex-col w-full gap-4')}>
                                         <label className={clsx('font-medium text-gray-900')}>Precipitation</label>
 

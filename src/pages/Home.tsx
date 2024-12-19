@@ -124,13 +124,9 @@ export const metadata: StringMap = {
 };
 
 export function Home() {
-    const myRef = useRef<HTMLDivElement | null>(null);
-    const [myRefState, setMyRefState] = useState<HTMLDivElement | null>(null);
-    const myRefCallback = useCallback((element: HTMLDivElement) => {
-        console.log('returning from callback');
-
-        myRef.current = element;
-        setMyRefState(element);
+    const fullsizeDivRef = useRef<HTMLDivElement | null>(null);
+    const fullsizeDivRefCallback = useCallback((element: HTMLDivElement) => {
+        fullsizeDivRef.current = element;
         return element;
     }, []);
 
@@ -150,7 +146,7 @@ export function Home() {
 
                         <div
                             className={clsx('h-[calc(100vh-8rem)] inset-0 w-full absolute z-10')}
-                            ref={myRefCallback}
+                            ref={fullsizeDivRefCallback}
                         >
                         </div>
                         <div className={'w-full h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] inset-0 absolute z-20'}>
@@ -189,7 +185,7 @@ export function Home() {
                     </div>
 
                     <div id="pixi-app" className={clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none')}>
-                        {<HomeDemo ref={myRef}/>}
+                        {<HomeDemo ref={fullsizeDivRef}/>}
                     </div>
 
                     <Clients/>
