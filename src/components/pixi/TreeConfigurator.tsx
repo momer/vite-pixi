@@ -118,17 +118,6 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                         className={ clsx('') }>
                                         <motion.div
                                             initial={ { opacity: gearOpacity } }
-                                            animate={ {
-                                                y: [-800, 0],
-                                                x: [0, 0],
-                                            } }
-                                            onAnimationComplete={ onEntranceComplete }
-                                            transition={ {
-                                                delay: 0,
-                                                duration: 5,
-                                                ease: 'easeOut',
-
-                                            } }
                                         >
                                             <motion.div
                                                 animate={ {
