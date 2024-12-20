@@ -2,7 +2,7 @@ import React, { FC, ReactNode, useCallback, useContext, useEffect, useState } fr
 import { TreeContext, TreeOptions } from '@/components/pixi/TreeProvider';
 import { FadeIn } from '@/components/FadeIn';
 import clsx from 'clsx';
-import { AnimationDefinition, motion, useMotionValue } from 'framer-motion';
+import { AnimationDefinition, motion, ResolvedValues, useMotionValue } from 'framer-motion';
 import { PopoverPicker } from '@/components/PopoverPicker';
 import { PrecipitationOptions, PrecipitationType } from '@/components/pixi/Precipitation';
 
@@ -49,12 +49,16 @@ function GearIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const treeContext = useContext(TreeContext);
 
+    const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
     const [isHoverOrTouchVisible, setIsHoverOrTouchVisible] = useState<boolean>(true);
     const gearOpacity = useMotionValue(0);
+    let entranceFrameNum = 0;
 
     const onEntranceComplete = useCallback((animation: AnimationDefinition): void => {
         setIsHoverOrTouchVisible(false);
         gearOpacity.set(1);
+        setPrecipitationOption('density', 0);
+        setIsInitialLoad(false);
     }, [isHoverOrTouchVisible]);
 
     const setPrecipitationOption = <K extends keyof PrecipitationOptions, T extends PrecipitationOptions[K]>(key: K, value: T): void => {
@@ -72,9 +76,20 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
             { treeContext ? (
                 <motion.div
                     animate={ {
-                        y: [-800, 0],
+                        y: [-700, 0],
                         x: [0, 0],
                     } }
+                    onUpdate={async (latest) => {
+                        entranceFrameNum += 1;
+                        if (entranceFrameNum % 60 === 0 && entranceFrameNum < 180) {
+                            setPrecipitationOption('density', (treeContext?.treeOptions.precipitation.density + 1) % 4);
+                        }
+                        await new Promise((resolve) => {
+                            setTimeout(() => {
+                                requestAnimationFrame(resolve);
+                            }, 0);
+                        });
+                    }}
                     onAnimationComplete={ onEntranceComplete }
                     transition={ {
                         delay: 0,
@@ -91,11 +106,15 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                             <div
                                 onMouseEnter={ () => {
                                     console.log(`in mouse enter: is hover visible? ${ isHoverOrTouchVisible }`);
-                                    return setIsHoverOrTouchVisible(true);
+                                    if (!isInitialLoad) {
+                                        return setIsHoverOrTouchVisible(true);
+                                    }
                                 } }
                                 onMouseLeave={ () => {
                                     console.log(`in mouse leave: is hover visible? ${ isHoverOrTouchVisible }`);
-                                    return setIsHoverOrTouchVisible(false);
+                                    if (!isInitialLoad) {
+                                        return setIsHoverOrTouchVisible(false);
+                                    }
                                 } }
                                 className={ clsx(
                                     'flex flex-col mx-auto',
@@ -141,15 +160,19 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                         console.log(`in onclick. current: ${ isHoverOrTouchVisible }`);
                                                         // could be visible via hover as well
                                                         if (isHoverOrTouchVisible) {
-                                                            setIsHoverOrTouchVisible((current) => {
-                                                                console.log(`in onclick callback 1. current: ${ isHoverOrTouchVisible }`);
-                                                                return !current;
-                                                            });
+                                                            if (!isInitialLoad) {
+                                                                setIsHoverOrTouchVisible((current) => {
+                                                                    console.log(`in onclick callback 1. current: ${ isHoverOrTouchVisible }`);
+                                                                    return !current;
+                                                                });
+                                                            }
                                                         } else {
-                                                            setIsHoverOrTouchVisible((current) => {
-                                                                console.log(`in onclick callback 2. current: ${ isHoverOrTouchVisible }`);
-                                                                return !current;
-                                                            });
+                                                            if (!isInitialLoad) {
+                                                                setIsHoverOrTouchVisible((current) => {
+                                                                    console.log(`in onclick callback 2. current: ${ isHoverOrTouchVisible }`);
+                                                                    return !current;
+                                                                });
+                                                            }
                                                         }
                                                     } }
                                                 ></GearIcon>
