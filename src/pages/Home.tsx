@@ -22,6 +22,7 @@ import clsx from 'clsx';
 import { HomeDemo } from '@/components/pixi/HomeDemo';
 import { TreeConfigurator } from '@/components/pixi/TreeConfigurator';
 import { TreeProvider } from '@/components/pixi/TreeProvider';
+import Dandelion from '@/components/plants/Dandelion';
 
 interface StringMap {
     [key: string]: string;
@@ -170,7 +171,8 @@ export function Home() {
                                             Systems thinking, in bloom.
 
                                         </h1>
-                                        <div className={ 'z-10 absolute left-1/2 lg:left-[29rem] lg:bottom-[2.5rem] bottom-[8rem] md:bottom-[5.5rem]' }>
+                                        <div
+                                            className={ 'z-10 absolute left-1/2 lg:left-[29rem] lg:bottom-[2.5rem] bottom-[8rem] md:bottom-[5.5rem]' }>
                                             <TreeConfigurator/>
                                         </div>
                                     </div>
@@ -192,7 +194,11 @@ export function Home() {
                     <div id="pixi-app" className={ clsx('top-12 left-0 m-0 p-0 absolute touch-none z-10') }>
                         { <HomeDemo ref={ fullsizeDivRef }/> }
                     </div>
-
+                    <div className="bg-neutral-950 mt-24 rounded-4xl py-20 sm:mt-32 sm:py-32 lg:mt-10">
+                        <Container>
+                            <Dandelion/>
+                        </Container>
+                    </div>
                     <Clients/>
 
                     <Testimonial
