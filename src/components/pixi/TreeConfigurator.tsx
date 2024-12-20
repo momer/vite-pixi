@@ -52,7 +52,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
     const [isHoverOrTouchVisible, setIsHoverOrTouchVisible] = useState<boolean>(true);
     const gearOpacity = useMotionValue(0);
-    const configuratorOpacity = useMotionValue(0);
+    const [configuratorOpacity, setConfiguratorOpacity] = useState<number>(0);
     const entranceFrameNum = useMotionValue(0);
 
     const onEntranceComplete = useCallback((animation: AnimationDefinition): void => {
@@ -80,6 +80,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                         opacity: configuratorOpacity,
                     }}
                     animate={ {
+                        opacity: [0, configuratorOpacity],
                         y: [-700, 0, 0],
                         x: [0, 0],
                     } }
@@ -87,16 +88,11 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                         entranceFrameNum.set(entranceFrameNum.get() + 1);
                         // prevent flickering
                         if (entranceFrameNum.get() === 1) {
-                            configuratorOpacity.set(1);
+                            setConfiguratorOpacity(1);
                         }
-                        if (entranceFrameNum.get() % 60 === 0 && entranceFrameNum.get() <= 120) {
-                            setPrecipitationOption('density', (treeContext?.treeOptions.precipitation.density + 1) % 4);
-                        }
-
-                        if (entranceFrameNum.get() % 10 === 0 && entranceFrameNum.get() > 120) {
-                            setTimeout(() => {
-                                setPrecipitationOption('density', 0);
-                            }, 1000);
+                        if (entranceFrameNum.get() === 120) {
+                            // go from 1 to 0, or 0 to 1
+                            setPrecipitationOption('density', 0);
                         }
 
                         await new Promise((resolve) => {
@@ -108,7 +104,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                     onAnimationComplete={ onEntranceComplete }
                     transition={ {
                         delay: 0,
-                        duration: 4.5,
+                        duration: 3.5,
                         ease: 'easeOut',
 
                     } }
@@ -120,13 +116,11 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                         <div className={ clsx('flex flex-col items-end') }>
                             <div
                                 onMouseEnter={ () => {
-                                    console.log(`in mouse enter: is hover visible? ${ isHoverOrTouchVisible }`);
                                     if (!isInitialLoad) {
                                         return setIsHoverOrTouchVisible(true);
                                     }
                                 } }
                                 onMouseLeave={ () => {
-                                    console.log(`in mouse leave: is hover visible? ${ isHoverOrTouchVisible }`);
                                     if (!isInitialLoad) {
                                         return setIsHoverOrTouchVisible(false);
                                     }
@@ -159,7 +153,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                 } }
                                                 transition={ {
                                                     repeat: Infinity,
-                                                    delay: 5,
+                                                    delay: 3.75,
                                                     duration: 7,
                                                     repeatDelay: 0,
                                                     ease: 'linear'
