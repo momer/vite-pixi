@@ -159,6 +159,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                 } }
                                                 transition={ {
                                                     repeat: Infinity,
+                                                    delay: 5,
                                                     duration: 7,
                                                     repeatDelay: 0,
                                                     ease: 'linear'
