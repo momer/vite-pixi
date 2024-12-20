@@ -1,25 +1,34 @@
-import React, { forwardRef, RefObject, useContext } from 'react';
+import React, { forwardRef, RefObject, useContext, useState } from 'react';
 
+import { Application } from 'pixi.js';
 import { TreeContainer } from '@/components/pixi/TreeContainer';
 import { Color } from 'pixi.js';
 import { TreeContext } from '@/components/pixi/TreeProvider';
 import { ContextApplication } from '@/components/pixi/ContextBridge';
+import App from '@/app/App';
 
 export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
     const treeContext = useContext(TreeContext);
+    const [isLoading, setIsLoading] = useState(true);
     return (
         <div>
             { treeContext ? (
                 <ContextApplication
-                    context={treeContext}
+                    context={ treeContext }
                     hello={ true }
                     autoStart
                     sharedTicker
+                    onInit={ (app: Application) => {
+                        console.log('from inside app callback');
+                        app.renderer.background.alpha = 1;
+                        setIsLoading(false);
+                    } }
                     background={ new Color('white') }
-                    backgroundAlpha={ 1 }
+                    backgroundAlpha={ 0 }
+                    visible={ false }
                     antialias={ true }
                 >
-                    <TreeContainer ref={ ref }/>
+                    { (!isLoading && <TreeContainer ref={ ref }/>) }
                 </ContextApplication>
             ) : <div></div> }
         </div>

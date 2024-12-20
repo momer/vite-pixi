@@ -501,7 +501,8 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         isSuccess && app?.renderer && app?.screen && (
             <>
 
-                <container sortableChildren={ true }>
+                <container
+                    sortableChildren={ true }>
 
                     <container sortableChildren={ true } ref={ treeWorldContainerRef }>
                         {/* tree container*/ }

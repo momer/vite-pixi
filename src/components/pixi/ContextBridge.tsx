@@ -1,4 +1,5 @@
 import { Application } from '@pixi/react';
+import { Application as PixiApplication } from 'pixi.js';
 import { ReactNode } from 'react';
 import { TreeContext, TreeContextT } from '@/components/pixi/TreeProvider';
 
@@ -15,8 +16,13 @@ export const ContextBridge = ({ children, Context, render }) => {
 export const ContextApplication = ({
                                        context,
                                        children,
+                                       onInit,
                                        ...props
-                                   }: any & { children: ReactNode, context: TreeContextT }) => {
+                                   }: any & {
+    children: ReactNode,
+    context: TreeContextT,
+    onInit: (app: PixiApplication) => void
+}) => {
 
     return (
         <ContextBridge
@@ -25,7 +31,7 @@ export const ContextApplication = ({
             render={
                 (children) => {
                     return (
-                        <Application { ...(props) }>{ children }</Application>
+                        <Application onInit={ onInit } { ...(props) }>{ children }</Application>
                     );
                 } }
         />
