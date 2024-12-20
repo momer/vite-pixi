@@ -427,13 +427,10 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
     // initial load, start observing the div parent for sizing
     useEffect(() => {
-        console.log('resize observable effect called');
         (async () => {
             if (ref) {
-                console.log('ref:', ref);
                 ref = ref as MutableRefObject<HTMLDivElement>;
                 const observer = new ResizeObserver((entries) => {
-                    console.log('resize observer called');
                     for (const entry of entries) {
                         const { width, height } = entry.contentRect;
                         if (app && app.renderer) {
@@ -489,7 +486,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
     }, [assetLoadSuccess]);
 
     useEffect(() => {
-        resizeTreeContainer();
+        // resizeTreeContainer();
     }, [assetLoadSuccess, isTrunkGraphicsLoading, isCanopyGraphicsLoading, app, treeTrunk, treeCanopy]);
 
     useEffect(() => {
@@ -512,18 +509,18 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
                             {/* @ts-expect-error graphics requires draw */ }
                             <graphics
                                 ref={ handleTreeTrunkGraphics }
-                                visible={ hasResized }
+                                alpha={ hasResized ? 1 : 0 }
                                 context={ treeTrunk }
                             />
                             {/* @ts-expect-error graphics requires draw */ }
                             <graphics
                                 ref={ handleTreeCanopyGraphics }
-                                visible={ hasResized }
+                                alpha={ hasResized ? 1 : 0 }
                                 context={ treeCanopy }
                             />
                             <graphics
                                 ref={ handleBlossomableAreaGraphics }
-                                visible={ hasResized }
+                                alpha={ hasResized ? 1 : 0 }
                                 context={ blossomableArea }
                             />
 

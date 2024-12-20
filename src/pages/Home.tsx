@@ -40,7 +40,7 @@ const clients = [
 
 function Clients() {
     return (
-        <div className="mt-24 rounded-4xl bg-neutral-950 py-20 sm:mt-32 sm:py-32 lg:mt-10">
+        <div className="mt-24 rounded-4xl py-20 sm:mt-32 sm:py-32 lg:mt-10">
             <Container>
                 <FadeIn className="flex items-center gap-x-8">
                     <h2 className="text-center font-display text-sm font-semibold tracking-wider text-white sm:text-left">
@@ -142,10 +142,10 @@ export function Home() {
                     </Helmet>
 
 
-                    <div className={ clsx('h-screen w-full relative') }>
+                    <div className={ clsx('h-screen w-full relative bg-white') }>
 
                         <div
-                            className={ clsx('h-[calc(100vh-8rem)] inset-0 w-full absolute z-10') }
+                            className={ clsx('h-[calc(100vh-8rem)] inset-0 w-full absolute') }
                             ref={ fullsizeDivRefCallback }
                         >
                         </div>
@@ -189,7 +189,7 @@ export function Home() {
 
                     </div>
 
-                    <div id="pixi-app" className={ clsx('z-[-1] top-12 left-0 m-0 p-0 absolute touch-none') }>
+                    <div id="pixi-app" className={ clsx('top-12 left-0 m-0 p-0 absolute touch-none z-10') }>
                         { <HomeDemo ref={ fullsizeDivRef }/> }
                     </div>
 
