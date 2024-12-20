@@ -167,19 +167,16 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                     ) }
 
                                                     onTouchStart={ () => {
-                                                        console.log(`in onclick. current: ${ isHoverOrTouchVisible }`);
                                                         // could be visible via hover as well
                                                         if (isHoverOrTouchVisible) {
                                                             if (!isInitialLoad) {
                                                                 setIsHoverOrTouchVisible((current) => {
-                                                                    console.log(`in onclick callback 1. current: ${ isHoverOrTouchVisible }`);
                                                                     return !current;
                                                                 });
                                                             }
                                                         } else {
                                                             if (!isInitialLoad) {
                                                                 setIsHoverOrTouchVisible((current) => {
-                                                                    console.log(`in onclick callback 2. current: ${ isHoverOrTouchVisible }`);
                                                                     return !current;
                                                                 });
                                                             }

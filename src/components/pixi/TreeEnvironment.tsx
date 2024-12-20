@@ -203,8 +203,10 @@ export const TreeEnvironment = (props: TreeEnvironmentProps) => {
             // update emitter (convert to seconds)
             try {
                 props.emitter.update((now - elapsedRef.current) * 0.001);
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error) {
-                console.log(`caught error: ${ error }`);
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                null;
             }
         }
 

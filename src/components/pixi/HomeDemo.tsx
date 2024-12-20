@@ -19,7 +19,6 @@ export const HomeDemo = forwardRef<HTMLDivElement>((props, ref) => {
                     autoStart
                     sharedTicker
                     onInit={ (app: Application) => {
-                        console.log('from inside app callback');
                         app.renderer.background.alpha = 1;
                         setIsLoading(false);
                     } }

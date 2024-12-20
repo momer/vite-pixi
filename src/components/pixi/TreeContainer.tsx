@@ -77,7 +77,6 @@ export const LeafCollection = (props: LeafCollectionProps) => {
             try {
                 await LeafCluster.init();
             } catch (err: unknown) {
-                console.log(`caught an error: ${ err }`);
                 setError(() => err);
             } finally {
                 setIsInitializing(false);
@@ -415,9 +414,7 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
         }
     ], {
         onProgress: (progress: number) => {
-            console.log('progress:', progress);
             if (progress >= 1) {
-                console.log('progress complete:', progress);
                 setAssetLoadSuccess(true);
             }
         },
@@ -480,14 +477,6 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
             setIsBlossomableAreaGraphicsLoading(false);
         }
     }, []);
-
-    useEffect(() => {
-        console.log(`asset load success is now: ${ assetLoadSuccess }`);
-    }, [assetLoadSuccess]);
-
-    useEffect(() => {
-        // resizeTreeContainer();
-    }, [assetLoadSuccess, isTrunkGraphicsLoading, isCanopyGraphicsLoading, app, treeTrunk, treeCanopy]);
 
     useEffect(() => {
         if (app) {

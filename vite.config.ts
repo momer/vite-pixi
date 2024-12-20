@@ -104,6 +104,5 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
         };
     }
 
-    console.log(`baseConfig plugins: ${JSON.stringify(baseConfig.plugins)}`);
     return baseConfig;
 });
