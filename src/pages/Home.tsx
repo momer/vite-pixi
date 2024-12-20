@@ -40,7 +40,7 @@ const clients = [
 
 function Clients() {
     return (
-        <div className="mt-24 rounded-4xl py-20 sm:mt-32 sm:py-32 lg:mt-10">
+        <div className="bg-neutral-950 mt-24 rounded-4xl py-20 sm:mt-32 sm:py-32 lg:mt-10">
             <Container>
                 <FadeIn className="flex items-center gap-x-8">
                     <h2 className="text-center font-display text-sm font-semibold tracking-wider text-white sm:text-left">
@@ -142,14 +142,14 @@ export function Home() {
                     </Helmet>
 
 
-                    <div className={ clsx('h-screen w-full relative bg-white') }>
+                    <div className={ clsx('h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] w-full relative bg-white') }>
 
                         <div
-                            className={ clsx('h-[calc(100vh-8rem)] inset-0 w-full absolute') }
+                            className={ clsx('h-full inset-0 w-full absolute') }
                             ref={ fullsizeDivRefCallback }
                         >
                         </div>
-                        <div className={ 'w-full h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] inset-0 absolute z-20' }>
+                        <div className={ 'w-full h-full inset-0 absolute z-20' }>
                             <div
                                 className={ clsx('flex flex-col bottom-28 sm:bottom-28 md:bottom-20 lg:top-1/2 w-full lg:items-end absolute z-10 ') }>
 
@@ -170,17 +170,17 @@ export function Home() {
                                             Systems thinking, in bloom.
 
                                         </h1>
-                                        <div className={ 'z-10 absolute left-1/2 lg:left-[29rem] lg:bottom-[2.5rem] bottom-[6rem]' }>
+                                        <div className={ 'z-10 absolute left-1/2 lg:left-[29rem] lg:bottom-[2.5rem] bottom-[8rem] md:bottom-[5.5rem]' }>
                                             <TreeConfigurator/>
                                         </div>
                                     </div>
 
                                     <span className="">
                                         <span className="hidden md:inline">
-                                            We connect ideas, strategy, and technology; helping challenges blossom into solutions.
+                                            We encourage challenges to blossom into solutions.
                                         </span>
                                         <span className="inline md:hidden">
-                                            We help challenges blossom into solutions.
+                                            We encourage challenges to blossom into solutions.
                                         </span>
                                     </span>
                                 </div>
