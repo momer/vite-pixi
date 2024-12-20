@@ -52,7 +52,8 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
     const [isHoverOrTouchVisible, setIsHoverOrTouchVisible] = useState<boolean>(true);
     const gearOpacity = useMotionValue(0);
-    let entranceFrameNum = 0;
+    const configuratorOpacity = useMotionValue(0);
+    const entranceFrameNum = useMotionValue(0);
 
     const onEntranceComplete = useCallback((animation: AnimationDefinition): void => {
         setIsHoverOrTouchVisible(false);
@@ -75,15 +76,29 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
         <div className={ 'w-full' }>
             { treeContext ? (
                 <motion.div
+                    style={{
+                        opacity: configuratorOpacity,
+                    }}
                     animate={ {
-                        y: [-700, 0],
+                        y: [-700, 0, 0],
                         x: [0, 0],
                     } }
                     onUpdate={async (latest) => {
-                        entranceFrameNum += 1;
-                        if (entranceFrameNum % 60 === 0 && entranceFrameNum < 180) {
+                        entranceFrameNum.set(entranceFrameNum.get() + 1);
+                        // prevent flickering
+                        if (entranceFrameNum.get() === 1) {
+                            configuratorOpacity.set(1);
+                        }
+                        if (entranceFrameNum.get() % 60 === 0 && entranceFrameNum.get() <= 120) {
                             setPrecipitationOption('density', (treeContext?.treeOptions.precipitation.density + 1) % 4);
                         }
+
+                        if (entranceFrameNum.get() % 10 === 0 && entranceFrameNum.get() > 120) {
+                            setTimeout(() => {
+                                setPrecipitationOption('density', 0);
+                            }, 1000);
+                        }
+
                         await new Promise((resolve) => {
                             setTimeout(() => {
                                 requestAnimationFrame(resolve);
@@ -93,7 +108,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                     onAnimationComplete={ onEntranceComplete }
                     transition={ {
                         delay: 0,
-                        duration: 3,
+                        duration: 4.5,
                         ease: 'easeOut',
 
                     } }
