@@ -169,27 +169,23 @@ export function Home() {
                             />
                             <div className={ clsx('flex flex-col gap-3 w-full') }>
                                 <h1 className="font-display text-3xl lg:text-4xl font-medium tracking-tight text-white">
-                                    We work with amazing people and brands.
+                                    We work with fantastic people and brands.
                                 </h1>
 
                                 <div
                                     className={ clsx('bg-transparent border-2 border-white h-full rounded-md w-full py-4 px-8') }>
                                     <div className={ 'relative p-0 h-full' }>
-                                        <ParallaxAny baseVelocity={ 15 }>
+                                        <ParallaxAny
+                                            baseVelocity={ 15 }
+                                            wrapStart={-19.5}
+                                            wrapEnd={-45}
+                                        >
                                             <div className={
                                                 clsx(
                                                     'inline-block w-96 h-48'
                                                 ) }
                                                  onClick={ handleCaseStudySelect }
                                                  id={ initialCaseStudyId }>
-                                                <PlainImage id={ initialCaseStudyId } src={ bonsaiLogo } width={'100%'} height={'100%'} />
-                                            </div>
-                                            <div className={
-                                                clsx(
-                                                    'inline-block w-96 h-48'
-                                                ) }
-                                                 onClick={ handleCaseStudySelect }
-                                                 id={ useId() }>
                                                 <PlainImage id={ initialCaseStudyId } src={ bonsaiLogo } width={'100%'} height={'100%'} />
                                             </div>
 
