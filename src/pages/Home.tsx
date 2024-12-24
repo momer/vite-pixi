@@ -4,69 +4,24 @@ import { FadeIn, FadeInStagger } from '@/components/FadeIn';
 import { List, ListItem } from '@/components/List';
 import { SectionIntro } from '@/components/SectionIntro';
 import { StylizedImage } from '@/components/StylizedImage';
+import { motion } from 'framer-motion';
 import { Testimonial } from '@/components/Testimonial';
 
 import sakuraBranch from '/static/images/plants/sakura-branch-1600.png';
-import logoBrightPath from '/static/images/clients/bright-path/logo-light.svg';
-import logoFamilyFund from '/static/images/clients/family-fund/logo-light.svg';
-import logoGreenLife from '/static/images/clients/green-life/logo-light.svg';
-import logoHomeWork from '/static/images/clients/home-work/logo-light.svg';
-import logoMailSmirk from '/static/images/clients/mail-smirk/logo-light.svg';
-import logoNorthAdventures from '/static/images/clients/north-adventures/logo-light.svg';
-import logoPhobiaDark from '/static/images/clients/phobia/logo-dark.svg';
-import logoPhobiaLight from '/static/images/clients/phobia/logo-light.svg';
-import logoUnseal from '/static/images/clients/unseal/logo-light.svg';
-import imageLaptop from '/static/images/laptop.jpg';
-import React, { useCallback, useRef, useState } from 'react';
+import bonsaiLogo from '/static/images/clients/bonsai/bonsai.png';
+
+import React, { useCallback, useId, useRef, useState } from 'react';
 // import { StringMap } from '@/lib/stringMap';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import clsx from 'clsx';
 import { HomeDemo } from '@/components/pixi/HomeDemo';
 import { TreeConfigurator } from '@/components/pixi/TreeConfigurator';
 import { TreeProvider } from '@/components/pixi/TreeProvider';
+import { PlainImage } from '@/components/PlainImage';
+import { ParallaxAny } from '@/components/ParallaxAny';
 
 interface StringMap {
     [key: string]: string;
-}
-
-const clients = [
-    ['Phobia', logoPhobiaLight],
-    ['Family Fund', logoFamilyFund],
-    ['Unseal', logoUnseal],
-    ['Mail Smirk', logoMailSmirk],
-    ['Home Work', logoHomeWork],
-    ['Green Life', logoGreenLife],
-    ['Bright Path', logoBrightPath],
-    ['North Adventures', logoNorthAdventures],
-];
-
-function Clients() {
-    return (
-        <div className="bg-neutral-950 mt-24 rounded-4xl py-20 sm:mt-32 sm:py-32 lg:mt-10">
-            <Container>
-                <FadeIn className="flex items-center gap-x-8">
-                    <h2 className="text-center font-display text-sm font-semibold tracking-wider text-white sm:text-left">
-                        We’ve worked with hundreds of amazing people
-                    </h2>
-                    <div className="h-px flex-auto bg-neutral-800"/>
-                </FadeIn>
-                <FadeInStagger faster>
-                    <ul
-                        role="list"
-                        className="mt-10 grid grid-cols-2 gap-x-8 gap-y-10 lg:grid-cols-4"
-                    >
-                        { clients.map(([client, logo]) => (
-                            <li key={ client }>
-                                <FadeIn>
-                                    <img src={ logo } alt={ client }/>
-                                </FadeIn>
-                            </li>
-                        )) }
-                    </ul>
-                </FadeInStagger>
-            </Container>
-        </div>
-    );
 }
 
 function Services() {
@@ -87,7 +42,6 @@ function Services() {
                     <div className="flex justify-center lg:w-1/2 lg:justify-end lg:pr-12">
                         <FadeIn className="w-[33.75rem] flex-none lg:w-[45rem]">
                             <StylizedImage
-                                src={ imageLaptop }
                                 sizes="(min-width: 1024px) 41rem, 31rem"
                                 className="justify-center lg:justify-end"
                             />
@@ -131,6 +85,15 @@ export function Home() {
         fullsizeDivRef.current = element;
         return element;
     }, []);
+
+    const initialCaseStudyId = useId();
+    const [activeCaseStudyId, setActiveCaseStudyId] = useState<number | string | null>(initialCaseStudyId);
+
+    const handleCaseStudySelect = (event: React.MouseEvent<HTMLDivElement>): void => {
+        if (event.currentTarget) {
+            setActiveCaseStudyId((event.currentTarget as HTMLDivElement).id);
+        }
+    };
 
     return (
         <>
@@ -198,25 +161,44 @@ export function Home() {
 
                     <div
                         className="h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] w-full relative bg-neutral-950 mt-24 rounded-4xl py-20 sm:mt-32 sm:py-32 lg:mt-10 px-0">
-                        <div className={ clsx('h-full sm:px-0 md:px-4') }>
+                        <div className={ clsx('flex h-full sm:px-0 md:px-4') }>
                             <img
                                 alt=""
                                 src={ sakuraBranch }
-                                className="w-1/2 object-contain top-8"
+                                className="w-1/2 object-contain top-8 self-start"
                             />
+                            <div className={ clsx('flex flex-col gap-3 w-full') }>
+                                <h1 className="font-display text-3xl lg:text-4xl font-medium tracking-tight text-white">
+                                    We work with amazing people and brands.
+                                </h1>
+
+                                <div
+                                    className={ clsx('bg-transparent border-2 border-white h-full rounded-md w-full py-4 px-8') }>
+                                    <div className={ 'relative p-0 h-full' }>
+                                        <ParallaxAny baseVelocity={ 15 }>
+                                            <div className={
+                                                clsx(
+                                                    'inline-block w-96 h-48'
+                                                ) }
+                                                 onClick={ handleCaseStudySelect }
+                                                 id={ initialCaseStudyId }>
+                                                <PlainImage id={ initialCaseStudyId } src={ bonsaiLogo } width={'100%'} height={'100%'} />
+                                            </div>
+                                            <div className={
+                                                clsx(
+                                                    'inline-block w-96 h-48'
+                                                ) }
+                                                 onClick={ handleCaseStudySelect }
+                                                 id={ useId() }>
+                                                <PlainImage id={ initialCaseStudyId } src={ bonsaiLogo } width={'100%'} height={'100%'} />
+                                            </div>
+
+                                        </ParallaxAny>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <Clients/>
-
-                    <Testimonial
-                        className="mt-24 sm:mt-32 lg:mt-40"
-                        client={ { name: 'Phobia', logo: logoPhobiaDark } }
-                    >
-                        The team at Studio went above and beyond with our onboarding, even
-                        finding a way to access the user’s microphone without triggering one of
-                        those annoying permission dialogs.
-                    </Testimonial>
 
                     <Services/>
 
