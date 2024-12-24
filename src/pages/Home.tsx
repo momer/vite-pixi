@@ -5,6 +5,8 @@ import { List, ListItem } from '@/components/List';
 import { SectionIntro } from '@/components/SectionIntro';
 import { StylizedImage } from '@/components/StylizedImage';
 import { Testimonial } from '@/components/Testimonial';
+
+import sakuraBranch from '/static/images/plants/sakura-branch-1600.png';
 import logoBrightPath from '/static/images/clients/bright-path/logo-light.svg';
 import logoFamilyFund from '/static/images/clients/family-fund/logo-light.svg';
 import logoGreenLife from '/static/images/clients/green-life/logo-light.svg';
@@ -22,7 +24,6 @@ import clsx from 'clsx';
 import { HomeDemo } from '@/components/pixi/HomeDemo';
 import { TreeConfigurator } from '@/components/pixi/TreeConfigurator';
 import { TreeProvider } from '@/components/pixi/TreeProvider';
-import Dandelion from '@/components/plants/Dandelion';
 
 interface StringMap {
     [key: string]: string;
@@ -194,11 +195,18 @@ export function Home() {
                     <div id="pixi-app" className={ clsx('top-12 left-0 m-0 p-0 absolute touch-none z-10') }>
                         { <HomeDemo ref={ fullsizeDivRef }/> }
                     </div>
-                    <div className="bg-neutral-950 mt-24 rounded-4xl py-20 sm:mt-32 sm:py-32 lg:mt-10">
-                        <Container>
-                            <Dandelion/>
-                        </Container>
+
+                    <div
+                        className="h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] w-full relative bg-neutral-950 mt-24 rounded-4xl py-20 sm:mt-32 sm:py-32 lg:mt-10 px-0">
+                        <div className={ clsx('h-full sm:px-0 md:px-4') }>
+                            <img
+                                alt=""
+                                src={ sakuraBranch }
+                                className="w-1/2 object-contain top-8"
+                            />
+                        </div>
                     </div>
+
                     <Clients/>
 
                     <Testimonial
