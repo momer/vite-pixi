@@ -23,6 +23,7 @@ import { TreeConfigurator } from '@/components/pixi/TreeConfigurator';
 import { TreeProvider } from '@/components/pixi/TreeProvider';
 import { PlainImage } from '@/components/PlainImage';
 import { ParallaxAny } from '@/components/ParallaxAny';
+import { InteractiveMarquee } from '@/components/Marquee';
 
 interface StringMap {
     [key: string]: string;
@@ -178,73 +179,183 @@ export function Home() {
 
                                 <div
                                     className={ clsx('bg-transparent border-2 border-white h-full rounded-md w-full py-4 px-8') }>
-                                    <div className={ 'flex flex-col gap-8 relative p-0' }>
-                                        <ParallaxAny
-                                            baseVelocity={ 15 }
-                                            wrapStart={-12.25}
-                                            wrapEnd={5}
+                                    <div className={ 'flex flex-col gap-8 relative p-0 justify-between h-full' }>
+                                        <InteractiveMarquee
+                                            speed={-0.5}
                                         >
-                                            <div className={
-                                                clsx(
-                                                    'inline-block'
-                                                ) }
-                                                 onClick={ handleCaseStudySelect }
-                                                 id={ initialCaseStudyId }>
-                                                <PlainImage id={ initialCaseStudyId } src={ bonsaiLogo } width={'80%'} height={'80%'} />
-                                            </div>
-                                        </ParallaxAny>
-                                        <ParallaxAny
-                                            baseVelocity={ 10 }
-                                            wrapStart={ -19.5 }
-                                            wrapEnd={ -45 }
-                                        >
-                                            <div className={
-                                                clsx(
-                                                    'inline'
-                                                ) }
-                                                 onClick={ handleCaseStudySelect }
-                                                 id={ initialCaseStudyId }>
-                                                <PlainImage id={ initialCaseStudyId }
-                                                            src={ mHUBLogo } />
-                                            </div>
-                                            <div className={
-                                                clsx(
-                                                    'inline'
-                                                ) }
-                                                 onClick={ handleCaseStudySelect }
-                                                 id={ initialCaseStudyId }>
-                                                <PlainImage id={ initialCaseStudyId } src={ mHUBLogo }/>
-                                            </div>
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ bonsaiLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ bonsaiLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ bonsaiLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ bonsaiLogo }
+                                            />
 
-                                        </ParallaxAny>
-                                        <ParallaxAny
-                                            baseVelocity={ 15 }
-                                            wrapStart={ -19.5 }
-                                            wrapEnd={ -45 }
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ bonsaiLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ bonsaiLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ bonsaiLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ bonsaiLogo }
+                                            />
+                                        </InteractiveMarquee>
+                                        <InteractiveMarquee
+                                            speed={0.5}
                                         >
-                                            <div className={
-                                                clsx(
-                                                    'inline-block'
-                                                ) }
-                                                 onClick={ handleCaseStudySelect }
-                                                 id={ initialCaseStudyId }>
-                                                <PlainImage id={ initialCaseStudyId } src={ twinmoLogo } width={'100%'} height={'100%'} />
-                                            </div>
-                                        </ParallaxAny>
-                                        <ParallaxAny
-                                            baseVelocity={ 10 }
-                                            wrapStart={-19.5}
-                                            wrapEnd={-45}
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+                                        </InteractiveMarquee>
+                                        <InteractiveMarquee
+                                            speed={-0.5}
                                         >
-                                            <div className={
-                                                clsx(
-                                                    'inline-block w-96 h-48'
-                                                ) }
-                                                 onClick={ handleCaseStudySelect }
-                                                 id={ initialCaseStudyId }>
-                                                <PlainImage id={ initialCaseStudyId } src={ astellasLogo } width={'100%'} height={'100%'} />
-                                            </div>
-                                        </ParallaxAny>
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ twinmoLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ twinmoLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ twinmoLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ twinmoLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ twinmoLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ twinmoLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ twinmoLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ twinmoLogo }
+                                            />
+                                        </InteractiveMarquee>
+                                        <InteractiveMarquee
+                                            speed={0.5}
+                                        >
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ astellasLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ astellasLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ astellasLogo }
+                                            />
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ astellasLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ astellasLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ astellasLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ astellasLogo }
+                                            />
+
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-64 object-contain' }
+                                                        src={ astellasLogo }
+                                            />
+                                        </InteractiveMarquee>
                                     </div>
                                 </div>
                             </div>
