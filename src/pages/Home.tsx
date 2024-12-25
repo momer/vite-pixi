@@ -9,6 +9,10 @@ import { Testimonial } from '@/components/Testimonial';
 
 import sakuraBranch from '/static/images/plants/sakura-branch-1600.png';
 import bonsaiLogo from '/static/images/clients/bonsai/bonsai.png';
+import astellasLogo from '/static/images/clients/astellas/astellas.png';
+import mHUBLogo from '/static/images/clients/mHUB/mHUB.png';
+import twinmoLogo from '/static/images/clients/twinmo/twinmo-logo.png';
+import cranesUPickLogo from '/static/images/clients/cranes/cranes-u-pick-logo.png';
 
 import React, { useCallback, useId, useRef, useState } from 'react';
 // import { StringMap } from '@/lib/stringMap';
@@ -174,9 +178,61 @@ export function Home() {
 
                                 <div
                                     className={ clsx('bg-transparent border-2 border-white h-full rounded-md w-full py-4 px-8') }>
-                                    <div className={ 'relative p-0 h-full' }>
+                                    <div className={ 'flex flex-col gap-8 relative p-0' }>
                                         <ParallaxAny
                                             baseVelocity={ 15 }
+                                            wrapStart={-12.25}
+                                            wrapEnd={5}
+                                        >
+                                            <div className={
+                                                clsx(
+                                                    'inline-block'
+                                                ) }
+                                                 onClick={ handleCaseStudySelect }
+                                                 id={ initialCaseStudyId }>
+                                                <PlainImage id={ initialCaseStudyId } src={ bonsaiLogo } width={'80%'} height={'80%'} />
+                                            </div>
+                                        </ParallaxAny>
+                                        <ParallaxAny
+                                            baseVelocity={ 10 }
+                                            wrapStart={ -19.5 }
+                                            wrapEnd={ -45 }
+                                        >
+                                            <div className={
+                                                clsx(
+                                                    'inline'
+                                                ) }
+                                                 onClick={ handleCaseStudySelect }
+                                                 id={ initialCaseStudyId }>
+                                                <PlainImage id={ initialCaseStudyId }
+                                                            src={ mHUBLogo } />
+                                            </div>
+                                            <div className={
+                                                clsx(
+                                                    'inline'
+                                                ) }
+                                                 onClick={ handleCaseStudySelect }
+                                                 id={ initialCaseStudyId }>
+                                                <PlainImage id={ initialCaseStudyId } src={ mHUBLogo }/>
+                                            </div>
+
+                                        </ParallaxAny>
+                                        <ParallaxAny
+                                            baseVelocity={ 15 }
+                                            wrapStart={ -19.5 }
+                                            wrapEnd={ -45 }
+                                        >
+                                            <div className={
+                                                clsx(
+                                                    'inline-block'
+                                                ) }
+                                                 onClick={ handleCaseStudySelect }
+                                                 id={ initialCaseStudyId }>
+                                                <PlainImage id={ initialCaseStudyId } src={ twinmoLogo } width={'100%'} height={'100%'} />
+                                            </div>
+                                        </ParallaxAny>
+                                        <ParallaxAny
+                                            baseVelocity={ 10 }
                                             wrapStart={-19.5}
                                             wrapEnd={-45}
                                         >
@@ -186,9 +242,8 @@ export function Home() {
                                                 ) }
                                                  onClick={ handleCaseStudySelect }
                                                  id={ initialCaseStudyId }>
-                                                <PlainImage id={ initialCaseStudyId } src={ bonsaiLogo } width={'100%'} height={'100%'} />
+                                                <PlainImage id={ initialCaseStudyId } src={ astellasLogo } width={'100%'} height={'100%'} />
                                             </div>
-
                                         </ParallaxAny>
                                     </div>
                                 </div>
