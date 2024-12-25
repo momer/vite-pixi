@@ -173,15 +173,15 @@ export function Home() {
                                 className="w-1/2 object-contain top-8 self-start"
                             />
                             <div className={ clsx('flex flex-col gap-3 w-full') }>
-                                <h1 className="font-display text-3xl lg:text-4xl font-medium tracking-tight text-white">
+                                <h1 className="text-right font-display text-3xl lg:text-4xl font-medium tracking-tight text-white">
                                     We work with fantastic people and brands.
                                 </h1>
 
                                 <div
-                                    className={ clsx('bg-transparent border-2 border-white h-full rounded-md w-full py-4 px-8') }>
+                                    className={ clsx('bg-transparent  h-full rounded-md w-full py-4 px-8') }>
                                     <div className={ 'flex flex-col gap-8 relative p-0 justify-between h-full' }>
                                         <InteractiveMarquee
-                                            speed={-0.5}
+                                            speed={-0.25}
                                         >
                                             <PlainImage id={ initialCaseStudyId }
                                                         className={ 'inline-block w-64 object-contain' }
@@ -277,7 +277,7 @@ export function Home() {
                                             />
                                         </InteractiveMarquee>
                                         <InteractiveMarquee
-                                            speed={-0.5}
+                                            speed={-0.25}
                                         >
                                             <PlainImage id={ initialCaseStudyId }
                                                         className={ 'inline-block w-64 object-contain' }
