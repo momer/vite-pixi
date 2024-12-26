@@ -21,7 +21,7 @@ export function CriticalSectionAnimation({
     children: React.ReactNode
     className?: string
 }) {
-    const animationDurationMS = 2500;
+    const animationDurationMS = 2000;
     const [activeIndex, setActiveIndex] = useState(0);
 
     const onAnimationStart = (): void => {
@@ -42,9 +42,9 @@ export function CriticalSectionAnimation({
                 (activeIndex === idx && <motion.span
                     key={ idx }
                     className={ className }
-                    initial={{ opacity: 0}}
+                    initial={{ opacity: 0.3}}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: (animationDurationMS * 0.9)/1000 }}
+                    transition={{ duration: (animationDurationMS * 0.5)/1000 }}
                     exit={{ opacity: 0}}
                     onAnimationStart={ onAnimationStart }
                     onAnimationComplete={ onAnimationComplete }
@@ -142,6 +142,8 @@ export function Home() {
                                     <h1 className='text-3xl lg:text-4xl font-medium tracking-tight font-display'>
                                         We&apos;re a&nbsp;
                                         <CriticalSectionAnimation className={ 'inline-block' }>
+                                            <p className={ 'inline' }>creative agency,</p>
+                                            <p className={ 'inline' }>technical agency,</p>
                                             <p className={ 'inline' }>creative technical agency,</p>
                                             <p className={ 'inline' }>technically creative agency,</p>
                                             <p className={ 'inline' }>technical creative agency,</p>
