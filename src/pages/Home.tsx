@@ -12,6 +12,49 @@ import { TreeConfigurator } from '@/components/pixi/TreeConfigurator';
 import { TreeProvider } from '@/components/pixi/TreeProvider';
 import { PlainImage } from '@/components/PlainImage';
 import { InteractiveMarquee } from '@/components/Marquee';
+import { AnimatePresence, AnimationDefinition, motion } from 'framer-motion';
+
+export function CriticalSectionAnimation({
+                                             children,
+                                             className,
+                                         }: {
+    children: React.ReactNode
+    className?: string
+}) {
+    const animationDurationMS = 2500;
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const onAnimationStart = (): void => {
+        setTimeout(
+            () => {
+                setActiveIndex((current) => (current + 1) % React.Children.count(children));
+            },
+            animationDurationMS);
+    };
+
+    const onAnimationComplete = (): void => {
+
+    };
+
+    return (
+        <>
+            { React.Children.map(children, (child, idx) => (
+                (activeIndex === idx && <motion.span
+                    key={ idx }
+                    className={ className }
+                    initial={{ opacity: 0}}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: (animationDurationMS * 0.9)/1000 }}
+                    exit={{ opacity: 0}}
+                    onAnimationStart={ onAnimationStart }
+                    onAnimationComplete={ onAnimationComplete }
+                >
+                    { child }
+                </motion.span>)
+            )) }
+        </>
+    );
+}
 
 export function Home() {
     const fullsizeDivRef = useRef<HTMLDivElement | null>(null);
@@ -97,7 +140,12 @@ export function Home() {
                                     'text-white text-right'
                                 }>
                                     <h1 className='text-3xl lg:text-4xl font-medium tracking-tight font-display'>
-                                        We&apos;re a technical creative agency,
+                                        We&apos;re a&nbsp;
+                                        <CriticalSectionAnimation className={ 'inline-block' }>
+                                            <p className={ 'inline' }>creative technical agency,</p>
+                                            <p className={ 'inline' }>technically creative agency,</p>
+                                            <p className={ 'inline' }>technical creative agency,</p>
+                                        </CriticalSectionAnimation>
                                     </h1>
                                     <h2 className='font-light'>
                                         helping our clients change the world, for the better.
