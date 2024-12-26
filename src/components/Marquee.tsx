@@ -139,7 +139,7 @@ export const InteractiveMarquee: React.FC<MarqueeProps> = (props) => {
          *
          * The threshold basically tells how much to speed up
          *
-         * Without this stop - x.current will mutiple expodentially
+         * Without this stop - x.current will increase exponentially
          */
         if (slowDown.current || Math.abs(x.current) < threshold) {
             return;

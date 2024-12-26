@@ -156,7 +156,7 @@ export function Home() {
                     </div>
 
                     <div
-                        className="h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] w-full relative bg-neutral-950 mt-24 rounded-4xl py-20 sm:mt-32 sm:py-32 lg:mt-10 px-0">
+                        className="h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] w-full relative bg-neutral-950 rounded-4xl py-20 sm:py-32 px-0">
                         <div className={ clsx('flex h-full sm:px-0 md:px-4') }>
                             <img
                                 alt=""
@@ -165,7 +165,7 @@ export function Home() {
                             />
                             <div className={ clsx('flex flex-col gap-3 w-full') }>
                                 <h1 className="text-right font-display text-3xl lg:text-4xl font-medium tracking-tight text-white">
-                                    Helping our clients make the world a better place.
+                                    We help our clients change the world, for the better.
                                 </h1>
 
                                 <div
@@ -214,6 +214,11 @@ export function Home() {
                                         <InteractiveMarquee
                                             speed={0.5}
                                         >
+                                            <PlainImage id={ initialCaseStudyId }
+                                                        className={ 'inline-block w-32 object-contain' }
+                                                        src={ mHUBLogo }
+                                            />
+
                                             <PlainImage id={ initialCaseStudyId }
                                                         className={ 'inline-block w-32 object-contain' }
                                                         src={ mHUBLogo }
