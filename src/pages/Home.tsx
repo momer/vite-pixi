@@ -12,24 +12,30 @@ import { TreeConfigurator } from '@/components/pixi/TreeConfigurator';
 import { TreeProvider } from '@/components/pixi/TreeProvider';
 import { PlainImage } from '@/components/PlainImage';
 import { InteractiveMarquee } from '@/components/Marquee';
-import { AnimatePresence, AnimationDefinition, motion } from 'framer-motion';
+import { AnimatePresence, AnimationDefinition, motion, useInView } from 'framer-motion';
 
 export function CriticalSectionAnimation({
                                              children,
                                              className,
+                                             stopIndex,
                                          }: {
-    children: React.ReactNode
-    className?: string
+    children: React.ReactNode;
+    className?: string;
+    stopIndex?: number;
 }) {
     const animationDurationMS = 2000;
     const [activeIndex, setActiveIndex] = useState(0);
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true });
 
     const onAnimationStart = (): void => {
-        setTimeout(
-            () => {
-                setActiveIndex((current) => (current + 1) % React.Children.count(children));
-            },
-            animationDurationMS);
+        if (stopIndex && stopIndex !== activeIndex) {
+            setTimeout(
+                () => {
+                    setActiveIndex((current) => (current + 1) % React.Children.count(children));
+                },
+                animationDurationMS);
+        }
     };
 
     const onAnimationComplete = (): void => {
@@ -37,22 +43,47 @@ export function CriticalSectionAnimation({
     };
 
     return (
-        <>
-            { React.Children.map(children, (child, idx) => (
-                (activeIndex === idx && <motion.span
+        <div className='inline-block' ref={ ref }>
+            { isInView && React.Children.map(children, (child, idx) => (
+                (activeIndex === idx && <div
+                    className='inline-block relative'
                     key={ idx }
-                    className={ className }
-                    initial={{ opacity: 0.3}}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: (animationDurationMS * 0.5)/1000 }}
-                    exit={{ opacity: 0}}
-                    onAnimationStart={ onAnimationStart }
-                    onAnimationComplete={ onAnimationComplete }
                 >
-                    { child }
-                </motion.span>)
+                    <motion.div
+                        className={ clsx(
+                            className,
+                            'inline-block relative'
+                        )}
+                        initial={ { opacity: 0.3 } }
+
+                        animate={ { opacity: 1 } }
+                        transition={ { duration: (animationDurationMS * 0.5) / 1000 } }
+                        exit={ { opacity: 0 } }
+                        onAnimationStart={ onAnimationStart }
+                        onAnimationComplete={ onAnimationComplete }
+                    >
+                        { child }
+                    </motion.div>
+                    <motion.div className={ clsx(
+                        'inline-block w-full h-full absolute top-0 left-0',
+
+                        'bg-red-500'
+                        // `bg-[url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%' height='24'%3E%3Cdefs%3E%3Cpattern id='bg' patternUnits='userSpaceOnUse' width='130' height='24'%3E%3Cpath fill='%23A5EF8B' d='M0,12c32.5,0,32.5,12,65,12s32.5-12,65-12V0C97.5,0,92.9,12,65,12C32.5,12,20.7,0,0,0'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%' height='100%' fill='url(%23bg)'/%3E%3C/svg%3E")] ${ '' } `
+                        // `bg-[url('/static/images/pixi/sakura/configurator/btn_icon_sun.png'),linear-gradient(0deg,_#9C9C9C_0%,_#858585_70%)] ${ '' } bg-cover `
+                    ) }
+                                initial={ { opacity: 0 } }
+                                animate={ {
+                                    opacity: 1
+                                } }
+                                transition={ {
+                                    delay: (animationDurationMS * 0.5) / 1000,
+                                } }
+                    >
+
+                    </motion.div>
+                </div>)
             )) }
-        </>
+        </div>
     );
 }
 
@@ -141,11 +172,9 @@ export function Home() {
                                 }>
                                     <h1 className='text-3xl lg:text-4xl font-medium tracking-tight font-display'>
                                         We&apos;re a&nbsp;
-                                        <CriticalSectionAnimation className={ 'inline-block' }>
+                                        <CriticalSectionAnimation stopIndex={ 2 } className={ 'inline-block' }>
                                             <p className={ 'inline' }>creative agency,</p>
                                             <p className={ 'inline' }>technical agency,</p>
-                                            <p className={ 'inline' }>creative technical agency,</p>
-                                            <p className={ 'inline' }>technically creative agency,</p>
                                             <p className={ 'inline' }>technical creative agency,</p>
                                         </CriticalSectionAnimation>
                                     </h1>
