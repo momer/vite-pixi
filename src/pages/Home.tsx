@@ -141,19 +141,10 @@ export function Home() {
 
                                         </h1>
                                         <div
-                                            className={ 'z-10 absolute left-1/2 lg:left-[29rem] lg:bottom-[2.5rem] bottom-[8rem] md:bottom-[5.5rem]' }>
+                                            className={ 'z-10 absolute left-1/2 lg:left-[28rem] lg:bottom-[1rem] bottom-[8rem] md:bottom-[5.5rem]' }>
                                             <TreeConfigurator/>
                                         </div>
                                     </div>
-
-                                    <span className="">
-                                        <span className="hidden md:inline">
-                                            We encourage challenges to blossom into solutions.
-                                        </span>
-                                        <span className="inline md:hidden">
-                                            We encourage challenges to blossom into solutions.
-                                        </span>
-                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -174,11 +165,11 @@ export function Home() {
                             />
                             <div className={ clsx('flex flex-col gap-3 w-full') }>
                                 <h1 className="text-right font-display text-3xl lg:text-4xl font-medium tracking-tight text-white">
-                                    We work with fantastic people and brands.
+                                    Helping our clients make the world a better place.
                                 </h1>
 
                                 <div
-                                    className={ clsx('bg-transparent  h-full rounded-md w-full py-4 px-8') }>
+                                    className={ clsx('bg-transparent  h-full rounded-md w-full py-4 ') }>
                                     <div className={ 'flex flex-col gap-8 relative p-0 justify-between h-full' }>
                                         <InteractiveMarquee
                                             speed={-0.25}
