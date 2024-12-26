@@ -1,16 +1,7 @@
-import { ContactSection } from '@/components/ContactSection';
-import { Container } from '@/components/Container';
-import { FadeIn, FadeInStagger } from '@/components/FadeIn';
-import { List, ListItem } from '@/components/List';
-import { SectionIntro } from '@/components/SectionIntro';
-import { StylizedImage } from '@/components/StylizedImage';
-import { motion } from 'framer-motion';
-import { Testimonial } from '@/components/Testimonial';
-
 import sakuraBranch from '/static/images/plants/sakura-branch-1600.png';
 import bonsaiLogo from '/static/images/clients/bonsai/bonsai.png';
 import astellasLogo from '/static/images/clients/astellas/astellas.png';
-import mHUBLogo from '/static/images/clients/mHUB/mHUB.png';
+import mHUBLogo from '/static/images/clients/mHUB/mHUB-white-text.png';
 import twinmoLogo from '/static/images/clients/twinmo/twinmo-logo.png';
 
 import React, { useCallback, useId, useRef, useState } from 'react';
