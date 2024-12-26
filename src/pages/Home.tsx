@@ -164,15 +164,22 @@ export function Home() {
                                 className="w-1/2 object-contain top-8 self-start"
                             />
                             <div className={ clsx('flex flex-col gap-3 w-full') }>
-                                <h1 className="text-right font-display text-3xl lg:text-4xl font-medium tracking-tight text-white">
-                                    We help our clients change the world, for the better.
-                                </h1>
+                                <div className={
+                                    'text-white text-right'
+                                }>
+                                    <h1 className='text-3xl lg:text-4xl font-medium tracking-tight font-display'>
+                                        We&apos;re a technical creative agency,
+                                    </h1>
+                                    <h2 className='font-light'>
+                                        helping our clients change the world, for the better.
+                                    </h2>
 
+                                </div>
                                 <div
                                     className={ clsx('bg-transparent  h-full rounded-md w-full py-4 ') }>
                                     <div className={ 'flex flex-col gap-8 relative p-0 justify-between h-full' }>
                                         <InteractiveMarquee
-                                            speed={-0.25}
+                                            speed={ -0.25 }
                                         >
                                             <PlainImage id={ initialCaseStudyId }
                                                         className={ 'inline-block w-64 object-contain' }
@@ -212,7 +219,7 @@ export function Home() {
                                             />
                                         </InteractiveMarquee>
                                         <InteractiveMarquee
-                                            speed={0.5}
+                                            speed={ 0.5 }
                                         >
                                             <PlainImage id={ initialCaseStudyId }
                                                         className={ 'inline-block w-32 object-contain' }
@@ -273,7 +280,7 @@ export function Home() {
                                             />
                                         </InteractiveMarquee>
                                         <InteractiveMarquee
-                                            speed={-0.25}
+                                            speed={ -0.25 }
                                         >
                                             <PlainImage id={ initialCaseStudyId }
                                                         className={ 'inline-block w-64 object-contain' }
@@ -313,7 +320,7 @@ export function Home() {
                                             />
                                         </InteractiveMarquee>
                                         <InteractiveMarquee
-                                            speed={0.5}
+                                            speed={ 0.5 }
                                         >
                                             <PlainImage id={ initialCaseStudyId }
                                                         className={ 'inline-block w-64 object-contain' }
