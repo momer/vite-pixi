@@ -23,8 +23,9 @@ export function CriticalSectionAnimation({
     className?: string;
     stopIndex?: number;
 }) {
+    const initialIndex = 0;
     const animationDurationMS = 2000;
-    const [activeIndex, setActiveIndex] = useState(0);
+    const [activeIndex, setActiveIndex] = useState(initialIndex);
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true });
 
@@ -54,7 +55,7 @@ export function CriticalSectionAnimation({
                             className,
                             'inline-block relative'
                         )}
-                        initial={ { opacity: 0.3 } }
+                        initial={ { opacity: idx === initialIndex ? 1 : 0.3 } }
 
                         animate={ { opacity: 1 } }
                         transition={ { duration: (animationDurationMS * 0.5) / 1000 } }
@@ -67,7 +68,7 @@ export function CriticalSectionAnimation({
                     <motion.div className={ clsx(
                         'inline-block w-full h-full absolute top-0 left-0',
 
-                        'bg-red-500'
+                        idx !== stopIndex && 'bg-red-500'
                         // `bg-[url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%' height='24'%3E%3Cdefs%3E%3Cpattern id='bg' patternUnits='userSpaceOnUse' width='130' height='24'%3E%3Cpath fill='%23A5EF8B' d='M0,12c32.5,0,32.5,12,65,12s32.5-12,65-12V0C97.5,0,92.9,12,65,12C32.5,12,20.7,0,0,0'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%' height='100%' fill='url(%23bg)'/%3E%3C/svg%3E")] ${ '' } `
                         // `bg-[url('/static/images/pixi/sakura/configurator/btn_icon_sun.png'),linear-gradient(0deg,_#9C9C9C_0%,_#858585_70%)] ${ '' } bg-cover `
                     ) }
@@ -173,10 +174,11 @@ export function Home() {
                                     <h1 className='text-3xl lg:text-4xl font-medium tracking-tight font-display'>
                                         We&apos;re a&nbsp;
                                         <CriticalSectionAnimation stopIndex={ 2 } className={ 'inline-block' }>
-                                            <p className={ 'inline' }>creative agency,</p>
-                                            <p className={ 'inline' }>technical agency,</p>
-                                            <p className={ 'inline' }>technical creative agency,</p>
+                                            <p className={ 'inline' }>creative</p>
+                                            <p className={ 'inline' }>technical</p>
+                                            <p className={ 'inline' }>technical creative</p>
                                         </CriticalSectionAnimation>
+                                        &nbsp;agency,
                                     </h1>
                                     <h2 className='font-light'>
                                         helping our clients change the world, for the better.
