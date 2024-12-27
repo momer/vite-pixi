@@ -81,7 +81,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                     }}
                     animate={ {
                         opacity: [0, configuratorOpacity],
-                        y: [-700, 0, 0],
+                        y: [0, 0, 0],
                         x: [0, 0],
                     } }
                     onUpdate={async (latest) => {
@@ -90,7 +90,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                         if (entranceFrameNum.get() === 1) {
                             setConfiguratorOpacity(1);
                         }
-                        if (entranceFrameNum.get() === 120) {
+                        if (entranceFrameNum.get() === 210) {
                             // go from 1 to 0, or 0 to 1
                             setPrecipitationOption('density', 0);
                         }
@@ -104,7 +104,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                     onAnimationComplete={ onEntranceComplete }
                     transition={ {
                         delay: 0,
-                        duration: 3.5,
+                        duration: 5.5,
                         ease: 'easeOut',
 
                     } }
