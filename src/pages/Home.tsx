@@ -54,7 +54,7 @@ export function CriticalSectionAnimation({
                         className={ clsx(
                             className,
                             'inline-block relative'
-                        )}
+                        ) }
                         initial={ { opacity: idx === initialIndex ? 1 : 0.3 } }
 
                         animate={ { opacity: 1 } }
@@ -116,7 +116,7 @@ export function Home() {
                     <div className={ clsx('h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] w-full relative bg-white') }>
 
                         <div
-                            className={ clsx('h-full inset-0 w-full absolute') }
+                            className={ clsx('h-[96.5%] inset-0 w-full absolute') }
                             ref={ fullsizeDivRefCallback }
                         >
                         </div>
@@ -152,9 +152,16 @@ export function Home() {
 
                     </div>
 
-                    <div id="pixi-app" className={ clsx('top-16 left-0 m-0 p-0 absolute touch-none z-10') }>
+                    <motion.div
+                        id="pixi-app"
+                        className={ clsx('top-16 left-0 p-0 absolute touch-none z-10 bg-white') }
+                        animate={ { opacity: [0, 1] } }
+                        transition={ {
+                            duration: 5
+                        } }
+                    >
                         { <HomeDemo ref={ fullsizeDivRef }/> }
-                    </div>
+                    </motion.div>
 
                     <div
                         className="h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] w-full relative bg-neutral-950 rounded-4xl py-20 sm:py-32 px-0">

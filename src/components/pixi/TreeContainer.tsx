@@ -324,10 +324,13 @@ export const TreeContainer = forwardRef<HTMLDivElement>((props, ref) => {
 
         // offset x for 2xl screens
         if (screenW >= cssScreens['2xl']) {
+            pos.y += containerBounds.height / 48;
             pos.x += (4 * containerBounds.width) / 8;
         } else if (screenW >= cssScreens['xl']) {
+            pos.y += containerBounds.height / 48;
             pos.x += (4 * containerBounds.width) / 10;
         } else if (screenW >= cssScreens['lg']) {
+            pos.y += containerBounds.height / 24;
             pos.x += (3 * containerBounds.width) / 8;
         } else if (screenW >= cssScreens['md']) {
             pos.y -= containerBounds.height / 12;
