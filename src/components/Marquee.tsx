@@ -27,6 +27,7 @@ const MarqueeItem: React.FC<MarqueeItemProps> = (props) => {
     const rectRef = useRef<DOMRect | null>(null);
     const x = useRef(0);
     const [width, height] = useWindowSize();
+    const [isHovered, setHovered] = React.useState(false);
 
     const setX = () => {
         if (!itemRef.current || !rectRef.current) {
@@ -54,8 +55,10 @@ const MarqueeItem: React.FC<MarqueeItemProps> = (props) => {
 
     const loop = () => {
         //Substracts the current x from the speed set by useSpring
-        x.current -= speed.get();
-        setX();
+        if (isHovered) {
+            x.current -= speed.get();
+            setX();
+        }
     };
 
     const [_, loopStart] = useRafLoop(loop, false);
@@ -65,7 +68,11 @@ const MarqueeItem: React.FC<MarqueeItemProps> = (props) => {
     }, []);
 
     return (
-        <motion.div className="flex gap-8" ref={ itemRef }>
+        <motion.div
+            className="flex gap-4"
+            ref={ itemRef }
+            onHoverStart={ () => setHovered(true) }
+            onHoverEnd={ () => setHovered(false) }>
             { children }
         </motion.div>
     );
