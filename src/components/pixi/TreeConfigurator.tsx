@@ -133,7 +133,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
 
                                 className={ clsx(
                                     'flex flex-col mx-auto',
-                                    'group bg-opacity-65',
+                                    'group bg-opacity-95',
                                     (isHoverOrTouchVisible) && 'absolute -left-64 -top-72 lg:left-2 lg:-top-[15.75rem] min-w-1/3 p-4 rounded-lg outline outline-2 outline-[#F29DBB] bg-white') }>
 
                                 <div
