@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { AnimationDefinition, motion, ResolvedValues, useMotionValue } from 'framer-motion';
 import { PopoverPicker } from '@/components/PopoverPicker';
 import { PrecipitationOptions, PrecipitationType } from '@/components/pixi/Precipitation';
+import { useClickOutside } from '@/components/useClickOutside';
 
 interface TreeConfiguratorProps {
     children?: ReactNode;
@@ -20,7 +21,7 @@ function GearIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
                 transition={ {
                     default: {
                         repeat: Infinity,
-                        delay: 5,
+                        delay: 2,
                         duration: 3,
                         ease: 'easeInOut',
                     },
@@ -61,6 +62,15 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
         setPrecipitationOption('density', 0);
         setIsInitialLoad(false);
     }, [isHoverOrTouchVisible]);
+
+    const close = () => {
+        if (isHoverOrTouchVisible) {
+            setIsHoverOrTouchVisible(false);
+        }
+    };
+
+    const pickerRef = useClickOutside<HTMLDivElement>({ handler: close });
+
 
     const setPrecipitationOption = <K extends keyof PrecipitationOptions, T extends PrecipitationOptions[K]>(key: K, value: T): void => {
         if (treeContext?.setTreeOptions) {
@@ -115,22 +125,19 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
 
                         <div className={ clsx('flex flex-col items-end') }>
                             <div
-                                onMouseEnter={ () => {
+                                onClick={ () => {
                                     if (!isInitialLoad) {
                                         return setIsHoverOrTouchVisible(true);
                                     }
                                 } }
-                                onMouseLeave={ () => {
-                                    if (!isInitialLoad) {
-                                        return setIsHoverOrTouchVisible(false);
-                                    }
-                                } }
+
                                 className={ clsx(
                                     'flex flex-col mx-auto',
                                     'group bg-opacity-65',
-                                    (isHoverOrTouchVisible) && 'min-w-1/3 p-4 rounded-lg outline outline-2 outline-[#F29DBB] bg-white') }>
+                                    (isHoverOrTouchVisible) && 'absolute -left-64 -top-72 lg:left-2 lg:-top-[15.75rem] min-w-1/3 p-4 rounded-lg outline outline-2 outline-[#F29DBB] bg-white') }>
 
                                 <div
+                                    ref={pickerRef}
                                     className={ clsx(
                                         'flex items-start justify-between w-full ',
                                         (isHoverOrTouchVisible) && 'drop-shadow-sm items-end pb-2 border-gray-100 border-b') }>
@@ -153,8 +160,8 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                 } }
                                                 transition={ {
                                                     repeat: Infinity,
-                                                    delay: 3.75,
-                                                    duration: 7,
+                                                    delay: 1,
+                                                    duration: 4,
                                                     repeatDelay: 0,
                                                     ease: 'linear'
                                                 } }
@@ -165,23 +172,6 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                                         (!isHoverOrTouchVisible) && 'h-8 w-8 ',
                                                         (isHoverOrTouchVisible) && 'h-6 w-6',
                                                     ) }
-
-                                                    onTouchStart={ () => {
-                                                        // could be visible via hover as well
-                                                        if (isHoverOrTouchVisible) {
-                                                            if (!isInitialLoad) {
-                                                                setIsHoverOrTouchVisible((current) => {
-                                                                    return !current;
-                                                                });
-                                                            }
-                                                        } else {
-                                                            if (!isInitialLoad) {
-                                                                setIsHoverOrTouchVisible((current) => {
-                                                                    return !current;
-                                                                });
-                                                            }
-                                                        }
-                                                    } }
                                                 ></GearIcon>
                                             </motion.div>
                                         </motion.div>

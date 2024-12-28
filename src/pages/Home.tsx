@@ -121,28 +121,24 @@ export function Home() {
                         >
                         </div>
                         <div className={ 'w-full h-full inset-0 absolute z-20' }>
-                            <div
-                                className={ clsx('flex flex-col bottom-28 sm:bottom-28 md:bottom-20 lg:top-1/2 w-full lg:items-end absolute z-10 ') }>
-
-                            </div>
 
                             <div
-                                className={ clsx('flex flex-col items-end lg:items-start mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute') }
+                                className={ clsx('flex flex-col items-start mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute') }
                             >
                                 {/*bg-white/60*/ }
                                 {/*[text-shadow:_0_1px_0_rgba(0,0,0,.4)]*/ }
                                 <div
-                                    className="flex flex-col mt-auto flex-wrap mx-auto lg:mx-0 sm:px-2 md:px-4 lg:mb-4 text-center lg:text-left bg-[linear-gradient(90deg,rgba(255,255,255,0.6)_0%,rgba(255,255,255,0.6)_60%,rgba(255,255,255,0.5)_95%,rgba(255,255,255,0)_100%)] text-neutral-950 ">
+                                    className="flex flex-col mt-auto flex-wrap mx-0 px-4 mb-4 text-left bg-[linear-gradient(90deg,rgba(255,255,255,0.6)_0%,rgba(255,255,255,0.6)_60%,rgba(255,255,255,0.5)_95%,rgba(255,255,255,0)_100%)] text-neutral-950 ">
 
                                     {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/ }
                                     <div className={ 'flex gap-3 items-end' }>
 
-                                        <h1 className="font-display mx-auto lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight  [text-wrap:balance]">
+                                        <h1 className="font-display lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight [text-wrap:balance]">
                                             Systems thinking, in bloom.
 
                                         </h1>
                                         <div
-                                            className={ 'z-10 absolute left-1/2 lg:left-[28rem] lg:bottom-[1rem] bottom-[8rem] md:bottom-[5.5rem]' }>
+                                            className={ 'z-10 absolute left-[23.5rem] lg:left-[28rem] bottom-[1rem]' }>
                                             <TreeConfigurator/>
                                         </div>
                                     </div>
@@ -164,29 +160,24 @@ export function Home() {
                     </motion.div>
 
                     <div
-                        className="h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] w-full relative bg-neutral-950 pt-4 px-0 overflow-hidden">
-                        <div className={ clsx('flex flex-col h-full sm:px-0 md:px-4') }>
-                            <img
-                                alt=""
-                                src={ sakuraBranch }
-                                className="max-h-full object-none top-0 left-0 self-start absolute opacity-35 overflow-visible"
-                            />
+                        className="min-h-[29rem] w-full relative  pt-4 px-0 overflow-hidden border-t-4 border-neutral-950">
+                        <div className={ clsx('flex flex-col px-4') }>
 
                             <div className={
-                                'flex flex-col w-3/4 xl:w-1/2 p-8 mx-auto xl:mx-0 xl:self-end text-neutral-950 text-left bg-white z-20 relative'
+                                'flex flex-col w-full xl:w-1/2 pb-8 mx-auto xl:mx-0 text-neutral-950 text-left bg-white z-20 relative'
                             }>
-                                <h1 className='text-3xl lg:text-4xl font-medium tracking-tight font-display'>
+                                <h1 className='text-3xl lg:text-4xl font-light tracking-tight font-display'>
                                     We&apos;re a&nbsp;
                                     <CriticalSectionAnimation stopIndex={ 2 } className={ 'inline-block' }>
-                                        <p className={ 'inline' }>creative</p>
-                                        <p className={ 'inline' }>technical</p>
-                                        <p className={ 'inline' }>technical, creative,</p>
+                                        <p className={ 'inline font-headings' }>creative</p>
+                                        <p className={ 'inline font-headings' }>technical</p>
+                                        <p className={ 'inline font-headings' }>technical/creative</p>
                                     </CriticalSectionAnimation>
                                     &nbsp;agency,
                                     engineering a better future.
                                 </h1>
 
-                                <div className={ 'flex flex-col gap-4 pt-4 font-light text-4xl' }>
+                                <div className={ 'flex flex-col gap-4 pt-4 font-light text-3xl lg:text-4xl font-headings' }>
                                     <p>
                                         We partner with organizations on projects we believe will make a lasting,
                                         positive, impact on the world.
@@ -197,9 +188,9 @@ export function Home() {
 
                                     </p>
                                     <div
-                                        className={ 'flex justify-start absolute bg-neutral-950 -bottom-14 left-0 ml-4' }>
+                                        className={ 'flex w-full p-4 justify-start absolute bg-neutral-950 -bottom-20 -left-8 ' }>
                                         <a href='mailto:mo@dcek.com'
-                                           className={ ' border-4 border-white p-4 text-white' }>
+                                           className={ ' pl-4 text-white font-headings' }>
                                             Get in touch.
                                         </a>
                                     </div>
@@ -210,22 +201,22 @@ export function Home() {
                     </div>
 
 
-                    <div className='flex gap-4 grow h-full mt-16 xl:mt-0'>
-                        <div className='flex w-full h-full z-10'>
-                            <div
-                                className='flex flex-col h-96 w-[32rem] p-4 bg-neutral-950 border-4 border-white'>
-                                <img
-                                    alt={ '' }
-                                    src={ bonsaiLogo }
-                                    className='object-contain w-24 overflow-hidden'/>
-                                <div className={ 'h-px w-full my-2 border-b border-1 border-white/45' }></div>
-                                <div className='h-full bg-white/85'>
+                    {/*<div className='flex gap-4 grow h-full mt-16 xl:mt-0'>*/}
+                    {/*    <div className='flex w-full h-full z-10'>*/}
+                    {/*        <div*/}
+                    {/*            className='flex flex-col h-96 w-[32rem] p-4 border-4 border-white'>*/}
+                    {/*            <img*/}
+                    {/*                alt={ '' }*/}
+                    {/*                src={ bonsaiLogo }*/}
+                    {/*                className='object-contain w-24 overflow-hidden'/>*/}
+                    {/*            <div className={ 'h-px w-full my-2 border-b border-1 border-neutral-950/45' }></div>*/}
+                    {/*            <div className='h-full bg-white'>*/}
 
-                                </div>
+                    {/*            </div>*/}
 
-                            </div>
-                        </div>
-                    </div>
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
 
                 </TreeProvider>
             </HelmetProvider>
