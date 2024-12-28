@@ -164,222 +164,69 @@ export function Home() {
                     </motion.div>
 
                     <div
-                        className="h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] w-full relative bg-neutral-950 rounded-4xl py-20 sm:py-32 px-0">
-                        <div className={ clsx('flex h-full sm:px-0 md:px-4') }>
+                        className="h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] w-full relative bg-neutral-950 pt-4 px-0 overflow-hidden">
+                        <div className={ clsx('flex flex-col h-full sm:px-0 md:px-4') }>
                             <img
                                 alt=""
                                 src={ sakuraBranch }
-                                className="w-1/2 object-contain top-8 self-start"
+                                className="max-h-full object-none top-0 left-0 self-start absolute opacity-35 overflow-visible"
                             />
-                            <div className={ clsx('flex flex-col gap-3 w-full') }>
-                                <div className={
-                                    'text-white text-right'
-                                }>
-                                    <h1 className='text-3xl lg:text-4xl font-medium tracking-tight font-display'>
-                                        We&apos;re a&nbsp;
-                                        <CriticalSectionAnimation className={ 'inline-block' }>
-                                            <p className={ 'inline' }>creative</p>
-                                            <p className={ 'inline' }>technical</p>
-                                            <p className={ 'inline' }>technical creative</p>
-                                            <p className={ 'inline' }>creatively technical</p>
-                                            <p className={ 'inline' }>technically creative</p>
-                                        </CriticalSectionAnimation>
-                                        &nbsp;agency,
-                                    </h1>
-                                    <h2 className='font-light'>
-                                        helping our clients change the world, for the better.
-                                    </h2>
 
-                                </div>
-                                <div
-                                    className={ clsx('bg-transparent  h-full rounded-md w-full py-4 ') }>
-                                    <div className={ 'flex flex-col gap-8 relative p-0 justify-between h-full' }>
-                                        <InteractiveMarquee
-                                            speed={ 0.25 }
-                                        >
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ bonsaiLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ bonsaiLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ bonsaiLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ bonsaiLogo }
-                                            />
+                            <div className={
+                                'flex flex-col w-3/4 xl:w-1/2 p-8 mx-auto xl:mx-0 xl:self-end text-neutral-950 text-left bg-white z-20 relative'
+                            }>
+                                <h1 className='text-3xl lg:text-4xl font-medium tracking-tight font-display'>
+                                    We&apos;re a&nbsp;
+                                    <CriticalSectionAnimation stopIndex={ 2 } className={ 'inline-block' }>
+                                        <p className={ 'inline' }>creative</p>
+                                        <p className={ 'inline' }>technical</p>
+                                        <p className={ 'inline' }>technical, creative,</p>
+                                    </CriticalSectionAnimation>
+                                    &nbsp;agency,
+                                    engineering a better future.
+                                </h1>
 
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ bonsaiLogo }
-                                            />
+                                <div className={ 'flex flex-col gap-4 pt-4 font-light text-4xl' }>
+                                    <p>
+                                        We partner with organizations on projects we believe will make a lasting,
+                                        positive, impact on the world.
+                                    </p>
+                                    <p>
+                                        Is your project making a difference? We help with branding and design,
+                                        technical community engagement, and systems development.&nbsp;
 
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ bonsaiLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ bonsaiLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ bonsaiLogo }
-                                            />
-                                        </InteractiveMarquee>
-                                        <InteractiveMarquee
-                                            speed={ 0.75 }
-                                        >
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-32 object-contain' }
-                                                        src={ mHUBLogo }
-                                            />
-                                        </InteractiveMarquee>
-                                        <InteractiveMarquee
-                                            speed={ 0.25 }
-                                        >
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ twinmoLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ twinmoLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ twinmoLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ twinmoLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ twinmoLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ twinmoLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ twinmoLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ twinmoLogo }
-                                            />
-                                        </InteractiveMarquee>
-                                        <InteractiveMarquee
-                                            speed={ 0.75 }
-                                        >
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ astellasLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ astellasLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ astellasLogo }
-                                            />
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ astellasLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ astellasLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ astellasLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ astellasLogo }
-                                            />
-
-                                            <PlainImage id={ initialCaseStudyId }
-                                                        className={ 'inline-block w-64 object-contain' }
-                                                        src={ astellasLogo }
-                                            />
-                                        </InteractiveMarquee>
+                                    </p>
+                                    <div
+                                        className={ 'flex justify-start absolute bg-neutral-950 -bottom-14 left-0 ml-4' }>
+                                        <a href='mailto:mo@dcek.com'
+                                           className={ ' border-4 border-white p-4 text-white' }>
+                                            Get in touch.
+                                        </a>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
+
+                    <div className='flex gap-4 grow h-full mt-16 xl:mt-0'>
+                        <div className='flex w-full h-full z-10'>
+                            <div
+                                className='flex flex-col h-96 w-[32rem] p-4 bg-neutral-950 border-4 border-white'>
+                                <img
+                                    alt={ '' }
+                                    src={ bonsaiLogo }
+                                    className='object-contain w-24 overflow-hidden'/>
+                                <div className={ 'h-px w-full my-2 border-b border-1 border-white/45' }></div>
+                                <div className='h-full bg-white/85'>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
                 </TreeProvider>
             </HelmetProvider>
         </>
