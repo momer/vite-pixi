@@ -164,7 +164,7 @@ export function Home() {
                         <div className={ clsx('flex flex-col px-4') }>
 
                             <div className={
-                                'flex flex-col w-full xl:w-1/2 pb-8 mx-auto xl:mx-0 text-neutral-950 text-left bg-white z-20 relative'
+                                'flex flex-col w-full xl:w-1/2 pb-8 mx-auto xl:mx-0 text-neutral-950 text-left bg-white z-20 relative gap-8'
                             }>
                                 <h1 className='text-3xl lg:text-4xl font-light tracking-tight font-display'>
                                     We&apos;re a&nbsp;
@@ -177,13 +177,14 @@ export function Home() {
                                     engineering a better future.
                                 </h1>
 
-                                <div className={ 'flex flex-col gap-4 pt-4 font-light text-3xl lg:text-4xl font-headings' }>
+                                <div className={ 'flex flex-col gap-8 pt-4 font-light text-3xl lg:text-4xl font-headings' }>
                                     <p>
                                         We partner with organizations on projects we believe will make a lasting,
                                         positive, impact on the world.
                                     </p>
                                     <p>
-                                        Is your project making a difference? We help with branding and design,
+                                        Is your project making a difference?
+                                        We help with branding and design,
                                         technical community engagement, and systems development.&nbsp;
 
                                     </p>

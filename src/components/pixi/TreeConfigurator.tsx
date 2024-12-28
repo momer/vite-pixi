@@ -51,7 +51,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
     const treeContext = useContext(TreeContext);
 
     const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
-    const [isHoverOrTouchVisible, setIsHoverOrTouchVisible] = useState<boolean>(true);
+    const [isHoverOrTouchVisible, setIsHoverOrTouchVisible] = useState<boolean>(false);
     const gearOpacity = useMotionValue(0);
     const [configuratorOpacity, setConfiguratorOpacity] = useState<number>(0);
     const entranceFrameNum = useMotionValue(0);
@@ -91,8 +91,8 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                     }}
                     animate={ {
                         opacity: [0, configuratorOpacity],
-                        y: [0, 0, 0],
-                        x: [0, 0],
+                        y: [-400, 0],
+                        x: [700, 0],
                     } }
                     onUpdate={async (latest) => {
                         entranceFrameNum.set(entranceFrameNum.get() + 1);
@@ -114,7 +114,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                     onAnimationComplete={ onEntranceComplete }
                     transition={ {
                         delay: 0,
-                        duration: 5.5,
+                        duration: 3.5,
                         ease: 'easeOut',
 
                     } }
