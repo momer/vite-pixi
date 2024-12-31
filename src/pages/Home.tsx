@@ -45,7 +45,7 @@ export function CriticalSectionAnimation({
 
     return (
         <div className='inline-block' ref={ ref }>
-            { isInView && React.Children.map(children, (child, idx) => (
+            { isInView ? React.Children.map(children, (child, idx) => (
                 (activeIndex === idx && <div
                     className='inline-block relative'
                     key={ idx }
@@ -53,7 +53,7 @@ export function CriticalSectionAnimation({
                     <motion.div
                         className={ clsx(
                             className,
-                            'inline-block relative'
+                            'inline-block relative underline'
                         ) }
                         initial={ { opacity: idx === initialIndex ? 1 : 0.3 } }
 
@@ -80,7 +80,7 @@ export function CriticalSectionAnimation({
 
                     </motion.div>
                 </div>)
-            )) }
+            )) : React.Children.toArray(children)[0] }
         </div>
     );
 }
