@@ -120,10 +120,10 @@ export function Home() {
                             ref={ fullsizeDivRefCallback }
                         >
                         </div>
-                        <div className={ 'w-full h-full inset-0 absolute z-20' }>
+                        <div className={ 'flex flex-col justify-end w-full h-full inset-0 absolute z-20' }>
 
                             <div
-                                className={ clsx('flex flex-col items-start mx-auto h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2 absolute') }
+                                className={ clsx('flex flex-col items-start h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2') }
                             >
                                 {/*bg-white/60*/ }
                                 {/*[text-shadow:_0_1px_0_rgba(0,0,0,.4)]*/ }
@@ -144,6 +144,45 @@ export function Home() {
                                     </div>
                                 </div>
                             </div>
+
+                            <div
+                                className="w-full relative overflow-hidden ">
+                                <div className={ clsx('flex flex-col px-4 mt-4 mb-8 gap-24') }>
+
+                                    {/* intro */ }
+                                    <div className={
+                                        'flex flex-col w-1/2  mx-auto xl:mx-0  text-left z-20 relative gap-8'
+                                    }>
+                                        <h1 className='text-3xl lg:text-4xl font-light tracking-tight font-headings'>
+                                            We&apos;re a&nbsp;
+                                            <CriticalSectionAnimation stopIndex={ 2 } className={ 'inline-block' }>
+                                                <p className={ 'inline font-headings' }>creative</p>
+                                                <p className={ 'inline font-headings' }>technical</p>
+                                                <p className={ 'inline font-headings' }>technical creative</p>
+                                            </CriticalSectionAnimation>
+                                            &nbsp;agency.
+                                        </h1>
+
+                                        <div
+                                            className={ 'flex flex-col gap-8 font-light text-3xl lg:text-4xl font-headings' }>
+                                            <p>
+                                                We help with branding and design,
+                                                community engagement, and systems development.&nbsp;
+
+                                            </p>
+                                            <div
+                                                className={ `flex w-full justify-start ${ '' } ` }>
+                                                <a href='mailto:mo@dcek.com'
+                                                   className={ 'font-headings hover:border-[#F29DBB] underline underline-offset-4 decoration-[#F29DBB] hover:decoration-white hover:text-[#F29DBB]' }>
+                                                    Get in touch.
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -159,44 +198,6 @@ export function Home() {
                         { <HomeDemo ref={ fullsizeDivRef }/> }
                     </motion.div>
 
-                    <div
-                        className="pb-20 w-full relative pt-14 px-0 overflow-hidden bg-neutral-950">
-                        <div className={ clsx('flex flex-col px-4 gap-24') }>
-
-                            {/* intro */ }
-                            <div className={
-                                'flex flex-col w-full  mx-auto xl:mx-0 text-white text-left z-20 relative gap-8'
-                            }>
-                                <h1 className='text-3xl lg:text-4xl font-light tracking-tight font-headings'>
-                                    We&apos;re a&nbsp;
-                                    <CriticalSectionAnimation stopIndex={ 2 } className={ 'inline-block' }>
-                                        <p className={ 'inline font-headings' }>creative</p>
-                                        <p className={ 'inline font-headings' }>technical</p>
-                                        <p className={ 'inline font-headings' }>technical creative</p>
-                                    </CriticalSectionAnimation>
-                                    &nbsp;agency.
-                                </h1>
-
-                                <div
-                                    className={ 'flex flex-col gap-8 font-light text-3xl lg:text-4xl font-headings' }>
-                                    <p>
-                                        We help with branding and design,
-                                        community engagement, and systems development.&nbsp;
-
-                                    </p>
-                                    <div
-                                        className={ `flex w-full justify-start ${ '' } ` }>
-                                        <a href='mailto:mo@dcek.com'
-                                           className={ '-m-4 p-4 font-headings border-4 border-white hover:border-[#F29DBB] underline underline-offset-4 decoration-[#F29DBB] hover:decoration-white hover:text-[#F29DBB]' }>
-                                            Get in touch.
-                                        </a>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
 
                     <div className='flex flex-col w-full p-4'>
                         <h2 className='text-3xl lg:text-4xl font-light tracking-tight font-headings'>
