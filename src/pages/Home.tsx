@@ -44,16 +44,16 @@ export function CriticalSectionAnimation({
     };
 
     return (
-        <div className='inline-block' ref={ ref }>
+        <div className='inline' ref={ ref }>
             { isInView ? React.Children.map(children, (child, idx) => (
                 (activeIndex === idx && <div
-                    className='inline-block relative'
+                    className='inline relative'
                     key={ idx }
                 >
                     <motion.div
                         className={ clsx(
                             className,
-                            'inline-block relative'
+                            'inline relative'
                         ) }
                         initial={ { opacity: idx === initialIndex ? 1 : 0.3 } }
 
@@ -66,7 +66,7 @@ export function CriticalSectionAnimation({
                         { child }
                     </motion.div>
                     <motion.div className={ clsx(
-                        'inline-block w-full h-full absolute top-0 left-0',
+                        'inline w-full h-full absolute top-0 left-0',
                         idx !== stopIndex && 'bg-black-500 bg-opacity-85',
                     ) }
                                 initial={ { opacity: 0 } }
@@ -113,58 +113,42 @@ export function Home() {
                     </Helmet>
 
 
-                    <div className={ clsx('h-[calc(100vh-128px)] lg:h-[calc(100vh-98px)] w-full relative bg-white') }>
+                    <div className={ clsx('h-[calc(100vh-64px)] lg:h-[calc(100vh-64px)] w-full relative bg-white') }>
 
                         <div
-                            className={ clsx('h-[96.5%] inset-0 w-full absolute') }
+                            className={ clsx('h-[95%] inset-0 w-full absolute') }
                             ref={ fullsizeDivRefCallback }
                         >
                         </div>
-                        <div className={ 'flex flex-col justify-end w-full h-full inset-0 absolute z-20' }>
+                        <div className={ 'flex flex-col items-end justify-end w-full h-full z-20' }>
 
                             <div
-                                className={ clsx('flex flex-col items-start h-1/2 w-full lg:max-w-xl xl:max-w-screen-2xl top-1/2') }
+                                className={ clsx('flex flex-col justify-end items-end w-full top-2/3 xl:top-1/2') }
                             >
-                                {/*bg-white/60*/ }
-                                {/*[text-shadow:_0_1px_0_rgba(0,0,0,.4)]*/ }
                                 <div
-                                    className="flex flex-col mt-auto flex-wrap mx-0 px-4 mb-4 text-left bg-[linear-gradient(90deg,rgba(255,255,255,0.6)_0%,rgba(255,255,255,0.6)_60%,rgba(255,255,255,0.5)_95%,rgba(255,255,255,0)_100%)] text-neutral-950 ">
+                                    className="flex flex-col justify-end w-full mt-auto flex-wrap mx-0 px-4 text-left bg-white/90 md:bg-transparent text-neutral-950 ">
 
-                                    {/*5todo, possibly: https://stackoverflow.com/questions/24757244/html-css-background-color-behind-text-word-wrap*/ }
-                                    <div className={ 'flex gap-3 items-end' }>
-
-                                        <h1 className="font-display lg:mx-0 text-3xl lg:text-4xl font-medium tracking-tight [text-wrap:balance]">
-                                            Systems thinking, in bloom.
-
-                                        </h1>
-                                        <div
-                                            className={ '' }>
-                                            <TreeConfigurator/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                className="w-full relative overflow-hidden ">
-                                <div className={ clsx('flex flex-col px-4 mt-4 mb-8 gap-24') }>
-
-                                    {/* intro */ }
                                     <div className={
-                                        'flex flex-col w-1/2  mx-auto xl:mx-0  text-left z-20 relative gap-8'
+                                        'flex flex-col justify-end xl:mx-0 text-left z-20 relative gap-8'
                                     }>
-                                        <h1 className='text-3xl lg:text-4xl font-light tracking-tight font-headings'>
-                                            We&apos;re a&nbsp;
-                                            <CriticalSectionAnimation stopIndex={ 2 } className={ 'inline-block' }>
-                                                <p className={ 'inline font-headings' }>creative</p>
-                                                <p className={ 'inline font-headings' }>technical</p>
-                                                <p className={ 'inline font-headings' }>technical creative</p>
-                                            </CriticalSectionAnimation>
-                                            &nbsp;agency.
-                                        </h1>
+                                        <div className='flex gap-3'>
+
+                                            <h1 className='text-3xl lg:text-4xl font-light tracking-tight font-headings'>
+                                                We&apos;re a&nbsp;
+                                                <CriticalSectionAnimation stopIndex={ 2 } className={ 'inline' }>
+                                                    <p className={ 'inline font-headings' }>creative</p>
+                                                    <p className={ 'inline font-headings' }>technical</p>
+                                                    <p className={ 'inline font-headings' }>technical creative</p>
+                                                </CriticalSectionAnimation>
+                                                &nbsp;agency.
+                                            </h1>
+                                            <div className='hidden lg:block self-end'>
+                                                <TreeConfigurator/>
+                                            </div>
+                                        </div>
 
                                         <div
-                                            className={ 'flex flex-col gap-8 font-light text-3xl lg:text-4xl font-headings' }>
+                                            className={ 'flex flex-col lg:w-1/2 font-light text-3xl lg:text-4xl font-headings gap-8' }>
                                             <p>
                                                 We help with branding and design,
                                                 community engagement, and systems development.&nbsp;
@@ -183,13 +167,22 @@ export function Home() {
 
                                 </div>
                             </div>
+
+                            <div
+                                className="w-full relative overflow-hidden ">
+                                <div className={ clsx('flex flex-col px-4 mt-4 mb-8 gap-24') }>
+
+                                    {/* intro */ }
+
+                                </div>
+                            </div>
                         </div>
 
                     </div>
 
                     <motion.div
                         id="pixi-app"
-                        className={ clsx('top-16 left-0 p-0 absolute touch-none z-10 bg-white') }
+                        className={ clsx('hidden lg:block top-16 left-0 p-0 absolute touch-none z-10 bg-white') }
                         animate={ { opacity: [0, 1] } }
                         transition={ {
                             duration: 5
@@ -197,33 +190,6 @@ export function Home() {
                     >
                         { <HomeDemo ref={ fullsizeDivRef }/> }
                     </motion.div>
-
-
-                    <div className='flex flex-col w-full p-4'>
-                        <h2 className='text-3xl lg:text-4xl font-light tracking-tight font-headings'>
-                            Some of our recent work:
-                        </h2>
-
-                        {/* case studies*/ }
-                        <div className='flex w-1/2 gap-4 mt-16 xl:mt-0'>
-                            <div className='flex z-10'>
-                                <div
-                                    className='flex flex-col h-96 w-[32rem] p-4 border-4 border-white'>
-                                    <img
-                                        alt={ '' }
-                                        src={ bonsaiLogo }
-                                        className='object-contain w-36 overflow-hidden'/>
-                                    <div
-                                        className={ 'h-px w-full my-2 border-b border-1 border-neutral-950/45' }></div>
-                                    <div className='h-full bg-white'>
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
 
 
                 </TreeProvider>

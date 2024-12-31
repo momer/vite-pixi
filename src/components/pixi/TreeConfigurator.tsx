@@ -121,10 +121,13 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                 >
                     <div
                         className={ clsx('') }
+
+                        ref={pickerRef}
                     >
 
                         <div className={ clsx('flex flex-col items-end') }>
                             <div
+
                                 onClick={ () => {
                                     if (!isInitialLoad) {
                                         return setIsHoverOrTouchVisible(true);
@@ -134,10 +137,9 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                                 className={ clsx(
                                     'flex flex-col mx-auto',
                                     'group bg-opacity-95',
-                                    (isHoverOrTouchVisible) && 'absolute -left-64 -top-72 lg:left-2 lg:-top-[15.75rem] min-w-1/3 p-4 rounded-lg outline outline-2 outline-[#F29DBB] bg-white') }>
+                                    (isHoverOrTouchVisible) && 'absolute lg:left-96 lg:-top-32 -left-64 -top-72 min-w-1/3 p-4 rounded-lg outline outline-2 outline-[#F29DBB] bg-white') }>
 
                                 <div
-                                    ref={pickerRef}
                                     className={ clsx(
                                         'flex items-start justify-between w-full ',
                                         (isHoverOrTouchVisible) && 'drop-shadow-sm items-end pb-2 border-gray-100 border-b') }>
