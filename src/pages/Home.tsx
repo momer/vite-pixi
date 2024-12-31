@@ -53,7 +53,7 @@ export function CriticalSectionAnimation({
                     <motion.div
                         className={ clsx(
                             className,
-                            'inline-block relative underline'
+                            'inline-block relative'
                         ) }
                         initial={ { opacity: idx === initialIndex ? 1 : 0.3 } }
 
@@ -160,64 +160,70 @@ export function Home() {
                     </motion.div>
 
                     <div
-                        className="min-h-[29rem] w-full relative  pt-4 px-0 overflow-hidden border-t-4 border-neutral-950">
-                        <div className={ clsx('flex flex-col px-4') }>
+                        className="pb-20 w-full relative pt-14 px-0 overflow-hidden bg-neutral-950">
+                        <div className={ clsx('flex flex-col px-4 gap-24') }>
 
+                            {/* intro */ }
                             <div className={
-                                'flex flex-col w-full xl:w-1/2 pb-8 mx-auto xl:mx-0 text-neutral-950 text-left bg-white z-20 relative gap-8'
+                                'flex flex-col w-full  mx-auto xl:mx-0 text-white text-left z-20 relative gap-8'
                             }>
-                                <h1 className='text-3xl lg:text-4xl font-light tracking-tight font-display'>
+                                <h1 className='text-3xl lg:text-4xl font-light tracking-tight font-headings'>
                                     We&apos;re a&nbsp;
                                     <CriticalSectionAnimation stopIndex={ 2 } className={ 'inline-block' }>
                                         <p className={ 'inline font-headings' }>creative</p>
                                         <p className={ 'inline font-headings' }>technical</p>
-                                        <p className={ 'inline font-headings' }>technical/creative</p>
+                                        <p className={ 'inline font-headings' }>technical creative</p>
                                     </CriticalSectionAnimation>
-                                    &nbsp;agency,
-                                    engineering a better future.
+                                    &nbsp;agency.
                                 </h1>
 
-                                <div className={ 'flex flex-col gap-8 pt-4 font-light text-3xl lg:text-4xl font-headings' }>
+                                <div
+                                    className={ 'flex flex-col gap-8 font-light text-3xl lg:text-4xl font-headings' }>
                                     <p>
-                                        We partner with organizations on projects we believe will make a lasting,
-                                        positive, impact on the world.
-                                    </p>
-                                    <p>
-                                        Is your project making a difference?
                                         We help with branding and design,
-                                        technical community engagement, and systems development.&nbsp;
+                                        community engagement, and systems development.&nbsp;
 
                                     </p>
                                     <div
-                                        className={ 'flex w-full p-4 justify-start absolute bg-neutral-950 -bottom-20 -left-8 ' }>
+                                        className={ `flex w-full justify-start ${ '' } ` }>
                                         <a href='mailto:mo@dcek.com'
-                                           className={ ' pl-4 text-white font-headings' }>
+                                           className={ '-m-4 p-4 font-headings border-4 border-white hover:border-[#F29DBB] underline underline-offset-4 decoration-[#F29DBB] hover:decoration-white hover:text-[#F29DBB]' }>
                                             Get in touch.
                                         </a>
                                     </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div className='flex flex-col w-full p-4'>
+                        <h2 className='text-3xl lg:text-4xl font-light tracking-tight font-headings'>
+                            Some of our recent work:
+                        </h2>
+
+                        {/* case studies*/ }
+                        <div className='flex w-1/2 gap-4 mt-16 xl:mt-0'>
+                            <div className='flex z-10'>
+                                <div
+                                    className='flex flex-col h-96 w-[32rem] p-4 border-4 border-white'>
+                                    <img
+                                        alt={ '' }
+                                        src={ bonsaiLogo }
+                                        className='object-contain w-36 overflow-hidden'/>
+                                    <div
+                                        className={ 'h-px w-full my-2 border-b border-1 border-neutral-950/45' }></div>
+                                    <div className='h-full bg-white'>
+
+                                    </div>
+
                                 </div>
                             </div>
 
                         </div>
                     </div>
 
-
-                    {/*<div className='flex gap-4 grow h-full mt-16 xl:mt-0'>*/}
-                    {/*    <div className='flex w-full h-full z-10'>*/}
-                    {/*        <div*/}
-                    {/*            className='flex flex-col h-96 w-[32rem] p-4 border-4 border-white'>*/}
-                    {/*            <img*/}
-                    {/*                alt={ '' }*/}
-                    {/*                src={ bonsaiLogo }*/}
-                    {/*                className='object-contain w-24 overflow-hidden'/>*/}
-                    {/*            <div className={ 'h-px w-full my-2 border-b border-1 border-neutral-950/45' }></div>*/}
-                    {/*            <div className='h-full bg-white'>*/}
-
-                    {/*            </div>*/}
-
-                    {/*        </div>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
 
                 </TreeProvider>
             </HelmetProvider>
