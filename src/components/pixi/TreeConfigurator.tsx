@@ -91,7 +91,7 @@ export const TreeConfigurator: FC<TreeConfiguratorProps> = ({ children }) => {
                     }}
                     animate={ {
                         opacity: [0, configuratorOpacity],
-                        y: [-400, -274],
+                        y: [-400, 0],
                         x: [700, 0],
                     } }
                     onUpdate={async (latest) => {

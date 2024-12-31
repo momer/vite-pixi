@@ -138,7 +138,7 @@ export function Home() {
 
                                         </h1>
                                         <div
-                                            className={ 'z-10 absolute left-[23.5rem] lg:left-[28rem] bottom-[1rem]' }>
+                                            className={ '' }>
                                             <TreeConfigurator/>
                                         </div>
                                     </div>
