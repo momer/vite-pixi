@@ -134,13 +134,13 @@ export function Home() {
                                         <div className='flex gap-3'>
 
                                             <h1 className='text-3xl lg:text-4xl font-light tracking-tight font-headings'>
-                                                We&apos;re a&nbsp;
+                                                We&apos;re a
                                                 <CriticalSectionAnimation stopIndex={ 2 } className={ 'inline' }>
-                                                    <p className={ 'inline font-headings' }>creative</p>
-                                                    <p className={ 'inline font-headings' }>technical</p>
-                                                    <p className={ 'inline font-headings' }>technical creative</p>
+                                                    <p className={ 'inline font-headings' }> creative </p>
+                                                    <p className={ 'inline font-headings' }> technical </p>
+                                                    <p className={ 'inline font-headings' }> technical creative </p>
                                                 </CriticalSectionAnimation>
-                                                &nbsp;agency.
+                                                agency.
                                             </h1>
                                             <div className='hidden lg:block self-end'>
                                                 <TreeConfigurator/>
