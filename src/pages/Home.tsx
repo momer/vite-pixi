@@ -24,7 +24,7 @@ export function CriticalSectionAnimation({
     stopIndex?: number;
 }) {
     const initialIndex = 0;
-    const animationDurationMS = 2000;
+    const animationDurationMS = 3500;
     const [activeIndex, setActiveIndex] = useState(initialIndex);
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true });
