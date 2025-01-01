@@ -157,7 +157,7 @@ export function Home() {
                                             <div
                                                 className={ `flex w-full justify-start ${ '' } ` }>
                                                 <a href='mailto:mo@dcek.com'
-                                                   className={ 'font-headings hover:border-[#F29DBB] underline underline-offset-4 decoration-[#F29DBB] hover:decoration-white hover:text-[#F29DBB]' }>
+                                                   className={ 'font-headings hover:border-[#F29DBB] underline underline-offset-4 decoration-[#F29DBB] hover:decoration-neutral-950 hover:text-[#F29DBB]' }>
                                                     Get in touch.
                                                 </a>
                                             </div>
